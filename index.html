@@ -1,0 +1,83 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>BotFactoryFX</title>
+<meta name="description" content="An algorithmic strategy lab. Not finished yet.">
+
+<style>
+  /* Deliberately quiet. Whoever lands here was not invited, and a countdown
+     saying "something big is coming" is the front page of every shitcoin
+     launch there has ever been — the exact impression the real site spends
+     nine sections dismantling. So: what it is, that it is not ready, and
+     nothing else. No timer, no promise, no date to miss. */
+  :root {
+    --paper: #f1f4f7;
+    --ink:   #0f141a;
+    --muted: #5b6775;
+    --amber: #a75f06;
+    --line:  #dbe2ea;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+  }
+  main { max-width: 30rem; display: flex; flex-direction: column; gap: 1.1rem; }
+  .brand {
+    font-weight: 800; letter-spacing: -0.045em; font-size: 1.4rem;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .brand em { font-style: normal; color: var(--amber); }
+  h1 { font-size: 1.05rem; font-weight: 600; margin: 0; letter-spacing: -0.015em; }
+  p { margin: 0; color: var(--muted); font-size: 0.96rem; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 0.4rem 0; }
+  a { color: var(--amber); text-underline-offset: 3px; }
+  .fine { font-size: 0.82rem; }
+</style>
+
+<main>
+  <span class="brand">BotFactory<em>FX</em></span>
+  <h1>An algorithmic strategy lab. Not finished yet.</h1>
+  <p>
+    It searches for trading strategies and then spends most of its effort trying to prove the ones
+    it found are worthless. It works. It is not ready to be sold to anyone.
+  </p>
+  <hr>
+  <p class="fine">
+    If you have got this far, you have got here early. Nothing is being collected, there is no list
+    to join, and there will be no announcement email — when it is ready, this page becomes the
+    product. Until then, <a href="mailto:hola@botfactoryfx.com">write to me</a> if you are curious.
+  </p>
+</main>
+
+<script>
+  // A shortcut, not a lock.
+  //
+  // Typing the word below jumps to the staging build. It is written here in
+  // plain sight because pretending otherwise would be worse: anything a static
+  // page checks, it checks with code it already handed to the visitor, so a
+  // password form here would be theatre with an inspector-shaped hole in it.
+  //
+  // What actually keeps the staging site private is that its address is a
+  // random string nobody can guess — a secret that never reaches a browser
+  // that does not already have it. This is only so the address does not have
+  // to be remembered.
+  (function () {
+    const WORD = "quant";
+    let typed = "";
+    addEventListener("keydown", (event) => {
+      if (event.key.length !== 1) return;
+      typed = (typed + event.key.toLowerCase()).slice(-WORD.length);
+      if (typed === WORD) location.href = "/3f35ba99a7/";
+    });
+  })();
+</script>
