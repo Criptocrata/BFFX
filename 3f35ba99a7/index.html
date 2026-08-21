@@ -124,6 +124,20 @@
   .btn-sm { padding: 0.5rem 0.85rem; font-size: 0.76rem; }
   .cta-row { display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center; }
 
+  /* ── One buy button per system ───────────────────────────────────────────── */
+  /* Stacked and full width rather than a row: three side-by-side buttons of
+     equal weight is exactly the arrangement that gets the wrong one clicked. */
+  .buybox { display: flex; flex-direction: column; gap: 0.5rem; align-self: stretch; }
+  .buybox .btn { justify-content: center; width: 100%; }
+  /* The badge is a flex item, not an absolute overlay. Overlaid, it sat on top
+     of the label as soon as the button narrowed — which on a phone is always. */
+  .buy.is-yours { flex-wrap: wrap; gap: 0.15rem 0.5rem; }
+  .buy.is-yours::after {
+    content: "your system";
+    font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+    opacity: 0.75; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
   /* ── The wall: six months of days against one afternoon ──────────────────── */
   .wall { background: var(--card); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 1.5rem 1.4rem; display: flex; flex-direction: column; gap: 1.7rem; }
   .wall-block { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
@@ -201,6 +215,9 @@
   .amount small { font-size: 0.95rem; color: #9fb0c0; margin-left: 0.45rem; font-weight: 500; }
   .price-main .btn-primary { background: var(--amber); color: #1a1204; align-self: flex-start; }
   .price-main .btn-primary:hover { background: #d07d10; }
+  /* `.small` is muted grey for the page's light ground, which on this near-black
+     card is grey on black and all but unreadable. The card owns its own text. */
+  .price-main .small { color: #9fb0c0; }
   ul.ticks { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.93rem; color: #cfd9e3; }
   ul.ticks li { display: grid; grid-template-columns: 1.15rem 1fr; gap: 0.55rem; }
   ul.ticks li::before { content: "→"; font-family: var(--mono); color: #7fd8b4; }
@@ -302,7 +319,7 @@
     <span class="brand">BotFactory<em>FX</em></span>
     <span class="head-right">
       <span class="head-note">v1.4.1 · Linux · Windows · macOS</span>
-      <a class="btn btn-ghost btn-sm" href="#price">399 USD</a>
+      <a class="btn btn-ghost btn-sm" href="#price">499 USD</a>
       <a class="btn btn-primary btn-sm" href="demo/">Try it free</a>
     </span>
   </div>
@@ -319,7 +336,7 @@
     </p>
     <div class="cta-row">
       <a class="btn btn-primary" href="demo/">Run the full app in your browser</a>
-      <a class="btn btn-ghost" href="#price">Buy — 399 USD</a>
+      <a class="btn btn-ghost" href="#price">Buy — 499 USD</a>
     </div>
     <p class="small">Nothing to install to try it. No account, no email. Your data never leaves your machine.</p>
 
@@ -464,7 +481,7 @@
           <tr><th>&nbsp;</th><th>The big toolboxes</th><th>BotFactoryFX</th></tr>
         </thead>
         <tbody>
-          <tr><td>Typical price</td><td class="them num">1,000 – 4,000 USD</td><td class="us num">399 USD, once</td></tr>
+          <tr><td>Typical price</td><td class="them num">1,000 – 4,000 USD</td><td class="us num">499 USD, once</td></tr>
           <tr><td>Business model</td><td class="them">Licence tiers plus renewals</td><td class="us">One payment, lifetime updates</td></tr>
           <tr><td>Settings before you start</td><td class="them">Hundreds</td><td class="us">One sentence</td></tr>
           <tr><td>Time to a first verdict</td><td class="them">A term of study</td><td class="us">An afternoon</td></tr>
@@ -481,6 +498,75 @@
       <div class="card"><span class="stat" style="color:var(--amber)">41</span><h3>Built-in indicators</h3><p>Plus your own, written as plain formulas — <code>close - sma(200)</code> — and translated into every export language.</p></div>
       <div class="card"><span class="stat" style="color:var(--profit)">4</span><h3>Export targets</h3><p>MQL4, MQL5, JForex and Pine Script, each carrying a note about what that platform cannot reproduce.</p></div>
     </div>
+  </div>
+</section>
+
+<section id="ai">
+  <div class="wrap">
+    <p class="eyebrow">The part everybody claims</p>
+    <h2 class="narrow">There is no AI inside this. You bring your own, and it runs the application.</h2>
+    <p class="lead narrow">
+      Every trading product on the internet is powered by artificial intelligence now, and the phrase
+      has been worn down to mean nothing at all. So here is the version with details in it, which you
+      can check against the demo before you believe a word of it.
+    </p>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="stat" style="color:var(--cyan)">Yours</span>
+        <h3>The model belongs to you</h3>
+        <p>OpenAI, Anthropic, Google or OpenRouter, with <b>your</b> key. Your provider, your bill, your
+           account. There is nothing to sign up to here and nothing is relayed through me — the app
+           talks to whoever you configured and to nobody else. Configure none and it simply says so.</p>
+      </div>
+      <div class="card">
+        <span class="stat" style="color:var(--amber)">9</span>
+        <h3>It operates the app, it does not chat about it</h3>
+        <p>Dr. Quant is handed the application as nine tools: load a series, write the strategy, change
+           it, run a backtest, save it, and move the screen you are looking at. It works in a loop until
+           the thing exists, and every call and its result scroll past as it goes. You are watching the
+           work, not waiting on a spinner.</p>
+      </div>
+      <div class="card">
+        <span class="stat" style="color:var(--profit)">0</span>
+        <h3>Autopilot needs no model at all</h3>
+        <p>Say what you want in one sentence and Autopilot reads it <b>in code</b> — parsed, not prompted
+           — then runs the search, the Reality Check and the portfolio end to end. The headline feature
+           does not depend on anyone's API being up, on a key, or on you paying for tokens.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:1rem">
+      <div class="card" style="border-left:3px solid var(--amber)">
+        <h3>The assistant is not allowed to invent a number</h3>
+        <p>Ask it in chat to run a backtest and it refuses, on purpose. Chat mode has no tools, so any
+           figure it gave you would be a guess dressed as a measurement — the exact failure this whole
+           product exists to catch. What it actually replies is:</p>
+        <p style="border-left:2px solid var(--line-hi); padding-left:0.9rem; font-style:italic">
+          “In chat mode I can only comment on what's already on screen — I cannot run backtests, create
+          strategies or modify parameters. If I tried, I would be making up the numbers, and that would
+          be dishonest.”
+        </p>
+        <p>Then it points you at the mode that can actually do it. An assistant that says <i>I don't know</i>
+           is worth more than one that always has an answer.</p>
+      </div>
+      <div class="card">
+        <h3>And whatever it builds gets judged like everything else</h3>
+        <p>A strategy the AI wrote goes through the same eight checks as one you wrote by hand, and gets
+           the same verdict in the same words. There is no fast lane. It can produce something overfitted
+           and worthless — models are good at confident nonsense — and when it does, the Reality Check
+           says so.</p>
+        <p>That is the point of pairing the two. The generator is fast and credulous. The judge is slow
+           and unimpressed. Neither is much use on its own.</p>
+      </div>
+    </div>
+
+    <p class="small" style="margin-top:1rem">
+      <b>Not yet:</b> a local model — Ollama, LM Studio — driving the app with nothing leaving your
+      machine at all. The transport already accepts a custom endpoint, so the hard half is done; what is
+      missing is the field to type it into. It is next, and until it ships this line stays here saying
+      it has not.
+    </p>
   </div>
 </section>
 
@@ -553,25 +639,37 @@
 <section id="price" style="background: var(--card); border-block: 1px solid var(--line)">
   <div class="wrap">
     <p class="eyebrow">Price and availability</p>
-    <h2 class="narrow">399 USD, once. All three systems.</h2>
+    <h2 class="narrow">499 USD, once. Pick your system.</h2>
     <p class="lead narrow">
-      One licence, one download for whichever system you use, and every update after it. Before you
-      pay, read the next section — on Windows and macOS the first launch is uglier than it should be,
-      and you should know that while the money is still yours.
+      One licence for the system you run it on, and every update after it. Change machine later and
+      you write in — that is a message and a new key, not another 499. Before you pay, read the next
+      section: on Windows and macOS the first launch is uglier than it should be, and you should know
+      that while the money is still yours.
     </p>
 
     <div class="price">
       <div class="price-main">
-        <p class="eyebrow" style="color:#f0b45c">Linux · Windows · macOS</p>
-        <div class="amount">399<small>USD</small></div>
+        <p class="eyebrow" style="color:#f0b45c">One system, one licence</p>
+        <div class="amount">499<small>USD</small></div>
         <ul class="ticks">
-          <li>All three builds — use the licence on your own machines</li>
-          <li>Lifetime updates, everything on the roadmap</li>
+          <li>The build for your system, and every update to it</li>
+          <li>Moving to a new machine is a message away, at no charge</li>
           <li>No subscription and no renewal, ever</li>
           <li>Signed installers when there is enough demand to pay for the certificates</li>
         </ul>
-        <a class="btn btn-primary" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK"
-           target="_blank" rel="noopener noreferrer">Pay in crypto</a>
+        <!-- One button per system, because one licence covers one system.
+             The visitor's own is marked rather than pre-selected: detection is
+             right nearly always and wrong loudly when it is not, and buying the
+             wrong build with irreversible money is the one mistake this page
+             must not help anybody make. -->
+        <div class="buybox">
+          <a class="btn btn-primary buy" data-os="linux"
+             href="https://plisio.net/payment-button/new/jvdSf6CcbhCK"
+             target="_blank" rel="noopener noreferrer">Buy for Linux</a>
+          <a class="btn btn-ghost buy" data-os="windows" href="soon/?system=windows">Buy for Windows</a>
+          <a class="btn btn-ghost buy" data-os="macos" href="soon/?system=macos">Buy for macOS</a>
+        </div>
+        <p class="small" id="os-hint" style="margin:0.1rem 0 0" hidden></p>
         <div class="chains" style="margin-top:0.2rem">
           <span class="chain" style="background:transparent;border-color:#3c4a58;color:#9fb0c0">USDT · TRON</span>
           <span class="chain" style="background:transparent;border-color:#3c4a58;color:#9fb0c0">Monero</span>
@@ -647,7 +745,7 @@
       <h3 style="margin-bottom:0.35rem">Why you are being told this before the payment page</h3>
       <p style="max-width:74ch">
         Because crypto cannot be refunded by anyone, and finding out about a Gatekeeper detour after
-        paying 399 dollars would be the worst possible introduction to a product whose entire pitch
+        paying 499 dollars would be the worst possible introduction to a product whose entire pitch
         is that it tells you inconvenient things early. If the detour is more than you want to deal
         with, use the free browser demo instead and buy nothing. That is a completely reasonable
         outcome and it costs me nothing to say so.
@@ -861,6 +959,42 @@
 </footer>
 
 <script>
+  // ── Which system is this ───────────────────────────────────────────────────
+  // A licence covers one system, so buying the wrong one costs somebody 499 USD
+  // in money that cannot be sent back. The visitor's own build is therefore
+  // marked, never preselected and never the only one shown: detection is right
+  // almost always, and the times it is wrong — a Linux user on a work Windows
+  // laptop, a phone — are exactly the times a hidden option would do harm.
+  (function () {
+    const buttons = document.querySelectorAll(".buy");
+    if (!buttons.length) return;
+
+    const ua = navigator.userAgent;
+    // Order matters: "Android" contains "Linux", and Windows user agents on
+    // some browsers still mention "Mac" in a compatibility token.
+    const os =
+      /Android/i.test(ua) ? null :
+      /Windows/i.test(ua) ? "windows" :
+      /Mac OS X|Macintosh/i.test(ua) ? "macos" :
+      /Linux|X11|CrOS/i.test(ua) ? "linux" :
+      null;
+    if (!os) return;
+
+    let marked = null;
+    for (const button of buttons) {
+      if (button.dataset.os === os) { button.classList.add("is-yours"); marked = button; }
+    }
+    if (!marked) return;
+
+    const hint = document.getElementById("os-hint");
+    if (hint) {
+      const label = { linux: "Linux", windows: "Windows", macos: "macOS" }[os];
+      hint.textContent =
+        "This browser says " + label + ". If you are buying it for a different computer, pick that one instead.";
+      hint.hidden = false;
+    }
+  })();
+
   // ── The wall ───────────────────────────────────────────────────────────────
   // 182 squares, one per day of six months, against five for one afternoon.
   // The argument is the ratio of the two widths, so both grids share a cell

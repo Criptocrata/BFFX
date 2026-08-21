@@ -1,0 +1,116 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>BotFactoryFX — not on sale for this system yet</title>
+<meta name="description" content="The Windows and macOS builds exist. The way to buy them does not, yet.">
+
+<style>
+  /* Deliberately the sales page's own palette and type, at a quarter of its
+     ambition. Somebody arriving here has just pressed a Buy button, and a page
+     that looks like a different site — or worse, like a broken one — is how a
+     stranger decides the whole thing is a fake and closes the tab. It has to
+     read as the same shop, briefly closed for this counter. */
+  :root {
+    --paper: #f1f4f7;
+    --card:  #ffffff;
+    --ink:   #0f141a;
+    --muted: #5b6775;
+    --amber: #a75f06;
+    --line:  #dbe2ea;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    background: var(--paper); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    font-size: 17px; line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    display: grid; place-items: center; padding: 2rem 1.25rem;
+  }
+  main { max-width: 34rem; display: flex; flex-direction: column; gap: 1.15rem; }
+  .brand {
+    font-weight: 800; letter-spacing: -0.045em; font-size: 1.3rem;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    text-decoration: none; color: var(--ink); align-self: flex-start;
+  }
+  .brand em { font-style: normal; color: var(--amber); }
+  .eyebrow {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--amber); margin: 0;
+  }
+  h1 { font-size: 1.5rem; font-weight: 700; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+  p { margin: 0; color: var(--muted); }
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; padding: 1.1rem 1.2rem;
+    display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .card h2 { font-size: 0.95rem; margin: 0; font-weight: 650; color: var(--ink); }
+  .card p { font-size: 0.92rem; }
+  a { color: var(--amber); text-underline-offset: 3px; }
+  .row { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 0.2rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.8rem; font-weight: 600; text-decoration: none;
+    padding: 0.72rem 1.15rem; border-radius: 6px; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-ghost { background: var(--card); color: var(--ink); border-color: #c3cedb; }
+  .fine { font-size: 0.82rem; }
+</style>
+
+<main>
+  <a class="brand" href="../">BotFactory<em>FX</em></a>
+
+  <p class="eyebrow" id="eyebrow">Not on sale yet</p>
+  <h1 id="headline">This system is not on sale yet.</h1>
+
+  <p>
+    Not a mistake, and nothing went wrong with your click. The build for it is finished — compiled,
+    packed and checksummed — but the way to take your money for it is not, and I would rather show
+    you this page than take a payment I cannot yet deliver against.
+  </p>
+
+  <div class="card">
+    <h2>What is actually ready</h2>
+    <p>
+      Linux is on sale today. Windows and macOS are built and waiting on the purchase and licensing
+      side, which is being finished now rather than promised for later.
+    </p>
+    <div class="row">
+      <a class="btn btn-primary" href="../#price">Buy the Linux version</a>
+      <a class="btn btn-ghost" href="../demo/">Run the whole thing free</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>If you want this one</h2>
+    <p>
+      Write to <a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a> saying which system,
+      and you will hear the day it opens. Nothing is stored, there is no list, and you will not get
+      anything else — this is a person answering a message, not a signup.
+    </p>
+  </div>
+
+  <p class="fine">
+    Meanwhile the browser edition is the same software with a shorter history, on every system,
+    costing nothing: <a href="../demo/">open it here</a>. It runs in the tab you are reading this in.
+  </p>
+</main>
+
+<script>
+  // Names the system the visitor asked for, from the query the button carried.
+  // A page that says "this system" to someone who pressed "Buy for macOS"
+  // reads as a template; saying "macOS" reads as an answer.
+  (function () {
+    const names = { windows: "Windows", macos: "macOS", linux: "Linux" };
+    const asked = new URLSearchParams(location.search).get("system");
+    const label = names[String(asked).toLowerCase()];
+    if (!label) return;
+    document.getElementById("headline").textContent = label + " is not on sale yet.";
+    document.getElementById("eyebrow").textContent = label + " — not on sale yet";
+    document.title = "BotFactoryFX — " + label + " is not on sale yet";
+  })();
+</script>
