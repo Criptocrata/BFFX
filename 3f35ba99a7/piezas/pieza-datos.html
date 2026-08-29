@@ -77,6 +77,14 @@ h1, h2 {
 @keyframes sube { from { opacity: 0; transform: translateY(1em) } to { opacity: 1; transform: none } }
 @keyframes ver  { from { opacity: 0 } to { opacity: 1 } }
 
+/* Incrustada en otra página —la web la abre dentro de un diálogo—, la pieza se
+   queda solo con el escenario: los mandos y el pie los pone el contenedor, y
+   el marco de un iframe ya recorta a 16:9. Se activa con #marco en la
+   dirección; abierta sola, la pieza no cambia. */
+body.marco { background: var(--ink); }
+body.marco .stage { max-width: none; border: 0; }
+body.marco .bar { display: none; }
+
 .bar { max-width: 62rem; margin: .9rem auto 2rem; display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; }
 .bar button {
   font-family: var(--mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase;
@@ -306,6 +314,12 @@ const BFX = (() => {
     };
     return reproducir;
   }
+
+  /* La web incrusta las piezas en un diálogo y aporta su propia barra de
+     mandos. Con #marco en la dirección, la pieza se queda solo con el
+     escenario; el motor va inyectado al final del documento, así que a estas
+     alturas <body> ya existe. */
+  if (location.hash === "#marco") document.body.classList.add("marco");
 
   return { azar, suave, entre, pulso, medir, paseo, trazar, rejilla, reproductor };
 })();

@@ -252,6 +252,73 @@
   footer { padding: var(--s5) 0; font-size: .84rem; color: var(--muted); background: var(--surface); }
   footer .wrap { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
 
+  /* ---------- cada paso abre su animación ----------
+     El recuadro es un <a> al fichero de la pieza y el guion le intercepta el
+     clic para abrirla en el diálogo. Así, sin JavaScript, el enlace sigue
+     llevando a la animación en vez de no hacer nada. */
+  /* En columna, para que el pie «Ver:» caiga al fondo de la tarjeta: los
+     párrafos no miden lo mismo y si no, la fila queda con los seis pies a
+     distinta altura. */
+  a.step { display: flex; flex-direction: column; color: inherit; text-decoration: none; transition: background .15s; }
+  /* El hueco mínimo lo pone el párrafo; el `margin-top: auto` del pie solo
+     reparte lo que sobre. Sin esto, en la tarjeta más larga de la fila el
+     filete quedaría pegado al texto. */
+  a.step p { margin-bottom: var(--s3); }
+  a.step:hover, a.step:focus-visible { background: var(--phos-wash); }
+  a.step:focus-visible { outline: 2px solid var(--phosphor); outline-offset: -3px; }
+  .step .ver {
+    display: flex; align-items: center; gap: .45rem;
+    margin-top: auto; padding-top: var(--s3); border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted); transition: color .15s;
+  }
+  a.step:hover .ver, a.step:focus-visible .ver { color: var(--phosphor); }
+  .step .ver svg { width: .62rem; height: .62rem; flex: none; fill: currentColor; }
+  .step .ver .dur { margin-left: auto; letter-spacing: .04em; }
+
+  /* ---------- el proyector ----------
+     Fondo en tinta porque las piezas lo son: un marco claro alrededor de un
+     16:9 oscuro le roba el contraste a lo único que hay que mirar. Los colores
+     van literales y no por variable: aquí dentro manda la paleta de las
+     piezas, no la de la página. */
+  dialog.cine {
+    width: min(72rem, 94vw); max-width: none; padding: 0; border: 0; border-radius: 4px;
+    background: #0b0d10; color: #e9ecef; overflow: hidden;
+  }
+  dialog.cine::backdrop { background: rgba(8, 10, 13, .84); }
+  .cine-top {
+    display: flex; align-items: baseline; gap: var(--s3); flex-wrap: wrap;
+    padding: var(--s3) var(--s4); border-bottom: 1px solid #262d35;
+  }
+  .cine-top .num { font-family: var(--mono); font-size: .7rem; letter-spacing: .18em; color: #e08a1e; }
+  .cine-top h3 { font-family: var(--mono); font-size: 1rem; font-weight: 600; letter-spacing: -.02em; margin: 0; }
+  .cine-top .paso {
+    font-family: var(--mono); font-size: .66rem; letter-spacing: .14em;
+    text-transform: uppercase; color: #6f7883; border-left: 1px solid #262d35; padding-left: var(--s3);
+  }
+  dialog.cine iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #05070a; }
+  .cine-pie {
+    display: flex; align-items: flex-start; gap: var(--s4); flex-wrap: wrap;
+    padding: var(--s3) var(--s4) var(--s4);
+  }
+  .cine-pie p { margin: 0; font-size: .9rem; color: #aab3bc; max-width: 46em; flex: 1 1 22rem; }
+  .cine-mandos { display: flex; gap: var(--s2); margin-left: auto; }
+  .cine-mandos > * {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+    background: transparent; color: #e08a1e; border: 1px solid #e08a1e; border-radius: 2px;
+    padding: .5rem .9rem; cursor: pointer; text-decoration: none; white-space: nowrap;
+  }
+  .cine-mandos > *:hover { background: #241a0d; }
+  .cine-x {
+    margin-left: auto; background: transparent; border: 0; cursor: pointer; padding: .2rem .35rem;
+    font-family: var(--mono); font-size: .9rem; line-height: 1; color: #6f7883;
+  }
+  .cine-x:hover { color: #e9ecef; }
+  @media (max-width: 40rem) {
+    .cine-top .paso { border-left: 0; padding-left: 0; }
+    .cine-mandos { margin-left: 0; }
+  }
+
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -393,49 +460,76 @@
     <h2>Seis pasos, y en ese orden.</h2>
     <p class="lead" style="margin-bottom:var(--s4)">El menú de la aplicación es el
       recorrido del trabajo. No hay saltos hacia atrás.</p>
+    <!-- Cada paso lleva detrás la pieza animada que cuenta ese momento. El
+         orden de las piezas es el suyo, de la serie, y no coincide con el de
+         los pasos: por eso el pie de cada recuadro dice qué animación abre. -->
     <div class="steps">
-      <div class="step">
+      <a class="step" href="piezas/pieza-datos.html"
+         data-num="05" data-titulo="El coste decide" data-dur="29 s"
+         data-pie="Cómo el spread se va comiendo la ventaja hasta hacerla desaparecer, y dónde queda el tuyo.">
         <span class="n">01 · DATOS</span>
         <h3>Tu histórico</h3>
         <p>CSV de tu bróker, exportación de TradingView, o descarga directa desde
           MetaTrader 5 con el conector incluido. Aquí también se declaran spread,
           comisión y deslizamiento — una vez por instrumento, y los usa todo lo demás.</p>
-      </div>
-      <div class="step">
+        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
+          Ver: datos y costes <span class="dur">29 s</span></span>
+      </a>
+      <a class="step" href="piezas/pieza-construir.html"
+         data-num="04" data-titulo="Dos caminos, la misma clase de estrategia" data-dur="27 s"
+         data-pie="A mano o por evolución: las dos vías producen la misma clase de reglas y pasan el mismo examen.">
         <span class="n">02 · CONSTRUIR</span>
         <h3>Reglas o evolución</h3>
         <p>Escribe las condiciones a mano si sabes lo que buscas, o deja que un algoritmo
           genético las busque por ti si no. Las dos vías producen la misma clase de
           estrategia y pasan el mismo examen.</p>
-      </div>
-      <div class="step">
+        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
+          Ver: construir <span class="dur">27 s</span></span>
+      </a>
+      <a class="step" href="piezas/pieza-busqueda.html"
+         data-num="01" data-titulo="Del ruido a las que aguantan" data-dur="32 s"
+         data-pie="Mil ochocientas candidatas, cribadas a golpe de backtest hasta las pocas que siguen funcionando sobre el histórico que nunca vieron.">
         <span class="n">03 · BACKTESTING</span>
         <h3>La prueba</h3>
         <p>Ejecución intrabar con métricas estándar. La gestión monetaria se declara
           aquí y no en Datos, porque cambia en cada prueba mientras que el instrumento
           y sus costes no.</p>
-      </div>
-      <div class="step">
+        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
+          Ver: la búsqueda <span class="dur">32 s</span></span>
+      </a>
+      <a class="step" href="piezas/pieza-reality-check.html"
+         data-num="02" data-titulo="Las once pruebas" data-dur="24 s"
+         data-pie="Las once comprobaciones, una a una, y un veredicto que señala por dónde flojea en vez de dar un aprobado.">
         <span class="n">04 · REALITY CHECK</span>
         <h3>El examen</h3>
         <p>El paso que da nombre a todo. Decide si el resultado es una ventaja o un
           espejismo, y sobre todo explica con qué evidencia lo decide, para que puedas
           discutirlo en vez de creértelo.</p>
-      </div>
-      <div class="step">
+        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
+          Ver: Reality Check <span class="dur">24 s</span></span>
+      </a>
+      <a class="step" href="piezas/pieza-salida.html"
+         data-num="06" data-titulo="Se va contigo" data-dur="31 s"
+         data-pie="Lo que la biblioteca guarda no se queda dentro: las mismas reglas convertidas en MQL5, MQL4, Java y Pine. Código que compila, no un esquema.">
         <span class="n">05 · BIBLIOTECA</span>
         <h3>Lo que sobrevive</h3>
         <p>Las estrategias que pasan se guardan con su histórico, sus costes y su
           veredicto pegados. Comparables entre sí meses después, sin tener que recordar
           con qué datos se hicieron.</p>
-      </div>
-      <div class="step">
+        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
+          Ver: la salida <span class="dur">31 s</span></span>
+      </a>
+      <a class="step" href="piezas/pieza-cartera.html"
+         data-num="03" data-titulo="Dos que suben no son dos apuestas" data-dur="27 s"
+         data-pie="Dos estrategias que ganan por separado y pierden a la vez. La correlación lo dice antes que el dinero.">
         <span class="n">06 · CARTERA</span>
         <h3>Y cómo se llevan</h3>
         <p>Matriz de correlación y curva agregada. Dos buenas estrategias que hacen lo
           mismo no son diversificación: son una sola estrategia con el doble de riesgo,
           y aquí se ve antes de descubrirlo con dinero.</p>
-      </div>
+        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
+          Ver: la cartera <span class="dur">27 s</span></span>
+      </a>
     </div>
 
     <div class="shot">
@@ -635,11 +729,6 @@
         <a class="btn ghost sm" href="soon/?system=macos">Avisadme</a>
       </div>
     </div>
-    <div class="note-strip" style="margin-top:var(--s4)">
-      <b>Por qué lo contamos así.</b> Vender hoy un binario sin probar es la vía rápida a
-      la primera devolución y a la primera reseña mala. Una lista de espera cuesta un
-      correo; una promesa incumplida cuesta el producto.
-    </div>
   </div>
 </section>
 
@@ -649,3 +738,78 @@
     <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
   </div>
 </footer>
+
+<!-- El proyector de las piezas. Vacío hasta que alguien pulsa un paso: el
+     marco no tiene dirección, así que la página no carga siete animaciones
+     que nadie ha pedido. -->
+<dialog class="cine" id="cine" aria-labelledby="cine-tit">
+  <div class="cine-top">
+    <span class="num" id="cine-num"></span>
+    <h3 id="cine-tit"></h3>
+    <span class="paso" id="cine-paso"></span>
+    <button class="cine-x" id="cine-x" type="button" aria-label="Cerrar">✕</button>
+  </div>
+  <iframe id="cine-marco" title="Animación" allow="fullscreen"></iframe>
+  <div class="cine-pie">
+    <p id="cine-txt"></p>
+    <div class="cine-mandos">
+      <button type="button" id="cine-otra">Repetir</button>
+      <a id="cine-aparte" target="_blank" rel="noopener">Abrir aparte</a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* Los seis pasos del recorrido abren su animación en el diálogo de arriba.
+   Las piezas se reproducen solas al cargarse, así que basta con darle una
+   dirección al marco; el sufijo #marco les dice que se queden solo con el
+   escenario, porque la barra de mandos la pone el diálogo.
+   Al cerrar se le quita la dirección: una pieza escondida seguiría pidiendo
+   fotogramas y calentando el portátil de quien la abrió. */
+(() => {
+  "use strict";
+  const cine = document.getElementById("cine");
+  const pasos = document.querySelectorAll("a.step[data-titulo]");
+  if (!cine || typeof cine.showModal !== "function") return;   // sin <dialog>, el enlace hace su trabajo
+
+  const marco  = document.getElementById("cine-marco");
+  const num    = document.getElementById("cine-num");
+  const titulo = document.getElementById("cine-tit");
+  const paso   = document.getElementById("cine-paso");
+  const texto  = document.getElementById("cine-txt");
+  const aparte = document.getElementById("cine-aparte");
+
+  pasos.forEach((a) => a.addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;  // abrir en otra pestaña sigue funcionando
+    e.preventDefault();
+    const ruta = a.getAttribute("href");
+    num.textContent    = "Pieza " + a.dataset.num;
+    titulo.textContent = a.dataset.titulo;
+    paso.textContent   = a.querySelector(".n").textContent;
+    texto.textContent  = a.dataset.pie;
+    aparte.href = ruta;
+    marco.src   = ruta + "#marco";
+    cine.showModal();
+  }));
+
+  const cerrar = () => cine.close();
+  document.getElementById("cine-x").addEventListener("click", cerrar);
+  cine.addEventListener("click", (e) => { if (e.target === cine) cerrar(); });   // el fondo también cierra
+  cine.addEventListener("close", () => marco.removeAttribute("src"));
+
+  /* Escape cierra. Debería hacerlo <dialog> por su cuenta, pero no en todos
+     los motores —aquí se comprobó que la tecla llega y el `cancel` no—, y un
+     modal del que no se sale con Escape es un modal roto. Cerrar dos veces no
+     hace nada, así que sobra con esto aunque el navegador ya lo hiciera. */
+  cine.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); cerrar(); }
+  });
+
+  /* Repetir recarga el marco, que es lo que vuelve a disparar la pieza. */
+  document.getElementById("cine-otra").addEventListener("click", () => {
+    const src = marco.src;
+    marco.removeAttribute("src");
+    marco.src = src;
+  });
+})();
+</script>
