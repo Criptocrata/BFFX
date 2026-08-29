@@ -157,6 +157,9 @@
     color: var(--muted); font-weight: 500; border-bottom-color: var(--line);
   }
   td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  /* La columna de remisiones de la tabla de límites: «Cap. 16» partido en dos
+     líneas se lee como dos cosas distintas. */
+  td.ref { white-space: nowrap; }
   tbody tr:last-child td { border-bottom: 0; }
 
   /* ---------- huecos de captura ----------
@@ -229,40 +232,27 @@
       <li><a href="#ajustes">Ajustes</a></li>
       <li><a href="#glosario">Glosario</a></li>
       <li><a href="#faq">Preguntas frecuentes</a></li>
-      <li><a href="#limites">Lo que no hace</a></li>
+      <li><a href="#limites">Límites</a></li>
     </ol>
   </nav>
 
   <main>
     <h1>Manual de BotFactoryFX</h1>
-    <p class="lede">Todo lo que hace el programa, pantalla por pantalla y en el orden en que se
-      trabaja. Si lo lees entero sabrás usarlo; si lo lees a saltos, cada capítulo
-      se sostiene solo.</p>
+    <p class="lede">Qué hace el programa, pantalla por pantalla y en el orden en que se trabaja.
+      Cada capítulo se sostiene solo, así que se puede leer entero o a saltos.</p>
 
     <!-- ================= 01 ================= -->
     <section id="empezar">
       <p class="num">01 · Antes de empezar</p>
-      <h2>Qué es esto, y qué no es.</h2>
+      <h2>Qué es BotFactoryFX.</h2>
 
-      <p>BotFactoryFX es un <strong>laboratorio de estrategias de trading algorítmico</strong>.
-        Construye estrategias —a mano o buscándolas con un algoritmo genético— y después
-        dedica la mayor parte de su esfuerzo a intentar demostrar que las que ha encontrado
-        no valen nada. Lo que sobrevive a eso, sale en código listo para tu plataforma.</p>
+      <p>Es un <strong>laboratorio de estrategias de trading algorítmico</strong>. Hace tres
+        cosas, en este orden: construye estrategias —a mano o buscándolas con un algoritmo
+        genético—, las somete a un examen que intenta demostrar que no valen nada, y exporta
+        el código de las que sobreviven para tu plataforma.</p>
 
-      <p>Esa segunda mitad es la razón de ser del producto. Generar estrategias que parecen
-        buenas sobre el histórico es fácil y lo hace cualquier herramienta. Averiguar cuáles
-        lo parecían solo porque memorizaron el pasado es el trabajo difícil, y es donde está
-        puesto casi todo el programa.</p>
-
-      <h3>Lo que no hace</h3>
-      <ul>
-        <li><strong>No opera por ti.</strong> No manda órdenes, no toca tu cuenta y no
-          necesita tus credenciales de bróker. Lee histórico y escribe código.</li>
-        <li><strong>No vende señales.</strong> No hay una lista de estrategias ganadoras que
-          copiar. Construye las tuyas.</li>
-        <li><strong>No promete beneficio.</strong> Ninguna herramienta puede, y la que lo
-          insinúa te está mintiendo.</li>
-      </ul>
+      <p>No manda órdenes ni toca tu cuenta: lee histórico y escribe ficheros de código. Los
+        límites están enumerados en el <a href="#limites">capítulo 20</a>.</p>
 
       <h3>Dos ediciones</h3>
       <div class="tbl-wrap">
@@ -273,20 +263,17 @@
             <tr><td>Histórico por serie</td><td class="n">Sin límite</td><td class="n">25.000 velas</td></tr>
             <tr><td>Conector de MetaTrader 5</td><td>Sí</td><td>No</td></tr>
             <tr><td>Código exportado</td><td>Completo</td><td>Completo</td></tr>
-            <tr><td>Precio</td><td class="n">Pago único</td><td class="n">Gratis</td></tr>
           </tbody>
         </table>
       </div>
 
-      <p>La versión de navegador no es un cebo recortado: el motor es el mismo, el examen es
-        el mismo y el código que exporta es el de verdad. Lo que cambia es cuánto histórico
-        cabe y si se guarda algo al cerrar.</p>
+      <p>El motor, el examen y el código exportado son idénticos en las dos. Lo único que
+        cambia es cuánto histórico cabe y si se guarda algo al cerrar.</p>
 
       <div class="note">
-        <p><b>Por qué 25.000 velas.</b> No es memoria, es tiempo. Una búsqueda genética
-          corre cientos de backtests seguidos: con 25.000 velas termina en unos 43 segundos
-          dentro de una pestaña, y con 100.000 pasaría de tres minutos. El límite existe
-          para que la búsqueda acabe mientras la estás mirando.</p>
+        <p><b>Por qué 25.000 velas.</b> No es memoria, es tiempo. Una búsqueda genética corre
+          cientos de backtests seguidos: con 25.000 velas termina en unos 43 segundos dentro
+          de una pestaña, y con 100.000 pasaría de tres minutos.</p>
       </div>
     </section>
 
@@ -312,13 +299,11 @@
         sesiones. Borrar el AppImage no los borra.</p>
 
       <h3>Navegador</h3>
-      <p>Abre la versión web y ya está: sin instalar, sin registro y sin cuenta. Sirve para
-        juzgar el producto antes de pagarlo, y para trabajar en una máquina que no es tuya.</p>
+      <p>Abre la versión web y ya está: sin instalar, sin registro y sin cuenta.</p>
 
       <div class="warn-box">
-        <p><b>Windows y macOS.</b> Todavía no se venden. El paquete existe, pero no está
-          verificado en una máquina real, y aquí no se pone a la venta nada sin comprobar.
-          Hay lista de espera.</p>
+        <p><b>Windows y macOS.</b> Todavía no se distribuyen. El paquete existe, pero no está
+          verificado en una máquina real. Hay lista de espera.</p>
       </div>
 
       <figure class="shot">
@@ -336,10 +321,10 @@
     <!-- ================= 03 ================= -->
     <section id="recorrido">
       <p class="num">03 · El recorrido</p>
-      <h2>El menú es el método.</h2>
+      <h2>El menú lateral, paso a paso.</h2>
 
-      <p>El menú lateral no es una lista de herramientas: es el trabajo, en el orden en que
-        se hace. Cada entrada es un paso, y no hay saltos hacia atrás.</p>
+      <p>Las siete entradas del menú lateral están en el orden en que se usan. Cada una es un
+        paso del trabajo, y ninguna necesita volver atrás.</p>
 
       <div class="tbl-wrap">
         <table>
@@ -356,14 +341,8 @@
         </table>
       </div>
 
-      <p>Abajo del todo, separados a propósito, están <strong>Settings</strong> y
-        <strong>Help</strong>: son utilidades, no pasos, y no pintan nada en el camino.</p>
-
-      <div class="note">
-        <p><b>Por qué importa el orden.</b> Un menú que lista herramientas deja que
-          descubras tú en qué orden se usan. Ese fue exactamente el problema que originó
-          este producto, así que aquí el orden viene dado.</p>
-      </div>
+      <p>Abajo del todo, separados del recorrido, están <strong>Settings</strong> y
+        <strong>Help</strong>: son utilidades, no pasos.</p>
     </section>
 
     <!-- ================= 04 ================= -->
@@ -406,9 +385,8 @@
         PRO+ o Premium). Después se suelta aquí como cualquier otro CSV.</p>
 
       <div class="note">
-        <p><b>No hay datos de muestra.</b> No se incluye ninguna serie sintética de ejemplo.
-          Un veredicto vale exactamente lo que valgan los datos que hay detrás, y un histórico
-          inventado produce veredictos inventados.</p>
+        <p><b>No hay datos de muestra.</b> No se incluye ninguna serie de ejemplo: el
+          histórico lo aportas tú, por CSV o desde MetaTrader.</p>
       </div>
 
       <h3>La biblioteca de series</h3>
@@ -437,7 +415,7 @@
         H4. Nadie hace backtest de 23 años de velas de un minuto.</p>
 
       <h3>Cambiar la temporalidad reconstruye las velas</h3>
-      <p>El selector no es una etiqueta. Elegir una temporalidad más gruesa
+      <p>Elegir una temporalidad más gruesa no cambia solo la etiqueta:
         <strong>reconstruye cada vela</strong> —apertura de la primera, cierre de la última,
         máximo y mínimo verdaderos de todo el periodo, volumen sumado— y el gráfico, el
         backtest, la búsqueda genética y el código exportado se mueven todos juntos. Nunca
@@ -501,11 +479,11 @@
         pruebes con él.</p>
 
       <div class="warn-box">
-        <p><b>Un spread equivocado es la vía más rápida a un backtest imposible de operar.</b>
-          Es el error más común y el más caro: una estrategia con ventaja de 2 pips sobre un
-          spread declarado de 0,5 cuando el real es 2,0 no tiene ventaja ninguna. El Reality
-          Check mide exactamente cuánto coste aguanta antes de morir, y esa es la cifra con
-          la que comparar la de tu bróker.</p>
+        <p><b>Comprueba el spread antes de nada.</b> Una estrategia con ventaja de 2 pips
+          sobre un spread declarado de 0,5 no tiene ninguna ventaja si el real es 2,0. La
+          comprobación de <em>tolerancia al coste</em> del Reality Check dice cuánto coste
+          aguanta la estrategia antes de dejar de ganar: esa es la cifra que hay que comparar
+          con la de tu bróker.</p>
       </div>
 
       <h3>Cómo saber tus números reales</h3>
@@ -705,8 +683,8 @@
       <h2>Cuánto arriesgas en cada operación.</h2>
 
       <p>La pestaña <strong>Money</strong> es la misma en el constructor manual, en el
-        genético y en Backtesting, y edita la misma estrategia. Por diseño: así dos pantallas
-        no pueden tener números distintos para lo mismo.</p>
+        genético y en Backtesting, y edita la misma estrategia: lo que cambies en una lo
+        verás cambiado en las otras dos.</p>
 
       <h3>Riesgo básico</h3>
       <ul>
@@ -761,19 +739,15 @@
       </div>
 
       <h3>Comparar con TradingView</h3>
-      <p>Dos backtests de las mismas reglas sobre el mismo instrumento deberían dar la misma
-        curva. Cuando no la dan, uno de los dos está mal, y saber cuál es justamente para lo
-        que existe el Reality Check.</p>
-      <p>Para comprobarlo: en el Strategy Tester de TradingView, pestaña <strong>List of
-        Trades</strong>, exporta. Aquí, <strong>External → TradingView</strong>, adjunta ese
-        fichero, y la pestaña de comparación pone los dos lado a lado.</p>
+      <p>En el Strategy Tester de TradingView, pestaña <strong>List of Trades</strong>,
+        exporta. Aquí, <strong>External → TradingView</strong>, adjunta ese fichero, y la
+        pestaña de comparación pone los dos resultados lado a lado.</p>
 
       <div class="warn-box">
-        <p><b>Exporta la lista de operaciones, no el resumen.</b> El resumen es una página de
-          totales, y un total que nadie puede recalcular es un total que nadie puede
-          comprobar. Aquí cada cifra se recalcula desde las operaciones individuales —incluido
-          el capital inicial, que TradingView no declara en esa exportación pero que sus
-          columnas de beneficio y beneficio porcentual delatan entre las dos.</p>
+        <p><b>Exporta la lista de operaciones, no el resumen.</b> Cada cifra de la
+          comparación se recalcula desde las operaciones individuales, así que el resumen de
+          totales no sirve. Incluido el capital inicial: TradingView no lo declara en esa
+          exportación, pero se deduce de sus columnas de beneficio y beneficio porcentual.</p>
       </div>
 
       <h4>Si las dos no coinciden</h4>
@@ -804,19 +778,15 @@
     <!-- ================= 10 ================= -->
     <section id="reality">
       <p class="num">10 · Reality Check</p>
-      <h2>Once intentos de tumbar tu resultado.</h2>
+      <h2>Once comprobaciones sobre el mismo resultado.</h2>
 
-      <p>Este es el capítulo que importa. Todo lo anterior sirve para producir un número
-        bonito; esto sirve para averiguar si ese número significa algo.</p>
-
-      <p>La pregunta no es «¿ganó dinero?» —eso ya lo dice el backtest— sino
-        <strong>«¿es real?»</strong>. Y se responde sometiendo la estrategia a once
-        comprobaciones independientes, cada una de las cuales intenta romperla por un sitio
-        distinto.</p>
+      <p>El backtest dice si la estrategia ganó dinero sobre el histórico. El Reality Check
+        contesta otra pregunta: si ese resultado se sostiene fuera de él. Para eso somete la
+        estrategia a once comprobaciones independientes, cada una de las cuales intenta
+        romperla por un sitio distinto.</p>
 
       <h3>Las once comprobaciones</h3>
-      <p>Cada una tiene un peso: no todas dicen lo mismo sobre si la ventaja es real, así que
-        no todas cuentan igual.</p>
+      <p>Cada una tiene un peso, porque no todas dicen lo mismo sobre si la ventaja es real.</p>
 
       <div class="tbl-wrap">
         <table>
@@ -845,10 +815,10 @@
         cada reajuste. Una estrategia puede pasar la primera y fallar esta.</p>
 
       <h4>La más severa contra el sobreajuste</h4>
-      <p><strong>Tolerancia al ruido</strong> pesa 0,13 a propósito, tanto como la
-        sensibilidad a parámetros. Es la única que pregunta si <em>este histórico concreto</em>
-        fue la razón del resultado: mueve ligeramente los precios y mira si la ventaja
-        sobrevive. Una estrategia que memorizó el pasado se cae aquí.</p>
+      <p><strong>Tolerancia al ruido</strong> mueve ligeramente los precios y vuelve a medir.
+        Es la única que pregunta si <em>este histórico concreto</em> fue la razón del
+        resultado, y una estrategia que memorizó el pasado se cae aquí. Por eso pesa 0,13,
+        tanto como la sensibilidad a parámetros.</p>
 
       <h4>Una puede no aplicar</h4>
       <p><strong>Resolución de vela</strong> queda en «no aplicable» cuando el fichero no
@@ -873,26 +843,22 @@
       </div>
 
       <div class="note">
-        <p><b>No es un aprobado: es un informe de por dónde flojea.</b> El valor no está en
-          la nota, está en qué comprobación concreta falló y en qué medida. Una estrategia con
-          un 62 y una debilidad clara en sensibilidad a parámetros te dice qué arreglar. Un 62
-          a secas no te diría nada.</p>
+        <p><b>Lee las filas, no solo la nota.</b> La información útil está en qué
+          comprobación concreta falló y en qué medida: un 62 con una debilidad clara en
+          sensibilidad a parámetros dice qué hay que arreglar.</p>
       </div>
 
-      <h3>Lo que el examen no puede saber</h3>
+      <h3>Las salvedades</h3>
       <p>Al final del informe aparecen las <strong>salvedades</strong>: cosas que el histórico
         no podía enseñar, diga lo que diga la nota. Sobre todo, qué ventana de tiempo cubren
         los datos y qué días de mercado no contiene esa ventana.</p>
-      <p>Deliberadamente no son una comprobación más. Una comprobación con peso cambiaría
-        todas las notas que esta herramienta ha dado nunca, y además contaría dos veces —tener
-        poco histórico ya se refleja en fuera de muestra y en walk-forward, que se debilitan
-        solos cuando no hay nada que partir. Mover la nota para subrayar algo sería
-        exactamente la manipulación que las once comprobaciones existen para cazar.</p>
+      <p>No son una comprobación más y no mueven la nota. Tener poco histórico ya se refleja
+        en fuera de muestra y en walk-forward, que se debilitan solos cuando no hay bastante
+        que partir; contarlo otra vez sería contarlo dos veces.</p>
 
       <h3>Cuánto tarda</h3>
-      <p>Sobre un histórico de verdad son decenas de backtests encadenados y ocupa buena parte
-        de un minuto. Va informando de cuál está corriendo, porque la diferencia entre
-        «trabajando» y «colgado» es precisamente esa.</p>
+      <p>Son decenas de backtests encadenados: sobre un histórico grande ocupa buena parte de
+        un minuto. Mientras corre indica en qué comprobación va.</p>
 
       <figure class="shot">
         <div class="slot">
@@ -920,11 +886,11 @@
     <!-- ================= 11 ================= -->
     <section id="biblioteca">
       <p class="num">11 · Biblioteca</p>
-      <h2>Lo que sobrevive se guarda entero.</h2>
+      <h2>Qué se guarda con cada estrategia.</h2>
 
-      <p>La biblioteca guarda cada estrategia con su histórico, sus costes y su veredicto
-        pegados. Eso es lo que permite compararlas entre sí meses después sin tener que
-        recordar con qué datos se hicieron.</p>
+      <p>La biblioteca guarda cada estrategia junto con el histórico sobre el que se midió,
+        los costes que se aplicaron y su veredicto. Así se pueden comparar entre sí meses
+        después sin tener que recordar con qué datos se hizo cada una.</p>
 
       <p>La disposición es maestro-detalle: lista a la izquierda, informe a la derecha. El
         informe incluye:</p>
@@ -952,15 +918,15 @@
     <!-- ================= 12 ================= -->
     <section id="cartera">
       <p class="num">12 · Cartera</p>
-      <h2>Dos buenas estrategias pueden ser una sola con el doble de riesgo.</h2>
+      <h2>Combinar varias estrategias.</h2>
 
       <p>Portfolio combina varias estrategias, cada una con su <strong>peso</strong>. El
         capital y el tamaño de lote escalan proporcionalmente, y se obtiene una curva agregada
         con el desglose por estrategia.</p>
 
       <h3>La matriz de correlación</h3>
-      <p>Es la parte útil. Mide, sobre los retornos de las curvas de capital, cuánto se mueven
-        juntas dos estrategias:</p>
+      <p>Mide, sobre los retornos de las curvas de capital, cuánto se mueven juntas dos
+        estrategias:</p>
 
       <div class="tbl-wrap">
         <table>
@@ -974,11 +940,10 @@
       </div>
 
       <div class="note">
-        <p><b>Por qué esto no es un adorno.</b> Dos estrategias que ganan por separado y
-          pierden a la vez no son una cartera diversificada: son una sola estrategia con el
-          doble de tamaño. La caída máxima conjunta lo revela, y es mejor descubrirlo aquí que
-          con dinero. Combinar una LONG con una SHORT suele ser la vía más rápida a una
-          correlación baja.</p>
+        <p><b>Correlación alta anula la diversificación.</b> Dos estrategias que ganan por
+          separado pero pierden a la vez equivalen a una sola con el doble de tamaño, y eso
+          se ve en la caída máxima conjunta. Combinar una LONG con una SHORT suele ser la
+          forma más rápida de bajar la correlación.</p>
       </div>
 
       <figure class="shot">
@@ -995,10 +960,10 @@
     <!-- ================= 13 ================= -->
     <section id="exportar">
       <p class="num">13 · Exportar</p>
-      <h2>Se va contigo, en código que compila.</h2>
+      <h2>El código del robot, en cuatro formatos.</h2>
 
       <p>La pestaña <strong>Export</strong> genera el robot completo a partir de la estrategia
-        actual, en cuatro formatos:</p>
+        actual:</p>
 
       <div class="tbl-wrap">
         <table>
@@ -1012,7 +977,7 @@
         </table>
       </div>
 
-      <p>No es un esqueleto: el código lleva los parámetros de entrada, <code>OnInit</code>,
+      <p>El fichero incluye los parámetros de entrada, <code>OnInit</code>,
         <code>OnTick</code>/<code>onBar</code>, los evaluadores de cada condición de entrada,
         la ejecución de las órdenes y —si los has activado— el trailing stop, el break-even y
         el tope de pérdida diaria. Puedes previsualizarlo, copiarlo al portapapeles o
@@ -1034,8 +999,8 @@
           </tbody>
         </table>
       </div>
-      <p>Es la tabla que evita la sorpresa más habitual: el robot y el backtest no darán lo
-        mismo si tienes gestión avanzada activada, y no porque ninguno esté roto.</p>
+      <p>Con gestión avanzada activada, el robot y el backtest darán resultados distintos.
+        Es esperable: la tabla dice exactamente en qué se diferencian.</p>
 
       <figure class="shot">
         <div class="slot">
@@ -1051,19 +1016,18 @@
     <!-- ================= 14 ================= -->
     <section id="quant">
       <p class="num">14 · Dr. Quant</p>
-      <h2>Un asistente al que le está prohibido halagarte.</h2>
+      <h2>El asistente de IA.</h2>
 
-      <p>Dr. Quant es el asistente de IA integrado. Conoce tu estrategia actual, el último
-        backtest y la serie cargada. Se abre con el botón del final del menú lateral.</p>
+      <p>Dr. Quant conoce tu estrategia actual, el último backtest y la serie cargada. Se abre
+        con el botón del final del menú lateral.</p>
 
-      <h3>Dos modos, y la diferencia importa</h3>
+      <h3>Dos modos</h3>
       <ul>
         <li><strong>Chat (💬)</strong> — conversa, explica conceptos, razona sobre métricas y
-          sugiere ideas. <em>No ejecuta</em> backtests ni guarda estrategias. Si le pides una
-          acción, te pide cambiar de modo <strong>en vez de inventarse los números</strong>.
-          Esa negativa es deliberada y es la característica, no una limitación.</li>
-        <li><strong>Agente (🤖)</strong> — toma decisiones de verdad: carga series, define
-          estrategias, ejecuta backtests, itera variantes y guarda la mejor en la biblioteca.
+          sugiere ideas. <em>No ejecuta</em> backtests ni guarda estrategias: si le pides una
+          acción, te pide cambiar de modo en vez de darte un número que no ha medido.</li>
+        <li><strong>Agente (🤖)</strong> — ejecuta acciones: carga series, define
+          estrategias, corre backtests, itera variantes y guarda la mejor en la biblioteca.
           Pensado para encargos del tipo «encuéntrame una estrategia rentable para EURUSD en
           H1 con profit factor por encima de 1,2».</li>
       </ul>
@@ -1087,14 +1051,13 @@
           nombre y factura por separado. <strong>Un modelo gratis no hace la búsqueda
           gratis</strong> — OpenRouter lo dice con esas palabras.</li>
       </ul>
-      <p>A las tarifas actuales, una búsqueda cuesta unos <strong>0,007 $</strong>. Consultar
-        las condiciones de tu bróker cien veces son unos 70 céntimos. Despreciable, pero es tu
-        dinero en tu clave, así que se dice en vez de sorprenderte.</p>
+      <p>A las tarifas actuales, una búsqueda cuesta unos <strong>0,007 $</strong>: consultar
+        las condiciones de tu bróker cien veces son unos 70 céntimos, cargados a tu clave.</p>
 
       <div class="note">
-        <p><b>La costumbre barata.</b> Pega la URL cuando la tengas; escribe el nombre del
-          bróker cuando no. Lo primero es gratis y es mejor evidencia; lo segundo cuesta menos
-          de un céntimo.</p>
+        <p><b>Pega la URL cuando la tengas</b> y escribe el nombre del bróker solo cuando no.
+          Lo primero es gratis y va a la fuente oficial; lo segundo cuesta menos de un
+          céntimo.</p>
       </div>
 
       <div class="warn-box">
@@ -1118,10 +1081,10 @@
     <!-- ================= 15 ================= -->
     <section id="autopilot">
       <p class="num">15 · Autopilot</p>
-      <h2>El recorrido entero, sin pulsar nada.</h2>
+      <h2>Los seis pasos, encadenados.</h2>
 
-      <p>El Autopilot ejecuta los seis pasos del método de principio a fin y te enseña por
-        cuál va:</p>
+      <p>El Autopilot ejecuta el recorrido entero de principio a fin, sin intervención, y va
+        indicando por qué paso va:</p>
 
       <div class="tbl-wrap">
         <table>
@@ -1142,10 +1105,9 @@
           código, no con un modelo. Funciona sin proveedor configurado y sin coste.</p>
       </div>
 
-      <p>Puede terminar sin encontrar nada, y lo dice claramente: <em>«la búsqueda corrió,
+      <p>Puede terminar sin encontrar nada, y en ese caso lo dice: <em>«la búsqueda corrió,
         pero nada de lo que encontró ganaba dinero. Eso también es un resultado: puede que
-        estos datos no contengan la ventaja que buscas.»</em> Las estrategias que fallan su
-        Reality Check no acaban etiquetadas como si lo hubieran pasado.</p>
+        estos datos no contengan la ventaja que buscas.»</em></p>
 
       <figure class="shot">
         <div class="slot">
@@ -1166,16 +1128,12 @@
         instrumentos que ofrezca tu bróker, en cualquier temporalidad, sin exportar ficheros a
         mano. <strong>Lee el terminal y nunca manda una orden.</strong></p>
 
-      <h3>Cómo se conecta, y por qué así</h3>
+      <h3>Cómo se conecta</h3>
       <p>Con un añadido llamado <strong>el conector</strong>: un <em>servicio</em> MQL5 que
         corre dentro de MetaTrader sin ocupar ningún gráfico. Se comunica con la aplicación
-        escribiendo ficheros en la carpeta común del propio MetaTrader.</p>
-      <p>Es una decisión deliberada. Una conexión de red —el servidor MCP de MetaTrader, un
-        socket o <code>WebRequest</code>— necesita un ajuste dentro del terminal que hay que
-        activar y recordar, y MetaTrader es conocido por olvidarlo entre reinicios. Los
-        ficheros no necesitan puerto, ni lista blanca, ni regla de cortafuegos, ni diálogo. Y
-        como un <em>servicio</em> lo rearranca el terminal cada vez que abre, se instala una
-        vez y no se vuelve a pensar en ello.</p>
+        escribiendo ficheros en la carpeta común del propio MetaTrader, así que no hace falta
+        abrir ningún puerto ni tocar la lista blanca de <code>WebRequest</code>. Y como los
+        servicios los rearranca el terminal al abrirse, se instala una vez.</p>
 
       <h3>Instalarlo, una sola vez</h3>
       <ol>
@@ -1186,16 +1144,15 @@
           BotFactoryFX</strong>, botón derecho, <strong>Add service</strong>; otra vez botón
           derecho y <strong>Start</strong>.</li>
       </ol>
-      <p>Ese es el único paso manual de todo el diseño, y existe porque MetaTrader no tiene
-        forma de añadir un servicio desde fuera. A partir de ahí lo arranca él solo, y el panel
-        se pone verde por su cuenta siempre que MetaTrader esté abierto.</p>
+      <p>El tercer paso hay que hacerlo a mano porque MetaTrader no permite añadir un servicio
+        desde fuera. A partir de ahí lo arranca él solo, y el panel se pone verde por su cuenta
+        siempre que MetaTrader esté abierto.</p>
 
       <h3>Qué Wine</h3>
       <p>MetaTrader 5 corre en Linux a través de Wine, y <strong>MetaQuotes soporta Wine 10.0
         en adelante</strong>. Con una versión anterior, el terminal escribe <em>«unstable and
         unsupported»</em> en su propio registro en cada arranque. La aplicación lee esa línea
-        y te dice en qué Wine está tu terminal, porque un problema del cimiento se parece
-        exactamente a un problema de lo que está encima.</p>
+        y te dice en qué Wine está corriendo tu terminal.</p>
       <p>En Debian, Ubuntu y Mint el Wine de la distribución suele ser demasiado viejo. El de
         WineHQ no:</p>
       <pre><code>sudo apt install --install-recommends winehq-stable</code></pre>
@@ -1242,7 +1199,7 @@
     <!-- ================= 17 ================= -->
     <section id="ajustes">
       <p class="num">17 · Ajustes</p>
-      <h2>Tres cosas, y ninguna obligatoria.</h2>
+      <h2>Tres apartados, ninguno obligatorio.</h2>
 
       <ul>
         <li><strong>Proveedores de IA</strong> — las claves de Dr. Quant. Se quedan en tu
@@ -1307,7 +1264,7 @@
     <!-- ================= 19 ================= -->
     <section id="faq">
       <p class="num">19 · Preguntas frecuentes</p>
-      <h2>Lo que se pregunta de verdad.</h2>
+      <h2>Dudas habituales.</h2>
 
       <h4>Mi estrategia no da ninguna operación. ¿Qué pasa?</h4>
       <p>Las condiciones son demasiado estrictas o los periodos demasiado largos. Prueba con
@@ -1320,14 +1277,14 @@
         las más gruesas. Importa un CSV más fino si necesitas velas más finas.</p>
 
       <h4>He cambiado la temporalidad. ¿Cambia también el backtest?</h4>
-      <p>Sí. Cambiar la temporalidad reconstruye las velas de verdad, y el gráfico, el
+      <p>Sí. Cambiar la temporalidad reconstruye las velas, y el gráfico, el
         backtest, la búsqueda y el código exportado corren todos sobre la serie reconstruida.
         Nunca pueden discrepar sobre qué está bajo prueba.</p>
 
       <h4>¿El buscador genético sobreajusta?</h4>
       <p>Sí, si lo configuras mal. Sube <code>minTrades</code> a 10-15 como mínimo, limita la
         caída máxima admitida a un 30 % o menos, y valida siempre sobre datos distintos de los
-        de la búsqueda. Ese es todo el propósito del Reality Check.</p>
+        de la búsqueda, que es lo que hace el Reality Check.</p>
 
       <h4>¿Por qué me marca indicadores como redundantes?</h4>
       <p>Son avisos, no errores, y detectan cinco cosas: condiciones idénticas, un indicador
@@ -1358,30 +1315,49 @@
 
     <!-- ================= 20 ================= -->
     <section id="limites">
-      <p class="num">20 · Lo que no hace</p>
-      <h2>Los límites, dichos aquí y no descubiertos luego.</h2>
+      <p class="num">20 · Límites</p>
+      <h2>Lo que el programa no hace.</h2>
 
-      <ul>
-        <li><strong>No opera.</strong> No hay ejecución en vivo, no hay conexión de órdenes y
-          no se piden credenciales de bróker. El conector de MetaTrader es de solo lectura.</li>
-        <li><strong>No simula la gestión avanzada.</strong> Trailing, break-even y topes
-          diarios se exportan al robot pero no entran en la curva de aquí.</li>
-        <li><strong>No hay datos incluidos.</strong> El histórico lo pones tú, por CSV o desde
-          MetaTrader.</li>
-        <li><strong>No hay modelo de IA incluido.</strong> Dr. Quant necesita tu clave y tu
-          cuenta. El Autopilot no.</li>
-        <li><strong>Windows y macOS no están verificados</strong> en máquina real, y por eso no
-          se venden todavía.</li>
-        <li><strong>El backtest es sobre velas</strong>, no tick a tick. La comprobación de
-          resolución de vela del Reality Check existe precisamente para medir cuánto importa
-          eso en tu caso.</li>
-      </ul>
-
-      <div class="note">
-        <p><b>Y lo más importante.</b> Ninguna de estas comprobaciones convierte una
-          estrategia en rentable. Lo que hacen es evitarte operar con una que no lo era, que
-          es un trabajo distinto y más barato.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Límite</th><th>Detalle</th><th>Dónde</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>No ejecuta operaciones</strong></td>
+              <td>No hay conexión de órdenes ni se piden credenciales de bróker. El conector de MetaTrader es de solo lectura.</td>
+              <td class="ref"><a href="#mt5">Cap. 16</a></td>
+            </tr>
+            <tr>
+              <td><strong>No simula la gestión avanzada</strong></td>
+              <td>Trailing stop, break-even y topes diarios se exportan al robot pero no entran en la curva de capital de aquí.</td>
+              <td class="ref"><a href="#exportar">Cap. 13</a></td>
+            </tr>
+            <tr>
+              <td><strong>El backtest es sobre velas</strong></td>
+              <td>No tick a tick. La comprobación de resolución de vela mide cuánto afecta eso a cada estrategia.</td>
+              <td class="ref"><a href="#reality">Cap. 10</a></td>
+            </tr>
+            <tr>
+              <td><strong>No incluye histórico</strong></td>
+              <td>Los datos los aportas tú, por CSV o desde MetaTrader.</td>
+              <td class="ref"><a href="#datos">Cap. 4</a></td>
+            </tr>
+            <tr>
+              <td><strong>No incluye modelo de IA</strong></td>
+              <td>Dr. Quant necesita tu proveedor y tu clave. El Autopilot funciona sin ninguno de los dos.</td>
+              <td class="ref"><a href="#quant">Cap. 14</a></td>
+            </tr>
+            <tr>
+              <td><strong>Solo Linux, por ahora</strong></td>
+              <td>Los paquetes de Windows y macOS existen pero no están verificados en máquina real.</td>
+              <td class="ref"><a href="#instalar">Cap. 2</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
+      <p>Pasar el Reality Check no hace rentable a una estrategia: solo indica que su
+        resultado no se explica por sobreajuste a los datos con los que se construyó.</p>
     </section>
 
     <footer>
