@@ -106,10 +106,17 @@ body.marco .bar { display: none; }
   }
   .lado b { color: var(--soft); font-weight: 500; }
 
-  .fallos { opacity: 0; }
+  /* Acotadas al territorio de la izquierda. Iban a lo ancho de la escena y
+     sin partir, y a tamaño real se montaban encima de dos cosas que el lienzo
+     dibuja debajo: el muro discontinuo, que está en el centro justo, y la caja
+     del terminal, que empieza en el 57 %. El 38 % es el ancho del recuadro
+     izquierdo —`ancho * 0.44` en la función de dibujo—, y el resto es aire a
+     los dos lados para que el texto no vaya pegado al filete del recuadro. */
+  .fallos { opacity: 0; left: 8.4%; right: auto; width: 34%; }
   .fallo {
     font-family: var(--mono); font-size: clamp(.48rem, 1.08vw, .72rem);
-    color: var(--soft); line-height: 1.95; opacity: 0; white-space: nowrap;
+    color: var(--soft); line-height: 1.7; opacity: 0;
+    margin-bottom: .85em; padding-left: 1.5em; text-indent: -1.5em;
   }
   .fallo::before { content: "✕"; color: var(--loss); margin-right: .7em; }
   .fallo em { font-style: normal; color: var(--muted); }
