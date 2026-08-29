@@ -1,0 +1,420 @@
+<meta charset="utf-8">
+<title>Las once pruebas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450&display=swap">
+
+<style>
+/* Motor visual común de las piezas de BotFactoryFX.
+   Se incrusta en cada pieza al ensamblar, porque un artefacto publicado tiene
+   que ser autónomo y no puede pedir ficheros a otro sitio. */
+:root {
+  --ink:      #0b0d10;
+  --surface:  #14181d;
+  --line:     #262d35;
+  --text:     #e9ecef;
+  --soft:     #aab3bc;
+  --muted:    #6f7883;
+  --phosphor: #e08a1e;
+  --trace:    #6e8ba3;
+  --profit:   #24b37e;
+  --loss:     #d14343;
+  --warn:     #d9a441;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #05070a; color: var(--text); font-family: var(--sans); }
+
+.stage {
+  position: relative; width: 100%; max-width: 62rem; margin: 0 auto;
+  aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden;
+  border: 1px solid var(--line);
+}
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.pad { position: absolute; left: 6.5%; right: 6.5%; }
+.lyr { position: absolute; left: 0; right: 0; top: 0; opacity: 0; }
+
+h1, h2 {
+  font-family: var(--mono); font-weight: 600; margin: 0;
+  letter-spacing: -.03em; line-height: 1.14; text-wrap: balance;
+  font-size: clamp(1rem, 2.9vw, 1.95rem);
+}
+.kicker {
+  font-family: var(--mono); font-size: clamp(.58rem, 1.3vw, .8rem);
+  letter-spacing: .2em; text-transform: uppercase; color: var(--phosphor);
+  margin: 0 0 .8em 0;
+}
+.sub { font-size: clamp(.7rem, 1.6vw, .98rem); color: var(--soft); margin: .8em 0 0; max-width: 32em; line-height: 1.55; }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.metrics > div { background: var(--surface); padding: 2.6% 3.4%; }
+.metrics .k { font-family: var(--mono); font-size: clamp(.48rem, 1vw, .64rem); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; }
+.metrics .v { font-family: var(--mono); font-size: clamp(.9rem, 2.4vw, 1.55rem); font-weight: 600; font-variant-numeric: tabular-nums; display: block; margin-top: .2em; }
+.metrics .v.up { color: var(--profit); }
+
+.badge {
+  display: inline-block; font-family: var(--mono); font-weight: 600;
+  font-size: clamp(.62rem, 1.6vw, .95rem); letter-spacing: .12em; text-transform: uppercase;
+  border-radius: 2px; padding: .3em .85em; border: 1px solid currentColor;
+}
+.badge.ok { color: var(--profit); }
+.badge.no { color: var(--loss); }
+
+.shot { border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--surface); }
+.shot img { display: block; width: 100%; height: auto; }
+
+.brandrow { display: flex; align-items: center; gap: 3%; }
+.brandrow svg { width: clamp(2.4rem, 7.5vw, 4.8rem); height: auto; flex: none; }
+.wordmark { font-family: var(--mono); font-weight: 600; font-size: clamp(1rem, 3.4vw, 2.15rem); letter-spacing: -.035em; }
+.wordmark i { font-style: normal; color: var(--phosphor); }
+.facts { font-family: var(--mono); font-size: clamp(.56rem, 1.4vw, .84rem); color: var(--muted); letter-spacing: .06em; margin-top: 1.1em; }
+
+/* Entradas y salidas. La salida SIEMPRE con `forwards`: con `both`, el relleno
+   hacia atrás aplica el primer fotograma desde el segundo cero y el elemento
+   se ve desde el principio de la pieza. */
+@keyframes sube { from { opacity: 0; transform: translateY(1em) } to { opacity: 1; transform: none } }
+@keyframes ver  { from { opacity: 0 } to { opacity: 1 } }
+
+.bar { max-width: 62rem; margin: .9rem auto 2rem; display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; }
+.bar button {
+  font-family: var(--mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase;
+  background: transparent; color: var(--phosphor); border: 1px solid var(--phosphor);
+  padding: .55rem 1rem; border-radius: 2px; cursor: pointer;
+}
+.bar button:hover { background: #241a0d; }
+.bar span { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .play * { animation-duration: .01ms !important; animation-delay: 0s !important; }
+}
+
+
+  /* ---- propio de esta pieza: la tabla de comprobaciones ---- */
+  /* Seis filas ahora, no cuatro: el hueco vertical baja de 1,6 % a 1 % para que
+     las once quepan entre el titular y el veredicto sin encoger la letra. */
+  .pruebas {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1% 5%; margin-top: 1.2%;
+  }
+  .prueba { opacity: 0; }
+  .prueba .fila { display: flex; align-items: baseline; justify-content: space-between; gap: .6em; }
+  .prueba .n {
+    font-family: var(--mono); font-size: clamp(.52rem, 1.18vw, .78rem);
+    color: var(--soft); letter-spacing: .02em;
+  }
+  .prueba .r {
+    font-family: var(--mono); font-size: clamp(.48rem, 1.05vw, .7rem);
+    font-variant-numeric: tabular-nums; letter-spacing: .08em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .prueba.ok   .r { color: var(--profit); }
+  .prueba.warn .r { color: var(--warn); }
+  /* La que no pudo correr no es un suspenso: no puntúa en ningún sentido, así
+     que va en gris y sin barra. Pintarla de rojo diría algo que no es. */
+  .prueba.na   .n { color: var(--muted); }
+  .prueba.na   .r { color: var(--muted); }
+  .pista {
+    position: relative; height: .34em; margin-top: .45em;
+    background: #1c2229; border-radius: 1px; overflow: hidden;
+  }
+  .pista i {
+    position: absolute; inset: 0; transform-origin: left center;
+    transform: scaleX(0); border-radius: 1px; display: block;
+  }
+  .prueba.ok   .pista i { background: var(--profit); }
+  .prueba.warn .pista i { background: var(--warn); }
+  .prueba.na .pista { background: none; border-top: 1px dashed #2b333c; height: 0; margin-top: .62em; }
+
+  .veredicto { display: flex; align-items: center; gap: 1.2em; flex-wrap: wrap; }
+  .veredicto .por {
+    font-family: var(--mono); font-size: clamp(.54rem, 1.2vw, .8rem);
+    color: var(--muted); letter-spacing: .04em;
+  }
+  .veredicto .por b { color: var(--warn); font-weight: 500; }
+
+  @keyframes llenar { from { transform: scaleX(0) } to { transform: scaleX(var(--v)) } }
+
+  /* Once compases: una prueba cada 0,85 s a partir del segundo 5. El intervalo
+     bajó de 1,15 s al pasar de ocho a once para que la última siga cayendo
+     antes del segundo 14 y el veredicto no se amontone contra el cierre. */
+  .play .prueba { animation: sube .55s ease both; }
+  .play .prueba i { animation: llenar .75s cubic-bezier(.25,.9,.35,1) both; }
+  .play .p1,  .play .p1 i  { animation-delay:  5.00s; }
+  .play .p2,  .play .p2 i  { animation-delay:  5.85s; }
+  .play .p3,  .play .p3 i  { animation-delay:  6.70s; }
+  .play .p4,  .play .p4 i  { animation-delay:  7.55s; }
+  .play .p5,  .play .p5 i  { animation-delay:  8.40s; }
+  .play .p6,  .play .p6 i  { animation-delay:  9.25s; }
+  .play .p7,  .play .p7 i  { animation-delay: 10.10s; }
+  .play .p8,  .play .p8 i  { animation-delay: 10.95s; }
+  .play .p9,  .play .p9 i  { animation-delay: 11.80s; }
+  .play .p10, .play .p10 i { animation-delay: 12.65s; }
+  .play .p11, .play .p11 i { animation-delay: 13.50s; }
+
+  .play .a1 { animation: sube .8s ease  0.9s both, ver .5s ease  3.6s reverse forwards; }
+  .play .a2 { animation: sube .8s ease  4.0s both, ver .5s ease 14.6s reverse forwards; }
+  .play .a3 { animation: sube .7s ease 15.0s both, ver .5s ease 19.6s reverse forwards; }
+  .play .a4 { animation: sube .7s ease 16.4s both, ver .5s ease 19.6s reverse forwards; }
+  .play .a5 { animation: ver  .6s ease 20.0s both; }
+  .play .a6 { animation: sube .8s ease 20.6s both; }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="lienzo"></canvas>
+
+  <div class="layer">
+    <div class="pad" style="top:8%">
+      <div class="lyr a1">
+        <p class="kicker">Reality Check</p>
+        <h1>Esta estrategia parece buena.</h1>
+      </div>
+      <div class="lyr a2">
+        <p class="kicker">Reality Check · once pruebas</p>
+        <h1>Vamos a intentar tumbarla once veces.</h1>
+      </div>
+      <div class="lyr a3">
+        <p class="kicker">Veredicto</p>
+        <h1>Aguanta ocho de once.</h1>
+      </div>
+      <div class="lyr a5">
+        <p class="kicker">Reality Check</p>
+        <h1>No es un aprobado.<br>Es un informe de por dónde flojea.</h1>
+      </div>
+    </div>
+
+    <!-- En el mismo orden de peso que las corre la aplicación: fuera de muestra
+         y walk-forward primero, margen de coste al final. El orden es
+         información, no decoración. -->
+    <div class="pad" style="top:24%">
+      <div class="pruebas">
+        <div class="prueba ok p1">
+          <div class="fila"><span class="n">Fuera de muestra</span><span class="r">Aguanta</span></div>
+          <div class="pista"><i style="--v:.78"></i></div>
+        </div>
+        <div class="prueba ok p2">
+          <div class="fila"><span class="n">Reajuste walk-forward</span><span class="r">Aguanta</span></div>
+          <div class="pista"><i style="--v:.71"></i></div>
+        </div>
+        <div class="prueba warn p3">
+          <div class="fila"><span class="n">Sensibilidad a parámetros</span><span class="r">Justa</span></div>
+          <div class="pista"><i style="--v:.44"></i></div>
+        </div>
+        <div class="prueba ok p4">
+          <div class="fila"><span class="n">Tolerancia al ruido</span><span class="r">Aguanta</span></div>
+          <div class="pista"><i style="--v:.66"></i></div>
+        </div>
+        <div class="prueba ok p5">
+          <div class="fila"><span class="n">Caída con posiciones abiertas</span><span class="r">Aguanta</span></div>
+          <div class="pista"><i style="--v:.83"></i></div>
+        </div>
+        <div class="prueba ok p6">
+          <div class="fila"><span class="n">Remuestreo Monte Carlo</span><span class="r">Aguanta</span></div>
+          <div class="pista"><i style="--v:.75"></i></div>
+        </div>
+        <div class="prueba ok p7">
+          <div class="fila"><span class="n">Consistencia por periodos</span><span class="r">Aguanta</span></div>
+          <div class="pista"><i style="--v:.69"></i></div>
+        </div>
+        <div class="prueba ok p8">
+          <div class="fila"><span class="n">Vela de inicio</span><span class="r">Aguanta</span></div>
+          <div class="pista"><i style="--v:.72"></i></div>
+        </div>
+        <div class="prueba na p9">
+          <div class="fila"><span class="n">Resolución de vela</span><span class="r">No aplica</span></div>
+          <div class="pista"></div>
+        </div>
+        <div class="prueba ok p10">
+          <div class="fila"><span class="n">Tamaño de la muestra</span><span class="r">412 op.</span></div>
+          <div class="pista"><i style="--v:.88"></i></div>
+        </div>
+        <div class="prueba warn p11">
+          <div class="fila"><span class="n">Margen de coste</span><span class="r">Justo</span></div>
+          <div class="pista"><i style="--v:.41"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pad lyr a4" style="top:auto; bottom:8%">
+      <div class="veredicto">
+        <span class="badge ok">Supera</span>
+        <span class="por">Flojea en <b>sensibilidad a parámetros</b> y <b>margen de coste</b>:
+          sube el spread un 40&nbsp;% y la ventaja desaparece. Una no pudo correr —
+          el fichero no tiene velas más finas.</span>
+      </div>
+    </div>
+
+    <div class="pad" style="top:auto; bottom:12%">
+      <div class="lyr a6">
+        <div class="brandrow">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#e08a1e" stroke-width="2.5" opacity="0.28"/>
+            <line x1="32" y1="11" x2="32" y2="53" stroke="#e08a1e" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+            <rect x="23" y="17" width="18" height="15" rx="2" fill="#e08a1e"/>
+            <rect x="23" y="37" width="18" height="11" rx="2" fill="#e08a1e" opacity="0.38"/>
+            <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="#e08a1e" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+          </svg>
+          <span class="wordmark">BotFactory<i>FX</i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button id="replay" type="button">Reproducir</button>
+  <span>24 s · 16:9 · Reality Check</span>
+</div>
+
+<script>
+/* Motor común de las piezas animadas. Cada pieza aporta su función de dibujo
+   y sus compases; todo lo demás —reloj, lienzo, curvas, suavizados— vive aquí. */
+const BFX = (() => {
+  "use strict";
+
+  /** Generador con semilla: la misma imagen en cada reproducción, que es lo
+   *  que permite volver a grabar una pieza y obtener el mismo plano. */
+  function azar(semilla = 20260828) {
+    let s = semilla >>> 0;
+    return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  }
+
+  const suave = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+  /** Progreso de 0 a 1 entre dos instantes de la línea de tiempo, suavizado. */
+  const entre = (t, a, b) => suave((t - a) / (b - a));
+  /** Un pulso: sube entre a y b, se mantiene, y baja entre c y d. */
+  const pulso = (t, a, b, c, d) => entre(t, a, b) * (1 - entre(t, c, d));
+
+  /** Ajusta el lienzo a su tamaño real teniendo en cuenta la densidad de la
+   *  pantalla; sin esto los trazos salen borrosos en pantallas retina. */
+  function medir(cv, cx) {
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return r;
+  }
+
+  /** Un paseo aleatorio con deriva: la forma de una curva de capital. */
+  function paseo(rnd, puntos, deriva, vol, desde = 0) {
+    const y = new Float32Array(puntos);
+    let v = desde;
+    for (let p = 0; p < puntos; p++) {
+      v += deriva + (rnd() - 0.5) * vol;
+      y[p] = v;
+    }
+    return y;
+  }
+
+  /** Traza una curva ya calculada dentro de un rectángulo. */
+  function trazar(cx, y, caja, escala, hasta = 1) {
+    const n = y.length;
+    const fin = Math.max(1, Math.round((n - 1) * hasta));
+    cx.beginPath();
+    for (let p = 0; p <= fin; p++) {
+      const x = caja.x + (caja.w * p) / (n - 1);
+      const py = escala(y[p]);
+      p === 0 ? cx.moveTo(x, py) : cx.lineTo(x, py);
+    }
+    cx.stroke();
+  }
+
+  /** Rejilla de instrumento. */
+  function rejilla(cx, caja, filas = 4, color = "#1b2128") {
+    cx.save();
+    cx.lineWidth = 1;
+    cx.strokeStyle = color;
+    for (let i = 0; i <= filas; i++) {
+      const y = caja.y + (caja.h * i) / filas;
+      cx.beginPath(); cx.moveTo(caja.x, y); cx.lineTo(caja.x + caja.w, y); cx.stroke();
+    }
+    cx.restore();
+  }
+
+  /** Arranca la pieza: reinicia las animaciones CSS y el reloj del lienzo. */
+  function reproductor({ stage, canvas, dibujar, duracion = 32 }) {
+    const cx = canvas.getContext("2d");
+    let caja = medir(canvas, cx);
+    let id = 0, t0 = 0, parado = false;
+    addEventListener("resize", () => { caja = medir(canvas, cx); });
+
+    function marco(ahora) {
+      if (parado) return;
+      const t = (ahora - t0) / 1000;
+      dibujar(cx, caja, t);
+      if (t < duracion + 1) id = requestAnimationFrame(marco);
+    }
+    function reproducir() {
+      parado = false;
+      cancelAnimationFrame(id);
+      stage.classList.remove("play");
+      void stage.offsetWidth;          // fuerza el reinicio de las animaciones
+      stage.classList.add("play");
+      caja = medir(canvas, cx);
+      t0 = performance.now();
+      id = requestAnimationFrame(marco);
+    }
+
+    /* Salta a un instante y lo pinta, sin reloj. Sirve para revisar un compás
+       concreto sin esperar a que llegue, que con la latencia de una captura de
+       pantalla es la diferencia entre ver el plano y ver el siguiente. */
+    reproducir.saltar = (t) => {
+      parado = true;                 // un fotograma ya encolado repintaría encima
+      cancelAnimationFrame(id);
+      caja = medir(canvas, cx);
+      dibujar(cx, caja, t);
+      stage.classList.add("play");
+      stage.querySelectorAll("*").forEach((el) => {
+        el.getAnimations().forEach((a) => { a.currentTime = t * 1000; a.pause(); });
+      });
+    };
+    return reproducir;
+  }
+
+  return { azar, suave, entre, pulso, medir, paseo, trazar, rejilla, reproductor };
+})();
+
+
+(() => {
+  "use strict";
+  const rnd = BFX.azar(7714);
+  const PTS = 90;
+  // La curva que se examina: buena, pero no espectacular.
+  const y = BFX.paseo(rnd, PTS, 0.0125, 0.030);
+
+  const stage = document.getElementById("stage");
+  const cv = document.getElementById("lienzo");
+
+  function dibujar(cx, caja, t) {
+    const w = caja.width, h = caja.height;
+    cx.clearRect(0, 0, w, h);
+
+    // La curva ocupa toda la escena al principio y se retira al fondo cuando
+    // entran las pruebas: sigue ahí, recordando qué se está examinando.
+    const retirada = BFX.entre(t, 4.0, 5.4);
+    const alto = h * (0.52 - 0.20 * retirada);
+    const rect = { x: w * 0.065, y: h * 0.30 + h * 0.32 * retirada, w: w * 0.87, h: alto };
+    const min = Math.min(...y), max = Math.max(...y);
+    const escala = (v) => rect.y + rect.h * (1 - (v - min) / (max - min || 1)) * 0.92 - rect.h * 0.04;
+
+    const aFondo = 1 - retirada * 0.72;
+    BFX.rejilla(cx, rect, 3, `rgba(27,33,40,${aFondo.toFixed(2)})`);
+
+    cx.strokeStyle = `rgba(224,138,30,${(0.95 * aFondo).toFixed(3)})`;
+    cx.lineWidth = 2.2;
+    cx.lineJoin = "round";
+    cx.lineCap = "round";
+    BFX.trazar(cx, y, rect, escala, BFX.entre(t, 0.5, 3.4));
+
+    // Se desvanece del todo para el cierre de marca.
+    cv.style.opacity = String(1 - BFX.entre(t, 19.4, 20.4));
+  }
+
+  const reproducir = BFX.reproductor({ stage, canvas: cv, dibujar, duracion: 24 });
+  window.saltar = reproducir.saltar;
+  document.getElementById("replay").addEventListener("click", reproducir);
+  reproducir();
+})();
+</script>

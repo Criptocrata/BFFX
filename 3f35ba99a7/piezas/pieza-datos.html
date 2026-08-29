@@ -1,0 +1,410 @@
+<meta charset="utf-8">
+<title>El coste decide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450&display=swap">
+
+<style>
+/* Motor visual común de las piezas de BotFactoryFX.
+   Se incrusta en cada pieza al ensamblar, porque un artefacto publicado tiene
+   que ser autónomo y no puede pedir ficheros a otro sitio. */
+:root {
+  --ink:      #0b0d10;
+  --surface:  #14181d;
+  --line:     #262d35;
+  --text:     #e9ecef;
+  --soft:     #aab3bc;
+  --muted:    #6f7883;
+  --phosphor: #e08a1e;
+  --trace:    #6e8ba3;
+  --profit:   #24b37e;
+  --loss:     #d14343;
+  --warn:     #d9a441;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #05070a; color: var(--text); font-family: var(--sans); }
+
+.stage {
+  position: relative; width: 100%; max-width: 62rem; margin: 0 auto;
+  aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden;
+  border: 1px solid var(--line);
+}
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.pad { position: absolute; left: 6.5%; right: 6.5%; }
+.lyr { position: absolute; left: 0; right: 0; top: 0; opacity: 0; }
+
+h1, h2 {
+  font-family: var(--mono); font-weight: 600; margin: 0;
+  letter-spacing: -.03em; line-height: 1.14; text-wrap: balance;
+  font-size: clamp(1rem, 2.9vw, 1.95rem);
+}
+.kicker {
+  font-family: var(--mono); font-size: clamp(.58rem, 1.3vw, .8rem);
+  letter-spacing: .2em; text-transform: uppercase; color: var(--phosphor);
+  margin: 0 0 .8em 0;
+}
+.sub { font-size: clamp(.7rem, 1.6vw, .98rem); color: var(--soft); margin: .8em 0 0; max-width: 32em; line-height: 1.55; }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.metrics > div { background: var(--surface); padding: 2.6% 3.4%; }
+.metrics .k { font-family: var(--mono); font-size: clamp(.48rem, 1vw, .64rem); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; }
+.metrics .v { font-family: var(--mono); font-size: clamp(.9rem, 2.4vw, 1.55rem); font-weight: 600; font-variant-numeric: tabular-nums; display: block; margin-top: .2em; }
+.metrics .v.up { color: var(--profit); }
+
+.badge {
+  display: inline-block; font-family: var(--mono); font-weight: 600;
+  font-size: clamp(.62rem, 1.6vw, .95rem); letter-spacing: .12em; text-transform: uppercase;
+  border-radius: 2px; padding: .3em .85em; border: 1px solid currentColor;
+}
+.badge.ok { color: var(--profit); }
+.badge.no { color: var(--loss); }
+
+.shot { border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--surface); }
+.shot img { display: block; width: 100%; height: auto; }
+
+.brandrow { display: flex; align-items: center; gap: 3%; }
+.brandrow svg { width: clamp(2.4rem, 7.5vw, 4.8rem); height: auto; flex: none; }
+.wordmark { font-family: var(--mono); font-weight: 600; font-size: clamp(1rem, 3.4vw, 2.15rem); letter-spacing: -.035em; }
+.wordmark i { font-style: normal; color: var(--phosphor); }
+.facts { font-family: var(--mono); font-size: clamp(.56rem, 1.4vw, .84rem); color: var(--muted); letter-spacing: .06em; margin-top: 1.1em; }
+
+/* Entradas y salidas. La salida SIEMPRE con `forwards`: con `both`, el relleno
+   hacia atrás aplica el primer fotograma desde el segundo cero y el elemento
+   se ve desde el principio de la pieza. */
+@keyframes sube { from { opacity: 0; transform: translateY(1em) } to { opacity: 1; transform: none } }
+@keyframes ver  { from { opacity: 0 } to { opacity: 1 } }
+
+.bar { max-width: 62rem; margin: .9rem auto 2rem; display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; }
+.bar button {
+  font-family: var(--mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase;
+  background: transparent; color: var(--phosphor); border: 1px solid var(--phosphor);
+  padding: .55rem 1rem; border-radius: 2px; cursor: pointer;
+}
+.bar button:hover { background: #241a0d; }
+.bar span { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .play * { animation-duration: .01ms !important; animation-delay: 0s !important; }
+}
+
+
+  /* ---- propio: orígenes del histórico y lectura de coste ---- */
+  .fuentes { display: flex; gap: 3%; flex-wrap: wrap; }
+  .fuente {
+    opacity: 0; border: 1px solid var(--line); border-radius: 3px;
+    padding: .55em .9em; background: var(--surface);
+    font-family: var(--mono); font-size: clamp(.5rem, 1.12vw, .74rem); color: var(--soft);
+  }
+  .fuente b { color: var(--phosphor); font-weight: 500; }
+
+  .juego {
+    font-family: var(--mono); font-size: clamp(.5rem, 1.1vw, .72rem);
+    color: var(--muted); letter-spacing: .04em; opacity: 0;
+  }
+  .juego b { color: var(--soft); font-weight: 400; }
+
+  .costes { display: flex; gap: 7%; align-items: flex-end; }
+  .coste { opacity: 0; }
+  .coste .k { font-family: var(--mono); font-size: clamp(.45rem, 1vw, .64rem); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; }
+  .coste .v {
+    font-family: var(--mono); font-size: clamp(1.1rem, 3.2vw, 2.1rem); font-weight: 600;
+    font-variant-numeric: tabular-nums; letter-spacing: -.03em; display: block; margin-top: .12em;
+    color: var(--phosphor);
+  }
+  .coste .v.cae { color: var(--loss); }
+  .coste .v.vive { color: var(--profit); }
+
+  .aviso {
+    font-family: var(--mono); font-size: clamp(.52rem, 1.15vw, .78rem);
+    color: var(--soft); border-left: 2px solid var(--warn); padding-left: .9em;
+  }
+  .aviso b { color: var(--warn); font-weight: 500; }
+
+  .play .h1 { animation: sube .8s ease  0.7s both, ver .5s ease  4.8s reverse forwards; }
+  .play .h2 { animation: sube .8s ease  5.2s both, ver .5s ease  8.8s reverse forwards; }
+  .play .h3 { animation: sube .8s ease  9.2s both, ver .5s ease 17.6s reverse forwards; }
+  .play .h4 { animation: sube .8s ease 18.0s both, ver .5s ease 21.8s reverse forwards; }
+  .play .h5 { animation: sube .8s ease 22.2s both, ver .5s ease 26.2s reverse forwards; }
+  .play .h6 { animation: ver  .6s ease 26.6s both; }
+  .play .marca { animation: sube .9s ease 27.2s both; }
+
+  .play .f1 { animation: sube .5s ease 1.6s both, ver .5s ease 8.6s reverse forwards; }
+  .play .f2 { animation: sube .5s ease 2.3s both, ver .5s ease 8.6s reverse forwards; }
+  .play .f3 { animation: sube .5s ease 3.0s both, ver .5s ease 8.6s reverse forwards; }
+  .play .juego { animation: ver .6s ease 3.8s both, ver .5s ease 8.6s reverse forwards; }
+
+  .play .c1 { animation: sube .6s ease  9.6s both, ver .5s ease 26.0s reverse forwards; }
+  .play .c2 { animation: sube .6s ease 10.2s both, ver .5s ease 26.0s reverse forwards; }
+  .play .av { animation: sube .7s ease 22.6s both, ver .5s ease 26.0s reverse forwards; }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="lienzo"></canvas>
+
+  <div class="layer">
+    <div class="pad" style="top:8%">
+      <div class="lyr h1"><p class="kicker">Datos</p><h1>Tu histórico. No uno de muestra.</h1></div>
+      <div class="lyr h2"><p class="kicker">Datos · costes</p><h1>Sin costes, casi cualquier<br>estrategia parece buena.</h1></div>
+      <div class="lyr h3"><p class="kicker">Datos · costes</p><h1>Ahora paga el spread.</h1></div>
+      <div class="lyr h4"><p class="kicker">Datos · costes</p><h1>A 2,4 pips esta ventaja<br>deja de existir.</h1></div>
+      <div class="lyr h5"><p class="kicker">Datos · costes</p><h1>Tu bróker cobra 1,8.<br>El margen son seis décimas.</h1></div>
+      <div class="lyr h6"><p class="kicker">Datos</p><h1>Por eso se declaran una vez.<br>Y los usa todo lo demás.</h1></div>
+    </div>
+
+    <div class="pad" style="top:30%">
+      <div class="fuentes">
+        <div class="fuente f1"><b>CSV</b> de tu bróker</div>
+        <div class="fuente f2"><b>TradingView</b> · exportación del gráfico</div>
+        <div class="fuente f3"><b>MetaTrader 5</b> · descarga directa</div>
+      </div>
+      <p class="juego" style="margin-top:1em">Cargado: <b>GBPJPY · H1 · 20.000 velas · MT5</b> &nbsp;·&nbsp; 2023-06-08 → 2026-08-26</p>
+    </div>
+
+    <div class="pad" style="top:auto; bottom:8%">
+      <div class="costes">
+        <div class="coste lyr c1" style="position:relative">
+          <span class="k">Spread aplicado</span><span class="v" id="spread">0,0 pips</span>
+        </div>
+        <div class="coste lyr c2" style="position:relative">
+          <span class="k">Resultado final</span><span class="v" id="final">+0,0 %</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pad lyr av" style="top:auto; bottom:23%">
+      <p class="aviso"><b>El Reality Check lo mide.</b> Informa de cuánto coste aguanta la ventaja
+        antes de desaparecer — y esa es la cifra contra la que comparar la de tu bróker.</p>
+    </div>
+
+    <div class="pad" style="top:auto; bottom:14%">
+      <div class="lyr marca">
+        <div class="brandrow">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#e08a1e" stroke-width="2.5" opacity="0.28"/>
+            <line x1="32" y1="11" x2="32" y2="53" stroke="#e08a1e" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+            <rect x="23" y="17" width="18" height="15" rx="2" fill="#e08a1e"/>
+            <rect x="23" y="37" width="18" height="11" rx="2" fill="#e08a1e" opacity="0.38"/>
+            <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="#e08a1e" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+          </svg>
+          <span class="wordmark">BotFactory<i>FX</i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button id="replay" type="button">Reproducir</button>
+  <span>29 s · 16:9 · Datos y costes</span>
+</div>
+
+<script>
+/* Motor común de las piezas animadas. Cada pieza aporta su función de dibujo
+   y sus compases; todo lo demás —reloj, lienzo, curvas, suavizados— vive aquí. */
+const BFX = (() => {
+  "use strict";
+
+  /** Generador con semilla: la misma imagen en cada reproducción, que es lo
+   *  que permite volver a grabar una pieza y obtener el mismo plano. */
+  function azar(semilla = 20260828) {
+    let s = semilla >>> 0;
+    return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  }
+
+  const suave = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+  /** Progreso de 0 a 1 entre dos instantes de la línea de tiempo, suavizado. */
+  const entre = (t, a, b) => suave((t - a) / (b - a));
+  /** Un pulso: sube entre a y b, se mantiene, y baja entre c y d. */
+  const pulso = (t, a, b, c, d) => entre(t, a, b) * (1 - entre(t, c, d));
+
+  /** Ajusta el lienzo a su tamaño real teniendo en cuenta la densidad de la
+   *  pantalla; sin esto los trazos salen borrosos en pantallas retina. */
+  function medir(cv, cx) {
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return r;
+  }
+
+  /** Un paseo aleatorio con deriva: la forma de una curva de capital. */
+  function paseo(rnd, puntos, deriva, vol, desde = 0) {
+    const y = new Float32Array(puntos);
+    let v = desde;
+    for (let p = 0; p < puntos; p++) {
+      v += deriva + (rnd() - 0.5) * vol;
+      y[p] = v;
+    }
+    return y;
+  }
+
+  /** Traza una curva ya calculada dentro de un rectángulo. */
+  function trazar(cx, y, caja, escala, hasta = 1) {
+    const n = y.length;
+    const fin = Math.max(1, Math.round((n - 1) * hasta));
+    cx.beginPath();
+    for (let p = 0; p <= fin; p++) {
+      const x = caja.x + (caja.w * p) / (n - 1);
+      const py = escala(y[p]);
+      p === 0 ? cx.moveTo(x, py) : cx.lineTo(x, py);
+    }
+    cx.stroke();
+  }
+
+  /** Rejilla de instrumento. */
+  function rejilla(cx, caja, filas = 4, color = "#1b2128") {
+    cx.save();
+    cx.lineWidth = 1;
+    cx.strokeStyle = color;
+    for (let i = 0; i <= filas; i++) {
+      const y = caja.y + (caja.h * i) / filas;
+      cx.beginPath(); cx.moveTo(caja.x, y); cx.lineTo(caja.x + caja.w, y); cx.stroke();
+    }
+    cx.restore();
+  }
+
+  /** Arranca la pieza: reinicia las animaciones CSS y el reloj del lienzo. */
+  function reproductor({ stage, canvas, dibujar, duracion = 32 }) {
+    const cx = canvas.getContext("2d");
+    let caja = medir(canvas, cx);
+    let id = 0, t0 = 0, parado = false;
+    addEventListener("resize", () => { caja = medir(canvas, cx); });
+
+    function marco(ahora) {
+      if (parado) return;
+      const t = (ahora - t0) / 1000;
+      dibujar(cx, caja, t);
+      if (t < duracion + 1) id = requestAnimationFrame(marco);
+    }
+    function reproducir() {
+      parado = false;
+      cancelAnimationFrame(id);
+      stage.classList.remove("play");
+      void stage.offsetWidth;          // fuerza el reinicio de las animaciones
+      stage.classList.add("play");
+      caja = medir(canvas, cx);
+      t0 = performance.now();
+      id = requestAnimationFrame(marco);
+    }
+
+    /* Salta a un instante y lo pinta, sin reloj. Sirve para revisar un compás
+       concreto sin esperar a que llegue, que con la latencia de una captura de
+       pantalla es la diferencia entre ver el plano y ver el siguiente. */
+    reproducir.saltar = (t) => {
+      parado = true;                 // un fotograma ya encolado repintaría encima
+      cancelAnimationFrame(id);
+      caja = medir(canvas, cx);
+      dibujar(cx, caja, t);
+      stage.classList.add("play");
+      stage.querySelectorAll("*").forEach((el) => {
+        el.getAnimations().forEach((a) => { a.currentTime = t * 1000; a.pause(); });
+      });
+    };
+    return reproducir;
+  }
+
+  return { azar, suave, entre, pulso, medir, paseo, trazar, rejilla, reproductor };
+})();
+
+
+(() => {
+  "use strict";
+  const rnd = BFX.azar(56123);
+  const PTS = 150, OPS = 412;
+
+  /* Una estrategia con ventaja, y el mismo recorrido pagando spread.
+     Cada operación paga el spread una vez, así que el coste total crece con
+     el número de operaciones: por eso una ventaja pequeña y muy operada es
+     la primera en desaparecer. */
+  const bruto = BFX.paseo(rnd, PTS, 0.0125, 0.052);
+  const opsHasta = (i) => (OPS * i) / (PTS - 1);
+  /* Coste de un pip en una operación, calibrado para que la ventaja se agote
+     justo en 2,4 pips: es el "margen de coste" que informa el Reality Check,
+     y el número contra el que se compara lo que cobra el bróker. */
+  const PIP = bruto[PTS - 1] / (2.4 * OPS);
+  const conCoste = (pips) => {
+    const y = new Float32Array(PTS);
+    for (let i = 0; i < PTS; i++) y[i] = bruto[i] - pips * PIP * opsHasta(i);
+    return y;
+  };
+  const NIVELES = [0, 0.6, 1.2, 1.8, 2.4, 3.0];
+  const curvas = NIVELES.map(conCoste);
+  const finalPct = (y) => (y[PTS - 1] / bruto[PTS - 1]) * 24.6;   // el bruto rinde 24,6 %
+
+  const stage = document.getElementById("stage");
+  const cv = document.getElementById("lienzo");
+  const elSpread = document.getElementById("spread");
+  const elFinal = document.getElementById("final");
+
+  const todos = curvas.flatMap((c) => [...c]);
+  const lo = Math.min(...todos, 0), hi = Math.max(...todos);
+
+  function dibujar(cx, caja, t) {
+    const w = caja.width, h = caja.height;
+    cx.clearRect(0, 0, w, h);
+
+    const rect = { x: w * 0.065, y: h * 0.42, w: w * 0.87, h: h * 0.34 };
+    const esc = (v) => rect.y + rect.h * (1 - (v - lo) / (hi - lo));
+
+    BFX.rejilla(cx, rect, 3);
+    // La línea del cero: cruzarla es dejar de ganar dinero.
+    cx.strokeStyle = "rgba(111,120,131,.45)";
+    cx.setLineDash([3, 5]); cx.lineWidth = 1;
+    cx.beginPath(); cx.moveTo(rect.x, esc(0)); cx.lineTo(rect.x + rect.w, esc(0)); cx.stroke();
+    cx.setLineDash([]);
+
+    cx.lineJoin = "round"; cx.lineCap = "round";
+
+    // La curva sin costes se traza primero y se queda de referencia.
+    const aBase = BFX.pulso(t, 5.6, 6.4, 27.0, 27.8);
+    if (aBase > 0.01) {
+      cx.strokeStyle = `rgba(224,138,30,${aBase.toFixed(3)})`;
+      cx.lineWidth = 2.2;
+      BFX.trazar(cx, curvas[0], rect, esc, BFX.entre(t, 5.6, 8.4));
+    }
+
+    // A partir del segundo 9,6 se van añadiendo niveles de coste, uno cada
+    // 1,5 s. Las anteriores se quedan tenues: la familia entera cuenta la
+    // historia mejor que una curva que se mueve.
+    const paso = 1.5;
+    for (let n = 1; n < NIVELES.length; n++) {
+      const t0 = 9.6 + (n - 1) * paso;
+      const a = BFX.pulso(t, t0, t0 + 0.5, 27.0, 27.8);
+      if (a < 0.01) continue;
+      const esUltima = t < t0 + paso;
+      const cae = NIVELES[n] >= 2.4;
+      const col = cae ? "209,67,67" : "224,138,30";
+      cx.strokeStyle = `rgba(${col},${(a * (esUltima ? 0.95 : 0.30)).toFixed(3)})`;
+      cx.lineWidth = esUltima ? 2.6 : 1.4;
+      BFX.trazar(cx, curvas[n], rect, esc, BFX.entre(t, t0, t0 + 1.1));
+    }
+
+    // La del bróker, resaltada al final.
+    const aBroker = BFX.pulso(t, 22.2, 23.0, 27.0, 27.8);
+    if (aBroker > 0.01) {
+      cx.strokeStyle = `rgba(36,179,126,${aBroker.toFixed(3)})`;
+      cx.lineWidth = 3;
+      BFX.trazar(cx, curvas[3], rect, esc, 1);
+    }
+
+    // Lecturas: el spread que se está aplicando y lo que queda del resultado.
+    const idx = t < 9.6 ? 0 : Math.min(NIVELES.length - 1, Math.floor((t - 9.6) / paso) + 1);
+    const mostrado = t > 22.2 ? 3 : idx;
+    elSpread.textContent = NIVELES[mostrado].toFixed(1).replace(".", ",") + " pips";
+    const pct = finalPct(curvas[mostrado]);
+    elFinal.textContent = (pct >= 0 ? "+" : "−") + Math.abs(pct).toFixed(1).replace(".", ",") + " %";
+    elFinal.className = "v " + (t > 22.2 ? "vive" : pct <= 2 ? "cae" : "");
+
+    cv.style.opacity = String(1 - BFX.entre(t, 27.2, 28.0));
+  }
+
+  const reproducir = BFX.reproductor({ stage, canvas: cv, dibujar, duracion: 29 });
+  window.saltar = reproducir.saltar;
+  document.getElementById("replay").addEventListener("click", reproducir);
+  reproducir();
+})();
+</script>

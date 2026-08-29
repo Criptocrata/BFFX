@@ -1,0 +1,471 @@
+<meta charset="utf-8">
+<title>El puente que nadie construyó</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450&display=swap">
+
+<style>
+/* Motor visual común de las piezas de BotFactoryFX.
+   Se incrusta en cada pieza al ensamblar, porque un artefacto publicado tiene
+   que ser autónomo y no puede pedir ficheros a otro sitio. */
+:root {
+  --ink:      #0b0d10;
+  --surface:  #14181d;
+  --line:     #262d35;
+  --text:     #e9ecef;
+  --soft:     #aab3bc;
+  --muted:    #6f7883;
+  --phosphor: #e08a1e;
+  --trace:    #6e8ba3;
+  --profit:   #24b37e;
+  --loss:     #d14343;
+  --warn:     #d9a441;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #05070a; color: var(--text); font-family: var(--sans); }
+
+.stage {
+  position: relative; width: 100%; max-width: 62rem; margin: 0 auto;
+  aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden;
+  border: 1px solid var(--line);
+}
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.pad { position: absolute; left: 6.5%; right: 6.5%; }
+.lyr { position: absolute; left: 0; right: 0; top: 0; opacity: 0; }
+
+h1, h2 {
+  font-family: var(--mono); font-weight: 600; margin: 0;
+  letter-spacing: -.03em; line-height: 1.14; text-wrap: balance;
+  font-size: clamp(1rem, 2.9vw, 1.95rem);
+}
+.kicker {
+  font-family: var(--mono); font-size: clamp(.58rem, 1.3vw, .8rem);
+  letter-spacing: .2em; text-transform: uppercase; color: var(--phosphor);
+  margin: 0 0 .8em 0;
+}
+.sub { font-size: clamp(.7rem, 1.6vw, .98rem); color: var(--soft); margin: .8em 0 0; max-width: 32em; line-height: 1.55; }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.metrics > div { background: var(--surface); padding: 2.6% 3.4%; }
+.metrics .k { font-family: var(--mono); font-size: clamp(.48rem, 1vw, .64rem); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; }
+.metrics .v { font-family: var(--mono); font-size: clamp(.9rem, 2.4vw, 1.55rem); font-weight: 600; font-variant-numeric: tabular-nums; display: block; margin-top: .2em; }
+.metrics .v.up { color: var(--profit); }
+
+.badge {
+  display: inline-block; font-family: var(--mono); font-weight: 600;
+  font-size: clamp(.62rem, 1.6vw, .95rem); letter-spacing: .12em; text-transform: uppercase;
+  border-radius: 2px; padding: .3em .85em; border: 1px solid currentColor;
+}
+.badge.ok { color: var(--profit); }
+.badge.no { color: var(--loss); }
+
+.shot { border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--surface); }
+.shot img { display: block; width: 100%; height: auto; }
+
+.brandrow { display: flex; align-items: center; gap: 3%; }
+.brandrow svg { width: clamp(2.4rem, 7.5vw, 4.8rem); height: auto; flex: none; }
+.wordmark { font-family: var(--mono); font-weight: 600; font-size: clamp(1rem, 3.4vw, 2.15rem); letter-spacing: -.035em; }
+.wordmark i { font-style: normal; color: var(--phosphor); }
+.facts { font-family: var(--mono); font-size: clamp(.56rem, 1.4vw, .84rem); color: var(--muted); letter-spacing: .06em; margin-top: 1.1em; }
+
+/* Entradas y salidas. La salida SIEMPRE con `forwards`: con `both`, el relleno
+   hacia atrás aplica el primer fotograma desde el segundo cero y el elemento
+   se ve desde el principio de la pieza. */
+@keyframes sube { from { opacity: 0; transform: translateY(1em) } to { opacity: 1; transform: none } }
+@keyframes ver  { from { opacity: 0 } to { opacity: 1 } }
+
+.bar { max-width: 62rem; margin: .9rem auto 2rem; display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; }
+.bar button {
+  font-family: var(--mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase;
+  background: transparent; color: var(--phosphor); border: 1px solid var(--phosphor);
+  padding: .55rem 1rem; border-radius: 2px; cursor: pointer;
+}
+.bar button:hover { background: #241a0d; }
+.bar span { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .play * { animation-duration: .01ms !important; animation-delay: 0s !important; }
+}
+
+
+  /* ---- propio: los dos lados, los fallos y el estado del conector ---- */
+  .lado {
+    font-family: var(--mono); font-size: clamp(.5rem, 1.12vw, .74rem);
+    letter-spacing: .16em; text-transform: uppercase; color: var(--muted); opacity: 0;
+  }
+  .lado b { color: var(--soft); font-weight: 500; }
+
+  .fallos { opacity: 0; }
+  .fallo {
+    font-family: var(--mono); font-size: clamp(.48rem, 1.08vw, .72rem);
+    color: var(--soft); line-height: 1.95; opacity: 0; white-space: nowrap;
+  }
+  .fallo::before { content: "✕"; color: var(--loss); margin-right: .7em; }
+  .fallo em { font-style: normal; color: var(--muted); }
+
+  .ruta {
+    font-family: var(--mono); font-size: clamp(.44rem, 1.0vw, .68rem);
+    color: var(--phosphor); letter-spacing: .01em; opacity: 0;
+    word-break: break-all; line-height: 1.7;
+  }
+  .ruta em { font-style: normal; color: var(--muted); }
+
+  .estado {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); opacity: 0;
+  }
+  .estado > div { background: var(--surface); padding: 2.4% 3%; }
+  .estado .k { font-family: var(--mono); font-size: clamp(.42rem, .95vw, .6rem); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; }
+  .estado .v { font-family: var(--mono); font-size: clamp(.72rem, 1.9vw, 1.2rem); font-weight: 600; font-variant-numeric: tabular-nums; display: block; margin-top: .2em; }
+  .estado .v.vivo { color: var(--profit); }
+
+  .log {
+    font-family: var(--mono); font-size: clamp(.46rem, 1.02vw, .7rem);
+    color: var(--soft); background: #0f1317; border: 1px solid var(--line);
+    border-left: 2px solid var(--profit); padding: .7em .9em; opacity: 0; white-space: nowrap; overflow: hidden;
+  }
+  .log b { color: var(--profit); font-weight: 500; }
+  .log em { font-style: normal; color: var(--muted); }
+
+  .play .h1 { animation: sube .8s ease  0.7s both, ver .5s ease  5.0s reverse forwards; }
+  .play .h2 { animation: sube .8s ease  5.4s both, ver .5s ease 10.0s reverse forwards; }
+  .play .h3 { animation: sube .8s ease 10.4s both, ver .5s ease 14.4s reverse forwards; }
+  .play .h4 { animation: sube .8s ease 14.8s both, ver .5s ease 21.6s reverse forwards; }
+  .play .h5 { animation: sube .8s ease 22.0s both, ver .5s ease 26.4s reverse forwards; }
+  .play .h6 { animation: sube .8s ease 26.8s both, ver .5s ease 30.6s reverse forwards; }
+  .play .h7 { animation: ver  .6s ease 31.0s both; }
+  .play .marca { animation: sube .9s ease 31.6s both; }
+
+  .play .lado  { animation: ver .6s ease 1.6s both, ver .5s ease 30.4s reverse forwards; }
+  .play .fallos{ animation: ver .5s ease 5.6s both, ver .5s ease 10.2s reverse forwards; }
+  .play .x1 { animation: sube .5s ease 5.9s both; }
+  .play .x2 { animation: sube .5s ease 6.9s both; }
+  .play .x3 { animation: sube .5s ease 7.9s both; }
+
+  .play .ruta   { animation: sube .7s ease 11.2s both, ver .5s ease 26.2s reverse forwards; }
+  .play .estado { animation: sube .7s ease 22.4s both, ver .5s ease 30.4s reverse forwards; }
+  .play .log    { animation: sube .7s ease 27.2s both, ver .5s ease 30.4s reverse forwards; }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="lienzo"></canvas>
+
+  <div class="layer">
+    <div class="pad" style="top:7%">
+      <div class="lyr h1"><p class="kicker">MetaTrader 5 · Linux</p><h1>Todo el sector asume lo mismo:<br>en Linux, esto no se puede hacer.</h1></div>
+      <div class="lyr h2"><p class="kicker">Por qué lo asumen</p><h1>Y tienen razones.</h1></div>
+      <div class="lyr h3"><p class="kicker">La puerta</p><h1>Pero hay una que no pide permiso.</h1></div>
+      <div class="lyr h4"><p class="kicker">El conector</p><h1>Una carpeta compartida.<br>Sin puerto. Sin lista blanca. Sin diálogo.</h1></div>
+      <div class="lyr h5"><p class="kicker">Funcionando</p><h1>20.000 velas de GBPJPY,<br>traídas de tu propio terminal.</h1></div>
+      <div class="lyr h6"><p class="kicker">Comprobado</p><h1>No prometido.<br>Verificado en una máquina real.</h1></div>
+      <div class="lyr h7"><p class="kicker">MetaTrader 5 · Linux</p><h1>Donde los demás ponen<br>«solo Windows».</h1></div>
+    </div>
+
+    <div class="pad lado" style="top:27%">
+      <span style="position:absolute;left:0"><b>BotFactoryFX</b> · Linux</span>
+      <span style="position:absolute;right:0;text-align:right"><b>MetaTrader 5</b> · Wine 11</span>
+    </div>
+
+    <div class="pad fallos" style="top:38%">
+      <div class="fallo x1">Un socket necesita su dirección en la lista blanca del terminal <em>— y hay que activarla a mano</em></div>
+      <div class="fallo x2">WebRequest, lo mismo <em>— y se pierde al recrear el prefijo</em></div>
+      <div class="fallo x3">El servidor MCP pide un token <em>— y no arranca si el prefijo dice Windows 7</em></div>
+    </div>
+
+    <div class="pad ruta" style="top:auto; bottom:26%; text-align:center">
+      ~/.wine-mt5/drive_c/users/<em>tú</em>/AppData/Roaming/MetaQuotes/Terminal/<b>Common/Files/BotFactoryFX/</b><br>
+      <em>status.txt &nbsp;·&nbsp; req/&lt;id&gt;.req &nbsp;·&nbsp; res/&lt;id&gt;.csv</em>
+    </div>
+
+    <div class="pad estado" style="top:auto; bottom:20%">
+      <div><span class="k">Conector</span><span class="v vivo" id="conn">1.0.1</span></div>
+      <div><span class="k">Terminal</span><span class="v">6140</span></div>
+      <div><span class="k">Servidor</span><span class="v">Darwinex</span></div>
+      <div><span class="k">Símbolos</span><span class="v">840</span></div>
+    </div>
+
+    <div class="pad" style="top:auto; bottom:11%">
+      <p class="log"><b>OI 0 11:03:02.137 Terminal</b> &nbsp;Windows 10 build 19045 <b>on Wine 11.0</b>
+        <em>Linux · 12 × Intel Core i7-1255U</em></p>
+    </div>
+
+    <div class="pad" style="top:auto; bottom:15%">
+      <div class="lyr marca">
+        <div class="brandrow">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#e08a1e" stroke-width="2.5" opacity="0.28"/>
+            <line x1="32" y1="11" x2="32" y2="53" stroke="#e08a1e" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+            <rect x="23" y="17" width="18" height="15" rx="2" fill="#e08a1e"/>
+            <rect x="23" y="37" width="18" height="11" rx="2" fill="#e08a1e" opacity="0.38"/>
+            <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="#e08a1e" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+          </svg>
+          <span class="wordmark">BotFactory<i>FX</i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button id="replay" type="button">Reproducir</button>
+  <span>33 s · 16:9 · MetaTrader 5 en Linux</span>
+</div>
+
+<script>
+/* Motor común de las piezas animadas. Cada pieza aporta su función de dibujo
+   y sus compases; todo lo demás —reloj, lienzo, curvas, suavizados— vive aquí. */
+const BFX = (() => {
+  "use strict";
+
+  /** Generador con semilla: la misma imagen en cada reproducción, que es lo
+   *  que permite volver a grabar una pieza y obtener el mismo plano. */
+  function azar(semilla = 20260828) {
+    let s = semilla >>> 0;
+    return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  }
+
+  const suave = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+  /** Progreso de 0 a 1 entre dos instantes de la línea de tiempo, suavizado. */
+  const entre = (t, a, b) => suave((t - a) / (b - a));
+  /** Un pulso: sube entre a y b, se mantiene, y baja entre c y d. */
+  const pulso = (t, a, b, c, d) => entre(t, a, b) * (1 - entre(t, c, d));
+
+  /** Ajusta el lienzo a su tamaño real teniendo en cuenta la densidad de la
+   *  pantalla; sin esto los trazos salen borrosos en pantallas retina. */
+  function medir(cv, cx) {
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return r;
+  }
+
+  /** Un paseo aleatorio con deriva: la forma de una curva de capital. */
+  function paseo(rnd, puntos, deriva, vol, desde = 0) {
+    const y = new Float32Array(puntos);
+    let v = desde;
+    for (let p = 0; p < puntos; p++) {
+      v += deriva + (rnd() - 0.5) * vol;
+      y[p] = v;
+    }
+    return y;
+  }
+
+  /** Traza una curva ya calculada dentro de un rectángulo. */
+  function trazar(cx, y, caja, escala, hasta = 1) {
+    const n = y.length;
+    const fin = Math.max(1, Math.round((n - 1) * hasta));
+    cx.beginPath();
+    for (let p = 0; p <= fin; p++) {
+      const x = caja.x + (caja.w * p) / (n - 1);
+      const py = escala(y[p]);
+      p === 0 ? cx.moveTo(x, py) : cx.lineTo(x, py);
+    }
+    cx.stroke();
+  }
+
+  /** Rejilla de instrumento. */
+  function rejilla(cx, caja, filas = 4, color = "#1b2128") {
+    cx.save();
+    cx.lineWidth = 1;
+    cx.strokeStyle = color;
+    for (let i = 0; i <= filas; i++) {
+      const y = caja.y + (caja.h * i) / filas;
+      cx.beginPath(); cx.moveTo(caja.x, y); cx.lineTo(caja.x + caja.w, y); cx.stroke();
+    }
+    cx.restore();
+  }
+
+  /** Arranca la pieza: reinicia las animaciones CSS y el reloj del lienzo. */
+  function reproductor({ stage, canvas, dibujar, duracion = 32 }) {
+    const cx = canvas.getContext("2d");
+    let caja = medir(canvas, cx);
+    let id = 0, t0 = 0, parado = false;
+    addEventListener("resize", () => { caja = medir(canvas, cx); });
+
+    function marco(ahora) {
+      if (parado) return;
+      const t = (ahora - t0) / 1000;
+      dibujar(cx, caja, t);
+      if (t < duracion + 1) id = requestAnimationFrame(marco);
+    }
+    function reproducir() {
+      parado = false;
+      cancelAnimationFrame(id);
+      stage.classList.remove("play");
+      void stage.offsetWidth;          // fuerza el reinicio de las animaciones
+      stage.classList.add("play");
+      caja = medir(canvas, cx);
+      t0 = performance.now();
+      id = requestAnimationFrame(marco);
+    }
+
+    /* Salta a un instante y lo pinta, sin reloj. Sirve para revisar un compás
+       concreto sin esperar a que llegue, que con la latencia de una captura de
+       pantalla es la diferencia entre ver el plano y ver el siguiente. */
+    reproducir.saltar = (t) => {
+      parado = true;                 // un fotograma ya encolado repintaría encima
+      cancelAnimationFrame(id);
+      caja = medir(canvas, cx);
+      dibujar(cx, caja, t);
+      stage.classList.add("play");
+      stage.querySelectorAll("*").forEach((el) => {
+        el.getAnimations().forEach((a) => { a.currentTime = t * 1000; a.pause(); });
+      });
+    };
+    return reproducir;
+  }
+
+  return { azar, suave, entre, pulso, medir, paseo, trazar, rejilla, reproductor };
+})();
+
+
+(() => {
+  "use strict";
+  const rnd = BFX.azar(19045);
+  const VELAS = 96;
+
+  // Velas OHLC para el gráfico que se va llenando en el lado de Linux.
+  const velas = [];
+  let precio = 186.0;
+  for (let i = 0; i < VELAS; i++) {
+    const o = precio;
+    const c = o + (rnd() - 0.46) * 1.5;
+    const h = Math.max(o, c) + rnd() * 0.55;
+    const l = Math.min(o, c) - rnd() * 0.55;
+    velas.push({ o, h, l, c });
+    precio = c;
+  }
+  const pMin = Math.min(...velas.map((v) => v.l));
+  const pMax = Math.max(...velas.map((v) => v.h));
+
+  // Paquetes que cruzan el puente mientras dura la transferencia.
+  const paquetes = Array.from({ length: 34 }, () => ({ t0: rnd(), vel: 0.55 + rnd() * 0.5, y: rnd() }));
+
+  const stage = document.getElementById("stage");
+  const cv = document.getElementById("lienzo");
+  const elConn = document.getElementById("conn");
+
+  function dibujar(cx, caja, t) {
+    const w = caja.width, h = caja.height;
+    cx.clearRect(0, 0, w, h);
+
+    const izq = w * 0.065, ancho = w * 0.87;
+    const cenX = izq + ancho / 2;
+    const banda = { y: h * 0.30, h: h * 0.44 };
+
+    // --- Los dos territorios, siempre presentes ---
+    const aLados = BFX.pulso(t, 1.4, 2.4, 30.2, 31.0);
+    if (aLados > 0.01) {
+      cx.strokeStyle = `rgba(38,45,53,${aLados.toFixed(3)})`;
+      cx.lineWidth = 1;
+      cx.strokeRect(izq, banda.y, ancho * 0.44, banda.h);
+      cx.strokeRect(izq + ancho * 0.56, banda.y, ancho * 0.44, banda.h);
+    }
+
+    // --- El muro: existe entre el 2 y el 11 y luego se disuelve ---
+    const aMuro = BFX.pulso(t, 2.0, 3.0, 10.6, 11.8);
+    if (aMuro > 0.01) {
+      cx.save();
+      cx.strokeStyle = `rgba(209,67,67,${(aMuro * 0.85).toFixed(3)})`;
+      cx.lineWidth = 2;
+      cx.setLineDash([7, 7]);
+      for (let k = -1; k <= 1; k++) {
+        cx.beginPath();
+        cx.moveTo(cenX + k * 5, banda.y - h * 0.03);
+        cx.lineTo(cenX + k * 5, banda.y + banda.h + h * 0.03);
+        cx.stroke();
+      }
+      cx.restore();
+    }
+
+    // --- El puente: sustituye al muro ---
+    const aPuente = BFX.pulso(t, 11.4, 12.4, 30.2, 31.0);
+    if (aPuente > 0.01) {
+      cx.strokeStyle = `rgba(224,138,30,${(aPuente * 0.55).toFixed(3)})`;
+      cx.lineWidth = 1.4;
+      cx.beginPath();
+      cx.moveTo(izq + ancho * 0.44, banda.y + banda.h * 0.5);
+      cx.lineTo(izq + ancho * 0.56, banda.y + banda.h * 0.5);
+      cx.stroke();
+    }
+
+    // --- La transferencia: paquetes cruzando de derecha a izquierda ---
+    const aFlujo = BFX.pulso(t, 15.0, 15.8, 26.0, 26.8);
+    if (aFlujo > 0.01) {
+      const x0 = izq + ancho * 0.56, x1 = izq + ancho * 0.44;
+      for (const p of paquetes) {
+        const fase = ((t - 15.0) * p.vel + p.t0) % 1;
+        const x = x0 + (x1 - x0) * fase;
+        const y = banda.y + banda.h * (0.22 + p.y * 0.56);
+        const brillo = Math.sin(fase * Math.PI);
+        cx.fillStyle = `rgba(224,138,30,${(aFlujo * brillo * 0.9).toFixed(3)})`;
+        cx.fillRect(x - 5, y - 1, 10, 2);
+      }
+    }
+
+    // --- El gráfico que se va llenando en el lado de Linux ---
+    const aChart = BFX.pulso(t, 15.6, 16.4, 30.2, 31.0);
+    if (aChart > 0.01) {
+      const g = { x: izq + ancho * 0.02, y: banda.y + banda.h * 0.12, w: ancho * 0.40, h: banda.h * 0.76 };
+      const escY = (v) => g.y + g.h * (1 - (v - pMin) / (pMax - pMin));
+      const llenas = Math.round(VELAS * BFX.entre(t, 15.8, 21.6));
+      const cw = g.w / VELAS;
+      for (let i = 0; i < llenas; i++) {
+        const v = velas[i];
+        const x = g.x + i * cw + cw / 2;
+        const sube = v.c >= v.o;
+        cx.strokeStyle = `rgba(${sube ? "36,179,126" : "209,67,67"},${aChart.toFixed(3)})`;
+        cx.lineWidth = 1;
+        cx.beginPath(); cx.moveTo(x, escY(v.h)); cx.lineTo(x, escY(v.l)); cx.stroke();
+        cx.fillStyle = cx.strokeStyle;
+        const yo = escY(v.o), yc = escY(v.c);
+        cx.fillRect(x - cw * 0.32, Math.min(yo, yc), Math.max(cw * 0.64, 1), Math.max(Math.abs(yc - yo), 1));
+      }
+
+      // Contador de velas recibidas, sobre el gráfico.
+      const recibidas = Math.round(20000 * (llenas / VELAS));
+      // Arriba a la izquierda: la serie sube hacia la derecha, así que es la
+      // única esquina que sigue despejada cuando el gráfico está completo.
+      cx.fillStyle = `rgba(224,138,30,${aChart.toFixed(3)})`;
+      cx.font = `600 ${Math.max(15, w * 0.023)}px "IBM Plex Mono", monospace`;
+      cx.fillText(recibidas.toLocaleString("es-ES"), g.x, g.y + h * 0.045);
+      cx.fillStyle = `rgba(111,120,131,${aChart.toFixed(3)})`;
+      cx.font = `${Math.max(8, w * 0.0092)}px "IBM Plex Mono", monospace`;
+      cx.fillText("VELAS RECIBIDAS · GBPJPY H1", g.x, g.y + h * 0.068);
+    }
+
+    // --- El terminal, al otro lado ---
+    const aTerm = BFX.pulso(t, 2.2, 3.2, 30.2, 31.0);
+    if (aTerm > 0.01) {
+      const r = { x: izq + ancho * 0.58, y: banda.y + banda.h * 0.16, w: ancho * 0.40, h: banda.h * 0.68 };
+      cx.strokeStyle = `rgba(110,139,163,${(aTerm * 0.5).toFixed(3)})`;
+      cx.lineWidth = 1;
+      for (let k = 0; k < 5; k++) {
+        const y = r.y + (r.h * (k + 0.5)) / 5;
+        cx.beginPath();
+        cx.moveTo(r.x, y);
+        cx.lineTo(r.x + r.w * (0.35 + 0.55 * ((k * 7919) % 100) / 100), y);
+        cx.stroke();
+      }
+      cx.fillStyle = `rgba(110,139,163,${(aTerm * 0.75).toFixed(3)})`;
+      cx.font = `${Math.max(9, w * 0.0105)}px "IBM Plex Mono", monospace`;
+      cx.fillText("terminal64.exe", r.x, r.y - h * 0.018);
+    }
+
+    // El conector parpadea mientras sirve: escribe su estado cada dos segundos.
+    if (t > 22.4) elConn.textContent = (Math.floor(t * 2) % 4 === 0) ? "1.0.1 ·" : "1.0.1";
+
+    cv.style.opacity = String(1 - BFX.entre(t, 31.2, 32.0));
+  }
+
+  const reproducir = BFX.reproductor({ stage, canvas: cv, dibujar, duracion: 33 });
+  window.saltar = reproducir.saltar;
+  document.getElementById("replay").addEventListener("click", reproducir);
+  reproducir();
+})();
+</script>

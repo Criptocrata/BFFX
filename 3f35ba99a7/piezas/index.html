@@ -1,0 +1,198 @@
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<!-- Plantilla de site/3f35ba99a7/piezas/index.html. Los enlaces son los del
+     destino: "../" es la portada y las piezas quedan a su lado. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BotFactoryFX · Las piezas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450;600&display=swap">
+
+<style>
+  /* Clara como el resto del sitio, aunque las piezas sean oscuras: esto es una
+     página del sitio, no una pieza. La transición a negro al abrir una es la
+     misma que la de una sala de proyección. */
+  :root {
+    --ink: #eeedea; --surface: #ffffff; --surface-2: #f6f5f2;
+    --line: #dcd9d2; --line-2: #e8e5df;
+    --text: #1b1d20; --text-soft: #45484d; --muted: #71757b;
+    --phosphor: #b8730f; --profit: #0b7d55;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --s1: .5rem; --s2: .85rem; --s3: 1.35rem; --s4: 2.1rem; --s5: 3.2rem; --s6: 5rem;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ink); color: var(--text);
+    font-family: var(--sans); font-size: 16px; line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .top { background: var(--surface); border-bottom: 1px solid var(--line); }
+  .top-in {
+    max-width: 60rem; margin: 0 auto; padding: .8rem var(--s3);
+    display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--text); }
+  .brand svg { width: 26px; height: 26px; flex: none; }
+  .brand b { font-family: var(--mono); font-weight: 600; letter-spacing: -.03em; font-size: 1rem; }
+  .brand b i { font-style: normal; color: var(--phosphor); }
+  .tag {
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--muted); border-left: 1px solid var(--line); padding-left: var(--s3);
+  }
+  .back { margin-left: auto; font-family: var(--mono); font-size: .76rem; color: var(--phosphor); text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+
+  main { max-width: 60rem; margin: 0 auto; padding: var(--s5) var(--s3) var(--s6); }
+  h1 {
+    font-family: var(--mono); font-size: clamp(1.7rem, 4.4vw, 2.4rem); font-weight: 600;
+    letter-spacing: -.035em; line-height: 1.12; margin: 0 0 var(--s3); text-wrap: balance;
+  }
+  .lede { font-size: 1.05rem; color: var(--text-soft); max-width: 40em; margin: 0 0 var(--s2); }
+  .nota {
+    font-family: var(--mono); font-size: .78rem; color: var(--muted);
+    border-left: 2px solid var(--phosphor); padding: .5rem var(--s2);
+    background: var(--surface-2); max-width: 40em; margin: var(--s3) 0 var(--s5);
+  }
+
+  .lista { display: grid; gap: var(--s2); }
+  a.pieza {
+    display: grid; grid-template-columns: 3rem 1fr auto; align-items: baseline;
+    gap: var(--s2) var(--s3); text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 3px;
+    padding: var(--s3); transition: border-color .15s, transform .15s;
+  }
+  a.pieza:hover, a.pieza:focus-visible {
+    border-color: var(--phosphor); transform: translateY(-1px); outline: none;
+  }
+  a.pieza:focus-visible { box-shadow: 0 0 0 2px var(--phosphor); }
+  .pieza .num {
+    font-family: var(--mono); font-size: .82rem; font-weight: 600; color: var(--phosphor);
+    font-variant-numeric: tabular-nums;
+  }
+  .pieza .cuerpo { min-width: 0; }
+  .pieza .t {
+    font-family: var(--mono); font-size: 1.02rem; font-weight: 600; letter-spacing: -.02em;
+    display: block; margin-bottom: .2rem;
+  }
+  .pieza .d { color: var(--text-soft); font-size: .92rem; display: block; max-width: 42em; }
+  .pieza .dur {
+    font-family: var(--mono); font-size: .76rem; color: var(--muted);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  @media (max-width: 34rem) {
+    a.pieza { grid-template-columns: 2.2rem 1fr; }
+    .pieza .dur { grid-column: 2; }
+  }
+
+  footer {
+    border-top: 1px solid var(--line); margin-top: var(--s6); padding: var(--s3) 0;
+    font-size: .82rem; color: var(--muted); max-width: 60rem;
+    display: flex; gap: var(--s3); justify-content: space-between; flex-wrap: wrap;
+  }
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="../">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="var(--phosphor)" stroke-width="2.5" opacity="0.28"/>
+        <line x1="32" y1="11" x2="32" y2="53" stroke="var(--phosphor)" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <rect x="23" y="17" width="18" height="15" rx="2" fill="var(--phosphor)"/>
+        <rect x="23" y="37" width="18" height="11" rx="2" fill="var(--phosphor)" opacity="0.38"/>
+        <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+      </svg>
+      <b>BotFactory<i>FX</i></b>
+    </a>
+    <span class="tag">Las piezas</span>
+    <a class="back" href="../">← Volver a la web</a>
+  </div>
+</header>
+
+<main>
+  <h1>Siete piezas, siete cosas que hace.</h1>
+  <p class="lede">Cada una cuenta una parte del método en menos de medio minuto. Se abren
+    solas, sin sonido, y se pueden repetir con el botón de abajo.</p>
+
+  <p class="nota">Todas las cifras que aparecen están calculadas a partir de las series que
+    se ven en pantalla, no escritas a mano. En una serie sobre no engañarse con los números,
+    teclearlos habría sido la primera mentira.</p>
+
+  <div class="lista">
+    <a class="pieza" href="pieza-busqueda.html">
+      <span class="num">01</span>
+      <span class="cuerpo">
+        <span class="t">La búsqueda</span>
+        <span class="d">Mil ochocientas candidatas, cribadas hasta las pocas que siguen
+          funcionando sobre el histórico que nunca vieron.</span>
+      </span>
+      <span class="dur">32 s</span>
+    </a>
+
+    <a class="pieza" href="pieza-reality-check.html">
+      <span class="num">02</span>
+      <span class="cuerpo">
+        <span class="t">Reality Check</span>
+        <span class="d">Las once comprobaciones, una a una, y un veredicto que señala por
+          dónde flojea en vez de dar un aprobado.</span>
+      </span>
+      <span class="dur">24 s</span>
+    </a>
+
+    <a class="pieza" href="pieza-cartera.html">
+      <span class="num">03</span>
+      <span class="cuerpo">
+        <span class="t">Cartera</span>
+        <span class="d">Dos estrategias que ganan por separado y pierden a la vez. La
+          correlación lo dice antes que el dinero.</span>
+      </span>
+      <span class="dur">27 s</span>
+    </a>
+
+    <a class="pieza" href="pieza-construir.html">
+      <span class="num">04</span>
+      <span class="cuerpo">
+        <span class="t">Construir</span>
+        <span class="d">A mano o por evolución: las dos vías producen la misma clase de
+          reglas y pasan el mismo examen.</span>
+      </span>
+      <span class="dur">27 s</span>
+    </a>
+
+    <a class="pieza" href="pieza-datos.html">
+      <span class="num">05</span>
+      <span class="cuerpo">
+        <span class="t">Datos y costes</span>
+        <span class="d">Cómo el spread se va comiendo la ventaja hasta hacerla desaparecer,
+          y dónde queda el tuyo.</span>
+      </span>
+      <span class="dur">29 s</span>
+    </a>
+
+    <a class="pieza" href="pieza-salida.html">
+      <span class="num">06</span>
+      <span class="cuerpo">
+        <span class="t">Salida</span>
+        <span class="d">Las mismas reglas convertidas en MQL5, MQL4, Java y Pine. Código que
+          compila, no un esquema.</span>
+      </span>
+      <span class="dur">31 s</span>
+    </a>
+
+    <a class="pieza" href="pieza-linux.html">
+      <span class="num">07</span>
+      <span class="cuerpo">
+        <span class="t">MetaTrader 5 en Linux</span>
+        <span class="d">El muro de «solo Windows», y el puente que sí cruza: veinte mil velas
+          traídas de un terminal real bajo Wine.</span>
+      </span>
+      <span class="dur">33 s</span>
+    </a>
+  </div>
+
+  <footer>
+    <span>BotFactoryFX v1.8.0</span>
+    <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
+  </footer>
+</main>

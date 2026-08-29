@@ -1,0 +1,425 @@
+<meta charset="utf-8">
+<title>Dos caminos, la misma clase de estrategia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450&display=swap">
+
+<style>
+/* Motor visual común de las piezas de BotFactoryFX.
+   Se incrusta en cada pieza al ensamblar, porque un artefacto publicado tiene
+   que ser autónomo y no puede pedir ficheros a otro sitio. */
+:root {
+  --ink:      #0b0d10;
+  --surface:  #14181d;
+  --line:     #262d35;
+  --text:     #e9ecef;
+  --soft:     #aab3bc;
+  --muted:    #6f7883;
+  --phosphor: #e08a1e;
+  --trace:    #6e8ba3;
+  --profit:   #24b37e;
+  --loss:     #d14343;
+  --warn:     #d9a441;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #05070a; color: var(--text); font-family: var(--sans); }
+
+.stage {
+  position: relative; width: 100%; max-width: 62rem; margin: 0 auto;
+  aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden;
+  border: 1px solid var(--line);
+}
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.pad { position: absolute; left: 6.5%; right: 6.5%; }
+.lyr { position: absolute; left: 0; right: 0; top: 0; opacity: 0; }
+
+h1, h2 {
+  font-family: var(--mono); font-weight: 600; margin: 0;
+  letter-spacing: -.03em; line-height: 1.14; text-wrap: balance;
+  font-size: clamp(1rem, 2.9vw, 1.95rem);
+}
+.kicker {
+  font-family: var(--mono); font-size: clamp(.58rem, 1.3vw, .8rem);
+  letter-spacing: .2em; text-transform: uppercase; color: var(--phosphor);
+  margin: 0 0 .8em 0;
+}
+.sub { font-size: clamp(.7rem, 1.6vw, .98rem); color: var(--soft); margin: .8em 0 0; max-width: 32em; line-height: 1.55; }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.metrics > div { background: var(--surface); padding: 2.6% 3.4%; }
+.metrics .k { font-family: var(--mono); font-size: clamp(.48rem, 1vw, .64rem); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; }
+.metrics .v { font-family: var(--mono); font-size: clamp(.9rem, 2.4vw, 1.55rem); font-weight: 600; font-variant-numeric: tabular-nums; display: block; margin-top: .2em; }
+.metrics .v.up { color: var(--profit); }
+
+.badge {
+  display: inline-block; font-family: var(--mono); font-weight: 600;
+  font-size: clamp(.62rem, 1.6vw, .95rem); letter-spacing: .12em; text-transform: uppercase;
+  border-radius: 2px; padding: .3em .85em; border: 1px solid currentColor;
+}
+.badge.ok { color: var(--profit); }
+.badge.no { color: var(--loss); }
+
+.shot { border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--surface); }
+.shot img { display: block; width: 100%; height: auto; }
+
+.brandrow { display: flex; align-items: center; gap: 3%; }
+.brandrow svg { width: clamp(2.4rem, 7.5vw, 4.8rem); height: auto; flex: none; }
+.wordmark { font-family: var(--mono); font-weight: 600; font-size: clamp(1rem, 3.4vw, 2.15rem); letter-spacing: -.035em; }
+.wordmark i { font-style: normal; color: var(--phosphor); }
+.facts { font-family: var(--mono); font-size: clamp(.56rem, 1.4vw, .84rem); color: var(--muted); letter-spacing: .06em; margin-top: 1.1em; }
+
+/* Entradas y salidas. La salida SIEMPRE con `forwards`: con `both`, el relleno
+   hacia atrás aplica el primer fotograma desde el segundo cero y el elemento
+   se ve desde el principio de la pieza. */
+@keyframes sube { from { opacity: 0; transform: translateY(1em) } to { opacity: 1; transform: none } }
+@keyframes ver  { from { opacity: 0 } to { opacity: 1 } }
+
+.bar { max-width: 62rem; margin: .9rem auto 2rem; display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; }
+.bar button {
+  font-family: var(--mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase;
+  background: transparent; color: var(--phosphor); border: 1px solid var(--phosphor);
+  padding: .55rem 1rem; border-radius: 2px; cursor: pointer;
+}
+.bar button:hover { background: #241a0d; }
+.bar span { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .play * { animation-duration: .01ms !important; animation-delay: 0s !important; }
+}
+
+
+  /* ---- propio: las dos columnas y las reglas ---- */
+  .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6%; }
+  .via .t {
+    font-family: var(--mono); font-size: clamp(.5rem, 1.1vw, .72rem);
+    letter-spacing: .18em; text-transform: uppercase; color: var(--muted);
+    padding-bottom: .5em; border-bottom: 1px solid var(--line); margin-bottom: .9em;
+  }
+  .regla {
+    font-family: var(--mono); font-size: clamp(.52rem, 1.16vw, .78rem);
+    line-height: 1.75; color: var(--soft); opacity: 0; white-space: nowrap;
+  }
+  .regla b { color: var(--phosphor); font-weight: 500; }
+  .regla em { font-style: normal; color: var(--text); }
+
+  .cont {
+    display: flex; gap: 8%; font-family: var(--mono);
+    font-variant-numeric: tabular-nums; margin-top: .4em;
+  }
+  .cont div { opacity: 0; }
+  .cont .k { font-size: clamp(.45rem, .98vw, .62rem); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; }
+  .cont .v { font-size: clamp(.8rem, 2.1vw, 1.3rem); font-weight: 600; color: var(--phosphor); display: block; margin-top: .12em; }
+
+  .sello { display: flex; align-items: center; gap: .9em; flex-wrap: wrap; }
+  .sello .txt { font-family: var(--mono); font-size: clamp(.52rem, 1.15vw, .78rem); color: var(--soft); }
+
+  .play .h1 { animation: sube .8s ease  0.7s both, ver .5s ease  9.0s reverse forwards; }
+  .play .h2 { animation: sube .8s ease  9.4s both, ver .5s ease 15.4s reverse forwards; }
+  .play .h3 { animation: sube .8s ease 15.8s both, ver .5s ease 20.4s reverse forwards; }
+  .play .h4 { animation: sube .8s ease 20.8s both; }
+
+  .play .via   { animation: ver .6s ease 1.6s both, ver .5s ease 24.2s reverse forwards; }
+  .play .ev-nota { animation: ver .5s ease 3.2s both, ver .4s ease 15.0s reverse forwards; }
+  .play .cont div { animation: ver .5s ease 2.6s both, ver .5s ease 15.0s reverse forwards; }
+
+  /* Las reglas de la izquierda se escriben una a una; las de la derecha
+     aparecen de golpe al terminar la evolución. */
+  .play .r1 { animation: sube .5s ease  2.8s both; }
+  .play .r2 { animation: sube .5s ease  4.0s both; }
+  .play .r3 { animation: sube .5s ease  5.2s both; }
+  .play .r4 { animation: sube .5s ease  6.4s both; }
+  .play .r5 { animation: sube .5s ease  7.6s both; }
+
+  .play .e1 { animation: sube .5s ease 15.2s both; }
+  .play .e2 { animation: sube .5s ease 15.7s both; }
+  .play .e3 { animation: sube .5s ease 16.2s both; }
+  .play .e4 { animation: sube .5s ease 16.7s both; }
+  .play .e5 { animation: sube .5s ease 17.2s both; }
+
+  .play .sel { animation: sube .7s ease 21.4s both; }
+  .play .marca { animation: sube .9s ease 24.6s both; }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="lienzo"></canvas>
+
+  <div class="layer">
+    <div class="pad" style="top:7%">
+      <div class="lyr h1"><p class="kicker">Construir</p><h1>Dos caminos hasta la misma<br>clase de estrategia.</h1></div>
+      <div class="lyr h2"><p class="kicker">Construir</p><h1>A mano sabes por qué.<br>Por evolución encuentras lo que no se te habría ocurrido.</h1></div>
+      <div class="lyr h3"><p class="kicker">Construir</p><h1>Y lo que sale es lo mismo:<br>reglas que puedes leer y editar.</h1></div>
+      <div class="lyr h4"><p class="kicker">Construir</p><h1>Vengan de donde vengan,<br>pasan el mismo examen.</h1></div>
+    </div>
+
+    <div class="pad cols2" style="top:36%">
+      <div class="via">
+        <div class="t">Camino 1 · a mano</div>
+        <div class="regla r1"><b>SI</b> EMA(<em>12</em>) cruza por encima de EMA(<em>26</em>)</div>
+        <div class="regla r2"><b>Y</b> RSI(<em>14</em>) &lt; <em>70</em></div>
+        <div class="regla r3"><b>ENTONCES</b> comprar</div>
+        <div class="regla r4"><b>SALIR</b> con SL <em>40</em> pips · TP <em>90</em> pips</div>
+        <div class="regla r5"><b>FILTRO</b> solo sesión de Londres</div>
+      </div>
+
+      <div class="via">
+        <div class="t">Camino 2 · por evolución</div>
+        <div class="cont">
+          <div><span class="k">Generación</span><span class="v" id="gen">1</span></div>
+          <div><span class="k">Población</span><span class="v">120</span></div>
+          <div><span class="k">Mejor aptitud</span><span class="v" id="fit">0,00</span></div>
+        </div>
+        <div class="regla ev-nota" style="margin-top:.55em;color:var(--muted);font-size:.62em;opacity:0" id="notaMuestra">las 15 mejores de cada generación</div>
+        <div class="regla e1" style="margin-top:.9em"><b>SI</b> ATR(<em>20</em>) &gt; media(ATR, <em>60</em>)</div>
+        <div class="regla e2"><b>Y</b> cierre &gt; banda alta de Donchian(<em>34</em>)</div>
+        <div class="regla e3"><b>ENTONCES</b> comprar</div>
+        <div class="regla e4"><b>SALIR</b> con trailing de <em>2,4</em> × ATR</div>
+        <div class="regla e5"><b>FILTRO</b> ninguno</div>
+      </div>
+    </div>
+
+    <div class="pad lyr sel" style="top:auto; bottom:9%">
+      <div class="sello">
+        <span class="badge ok">Reality Check</span>
+        <span class="txt">La escrita a mano aguanta ocho de once. La evolucionada, nueve.
+          Nadie tiene trato de favor.</span>
+      </div>
+    </div>
+
+    <div class="pad" style="top:auto; bottom:14%">
+      <div class="lyr marca">
+        <div class="brandrow">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#e08a1e" stroke-width="2.5" opacity="0.28"/>
+            <line x1="32" y1="11" x2="32" y2="53" stroke="#e08a1e" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+            <rect x="23" y="17" width="18" height="15" rx="2" fill="#e08a1e"/>
+            <rect x="23" y="37" width="18" height="11" rx="2" fill="#e08a1e" opacity="0.38"/>
+            <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="#e08a1e" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+          </svg>
+          <span class="wordmark">BotFactory<i>FX</i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button id="replay" type="button">Reproducir</button>
+  <span>27 s · 16:9 · Construir</span>
+</div>
+
+<script>
+/* Motor común de las piezas animadas. Cada pieza aporta su función de dibujo
+   y sus compases; todo lo demás —reloj, lienzo, curvas, suavizados— vive aquí. */
+const BFX = (() => {
+  "use strict";
+
+  /** Generador con semilla: la misma imagen en cada reproducción, que es lo
+   *  que permite volver a grabar una pieza y obtener el mismo plano. */
+  function azar(semilla = 20260828) {
+    let s = semilla >>> 0;
+    return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  }
+
+  const suave = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+  /** Progreso de 0 a 1 entre dos instantes de la línea de tiempo, suavizado. */
+  const entre = (t, a, b) => suave((t - a) / (b - a));
+  /** Un pulso: sube entre a y b, se mantiene, y baja entre c y d. */
+  const pulso = (t, a, b, c, d) => entre(t, a, b) * (1 - entre(t, c, d));
+
+  /** Ajusta el lienzo a su tamaño real teniendo en cuenta la densidad de la
+   *  pantalla; sin esto los trazos salen borrosos en pantallas retina. */
+  function medir(cv, cx) {
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return r;
+  }
+
+  /** Un paseo aleatorio con deriva: la forma de una curva de capital. */
+  function paseo(rnd, puntos, deriva, vol, desde = 0) {
+    const y = new Float32Array(puntos);
+    let v = desde;
+    for (let p = 0; p < puntos; p++) {
+      v += deriva + (rnd() - 0.5) * vol;
+      y[p] = v;
+    }
+    return y;
+  }
+
+  /** Traza una curva ya calculada dentro de un rectángulo. */
+  function trazar(cx, y, caja, escala, hasta = 1) {
+    const n = y.length;
+    const fin = Math.max(1, Math.round((n - 1) * hasta));
+    cx.beginPath();
+    for (let p = 0; p <= fin; p++) {
+      const x = caja.x + (caja.w * p) / (n - 1);
+      const py = escala(y[p]);
+      p === 0 ? cx.moveTo(x, py) : cx.lineTo(x, py);
+    }
+    cx.stroke();
+  }
+
+  /** Rejilla de instrumento. */
+  function rejilla(cx, caja, filas = 4, color = "#1b2128") {
+    cx.save();
+    cx.lineWidth = 1;
+    cx.strokeStyle = color;
+    for (let i = 0; i <= filas; i++) {
+      const y = caja.y + (caja.h * i) / filas;
+      cx.beginPath(); cx.moveTo(caja.x, y); cx.lineTo(caja.x + caja.w, y); cx.stroke();
+    }
+    cx.restore();
+  }
+
+  /** Arranca la pieza: reinicia las animaciones CSS y el reloj del lienzo. */
+  function reproductor({ stage, canvas, dibujar, duracion = 32 }) {
+    const cx = canvas.getContext("2d");
+    let caja = medir(canvas, cx);
+    let id = 0, t0 = 0, parado = false;
+    addEventListener("resize", () => { caja = medir(canvas, cx); });
+
+    function marco(ahora) {
+      if (parado) return;
+      const t = (ahora - t0) / 1000;
+      dibujar(cx, caja, t);
+      if (t < duracion + 1) id = requestAnimationFrame(marco);
+    }
+    function reproducir() {
+      parado = false;
+      cancelAnimationFrame(id);
+      stage.classList.remove("play");
+      void stage.offsetWidth;          // fuerza el reinicio de las animaciones
+      stage.classList.add("play");
+      caja = medir(canvas, cx);
+      t0 = performance.now();
+      id = requestAnimationFrame(marco);
+    }
+
+    /* Salta a un instante y lo pinta, sin reloj. Sirve para revisar un compás
+       concreto sin esperar a que llegue, que con la latencia de una captura de
+       pantalla es la diferencia entre ver el plano y ver el siguiente. */
+    reproducir.saltar = (t) => {
+      parado = true;                 // un fotograma ya encolado repintaría encima
+      cancelAnimationFrame(id);
+      caja = medir(canvas, cx);
+      dibujar(cx, caja, t);
+      stage.classList.add("play");
+      stage.querySelectorAll("*").forEach((el) => {
+        el.getAnimations().forEach((a) => { a.currentTime = t * 1000; a.pause(); });
+      });
+    };
+    return reproducir;
+  }
+
+  return { azar, suave, entre, pulso, medir, paseo, trazar, rejilla, reproductor };
+})();
+
+
+(() => {
+  "use strict";
+  const rnd = BFX.azar(90210);
+  const POB = 120, MUESTRA = 15, PTS = 34, GENS = 34;
+  const COLS = 5, FILAS = 3;
+
+  /* La población, generación a generación, calculada de una vez.
+     Cada individuo es una curva corta; en cada generación se ordenan por
+     resultado final, la mitad peor se descarta y se sustituye por copias
+     mutadas de la mitad buena. Eso es un algoritmo genético reducido a lo
+     que se puede ver en pantalla. */
+  const generaciones = [];
+  let pobl = Array.from({ length: POB }, () => ({
+    deriva: (rnd() - 0.55) * 0.030,
+    vol: 0.150 + rnd() * 0.150,
+  }));
+  const curva = (ind) => BFX.paseo(rnd, PTS, ind.deriva, ind.vol);
+
+  for (let g = 0; g < GENS; g++) {
+    const conCurva = pobl.map((ind) => ({ ...ind, y: curva(ind) }));
+    conCurva.forEach((c) => { c.apt = c.y[PTS - 1]; });
+    conCurva.sort((a, b) => b.apt - a.apt);
+    generaciones.push(conCurva);
+    const buenos = conCurva.slice(0, POB / 2);
+    pobl = [
+      ...buenos.map((c) => ({ deriva: c.deriva, vol: c.vol })),
+      ...buenos.map((c) => ({
+        deriva: c.deriva + (rnd() - 0.42) * 0.012,   // la mutación empuja a mejor
+        vol: Math.max(0.10, c.vol + (rnd() - 0.5) * 0.05),
+      })),
+    ];
+  }
+  const mejorFinal = generaciones[GENS - 1][0];
+  const aptMax = Math.max(...generaciones.map((g) => g[0].apt));
+
+  const stage = document.getElementById("stage");
+  const cv = document.getElementById("lienzo");
+  const elGen = document.getElementById("gen");
+  const elFit = document.getElementById("fit");
+
+  function dibujar(cx, caja, t) {
+    const w = caja.width, h = caja.height;
+    cx.clearRect(0, 0, w, h);
+
+    // La rejilla vive bajo la columna derecha, alineada con su texto.
+    const izq = w * 0.065, ancho = w * 0.87;
+    const colD = { x: izq + ancho * 0.53, w: ancho * 0.47 };
+    const top = h * 0.53, alto = h * 0.30;
+
+    // Las generaciones avanzan entre los segundos 2,6 y 14,2.
+    const p = BFX.entre(t, 2.6, 14.2);
+    const gi = Math.min(GENS - 1, Math.floor(p * GENS));
+    const gen = generaciones[gi];
+
+    elGen.textContent = String(gi + 1);
+    elFit.textContent = (gen[0].apt / aptMax).toFixed(2).replace(".", ",");
+
+    // Al acabar, la población se apaga y queda solo la mejor.
+    const aPobl = BFX.pulso(t, 2.4, 3.2, 14.2, 15.2);
+    if (aPobl > 0.01) {
+      const cw = colD.w / COLS, ch = alto / FILAS;
+      const vistas = gen.slice(0, MUESTRA);
+      for (let i = 0; i < MUESTRA; i++) {
+        const c = vistas[i];
+        const col = i % COLS, fil = Math.floor(i / COLS);
+        const x0 = colD.x + col * cw, y0 = top + fil * ch;
+        const rel = (c.apt - vistas[MUESTRA - 1].apt) / ((vistas[0].apt - vistas[MUESTRA - 1].apt) || 1);
+        cx.strokeStyle = `rgba(224,138,30,${(aPobl * (0.14 + rel * 0.75)).toFixed(3)})`;
+        cx.lineWidth = rel > 0.92 ? 1.8 : 1;
+        let cmin = Infinity, cmax = -Infinity;
+        for (const v of c.y) { if (v < cmin) cmin = v; if (v > cmax) cmax = v; }
+        cx.beginPath();
+        for (let q = 0; q < PTS; q++) {
+          const x = x0 + (cw * 0.84 * q) / (PTS - 1) + cw * 0.08;
+          const y = y0 + ch * 0.78 * (1 - (c.y[q] - cmin) / (cmax - cmin || 1)) + ch * 0.11;
+          q === 0 ? cx.moveTo(x, y) : cx.lineTo(x, y);
+        }
+        cx.stroke();
+      }
+    }
+
+    // La ganadora, a tamaño completo, mientras se leen sus reglas.
+    const aMejor = BFX.pulso(t, 15.0, 16.0, 20.6, 21.4);
+    if (aMejor > 0.01) {
+      const r = { x: colD.x, y: top + alto * 0.15, w: colD.w, h: alto * 0.7 };
+      const min = Math.min(...mejorFinal.y), max = Math.max(...mejorFinal.y);
+      const esc = (v) => r.y + r.h * (1 - (v - min) / (max - min || 1));
+      // Al fondo: comparte columna con las reglas evolucionadas y a plena
+      // opacidad compite con ellas en vez de acompañarlas.
+      cx.strokeStyle = `rgba(36,179,126,${(aMejor * 0.42).toFixed(3)})`;
+      cx.lineWidth = 2; cx.lineJoin = "round";
+      BFX.trazar(cx, mejorFinal.y, r, esc, 1);
+    }
+
+    cv.style.opacity = String(1 - BFX.entre(t, 24.0, 24.8));
+  }
+
+  const reproducir = BFX.reproductor({ stage, canvas: cv, dibujar, duracion: 27 });
+  window.saltar = reproducir.saltar;
+  document.getElementById("replay").addEventListener("click", reproducir);
+  reproducir();
+})();
+</script>
