@@ -204,7 +204,7 @@
       </svg>
       <b>BotFactory<i>FX</i></b>
     </a>
-    <span class="tag">Manual · v1.8.0</span>
+    <span class="tag">Manual · v1.9.0</span>
     <a class="back" href="../">← Volver a la web</a>
   </div>
 </header>
@@ -292,8 +292,8 @@
           desde el terminal.</li>
         <li>Doble clic.</li>
       </ol>
-      <pre><code>chmod +x BotFactoryFX-1.8.0.AppImage
-./BotFactoryFX-1.8.0.AppImage</code></pre>
+      <pre><code>chmod +x BotFactoryFX-1.9.0.AppImage
+./BotFactoryFX-1.9.0.AppImage</code></pre>
 
       <p>Tus estrategias, tus históricos importados y tus ajustes se quedan en tu disco entre
         sesiones. Borrar el AppImage no los borra.</p>
@@ -334,7 +334,7 @@
             <tr><td><strong>Data</strong></td><td>El histórico sobre el que vas a probar, y lo que tu bróker te cobra.</td></tr>
             <tr><td><strong>Build</strong></td><td>Escribes las reglas, o dejas que un algoritmo genético las busque.</td></tr>
             <tr><td><strong>Backtesting</strong></td><td>La prueba: la estrategia contra el histórico, con costes.</td></tr>
-            <tr><td><strong>Reality Check</strong></td><td>El examen: once intentos de tumbar el resultado.</td></tr>
+            <tr><td><strong>Reality Check</strong></td><td>El examen: doce intentos de tumbar el resultado.</td></tr>
             <tr><td><strong>Library</strong></td><td>Lo que sobrevive se guarda, con su histórico y su veredicto pegados.</td></tr>
             <tr><td><strong>Portfolio</strong></td><td>Cómo se llevan entre sí las que has guardado.</td></tr>
           </tbody>
@@ -364,7 +364,7 @@
         </div>
       </figure>
 
-      <h3>Tres maneras de traer precios</h3>
+      <h3>Cuatro maneras de traer precios</h3>
 
       <h4>1 · Un CSV</h4>
       <p>Arrastra el fichero o búscalo. El importador detecta solo las columnas habituales de
@@ -380,13 +380,39 @@
         ofrezca tu bróker, en cualquier temporalidad, sin exportar un solo fichero a mano.
         Está explicado entero en el <a href="#mt5">capítulo 16</a>.</p>
 
-      <h4>3 · Exportación de TradingView</h4>
+      <h4>3 · Directamente de Hyperliquid</h4>
+      <p>«Import from Hyperliquid» descarga el histórico de cualquiera de los perpetuos que
+        cotiza el sitio. <strong>No hace falta cuenta ni clave</strong>: su API es pública y
+        de solo lectura. Junto con las velas se lee el <em>spread</em> del libro de órdenes en
+        ese momento y el apalancamiento máximo que el sitio declara para ese instrumento, así
+        que los costes del capítulo siguiente vienen rellenos con lo que la plataforma dice, no
+        con un valor por defecto.</p>
+      <p>Es la única de las cuatro que trae precios <strong>sin que aportes nada</strong> —ni
+        un fichero ni un terminal instalado—, y por eso es la única fuente de mercado que la
+        <strong>edición de navegador</strong> tiene por sí sola: allí puedes seguir subiendo un
+        CSV tuyo, pero MetaTrader no está.</p>
+
+      <div class="warn-box">
+        <p><b>Cuanto más fina la vela, menos histórico.</b> El sitio guarda unas 5.000 velas
+          por instrumento y temporalidad, se pidan como se pidan: retroceder no devuelve más.
+          Eso son <strong>3 días</strong> en M1, <strong>52</strong> en M15, <strong>208</strong>
+          en H1, <strong>833</strong> en H4 y <strong>2.190</strong> —seis años— en D1. La
+          pantalla lo dice antes de descargar.</p>
+      </div>
+
+      <p>Un detalle que el importador resuelve solo: antes de que un instrumento empezara a
+        cotizar, la API sigue devolviendo velas —del precio índice, con volumen cero—. En el
+        diario de BTC son 909 de 2.191, el 42 %. Se descartan al importar, así que saldrán
+        menos velas de las que el rango sugiere, y la pantalla avisa de cuántas.</p>
+
+      <h4>4 · Exportación de TradingView</h4>
       <p>En la barra superior del gráfico, <strong>Download chart data…</strong> (requiere
         PRO+ o Premium). Después se suelta aquí como cualquier otro CSV.</p>
 
       <div class="note">
-        <p><b>No hay datos de muestra.</b> No se incluye ninguna serie de ejemplo: el
-          histórico lo aportas tú, por CSV o desde MetaTrader.</p>
+        <p><b>No hay datos de muestra.</b> No se incluye ninguna serie de ejemplo. El
+          histórico lo aportas tú —por CSV o desde MetaTrader— o lo traes de Hyperliquid, que
+          es lo único que se descarga sin cuenta de nadie.</p>
       </div>
 
       <h3>La biblioteca de series</h3>
@@ -468,15 +494,52 @@
       <p class="num">05 · Lo que te cuesta operar</p>
       <h2>Se declara una vez, y lo usa todo.</h2>
 
-      <p>Spread, comisión y deslizamiento no se preguntan en el backtest. Pertenecen al
-        instrumento, no a la prueba, así que se declaran aquí —en Data— y a partir de ese
-        momento todos los backtests, todas las búsquedas y todos los veredictos usan esos
-        mismos números.</p>
+      <p>Los costes no se preguntan en el backtest. Pertenecen al instrumento, no a la prueba,
+        así que se declaran aquí —en Data— y a partir de ese momento todos los backtests, todas
+        las búsquedas y todos los veredictos usan esos mismos números.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Coste</th><th>Se cobra</th><th>Qué es</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Spread</strong></td><td>por operación</td><td>La diferencia entre comprar y vender, en pips.</td></tr>
+            <tr><td><strong>Comisión</strong></td><td>por operación</td><td>Lo que cobra el bróker por lote, ida y vuelta.</td></tr>
+            <tr><td><strong>Deslizamiento</strong></td><td>por operación</td><td>Cuánto peor de lo pedido se ejecuta un stop. Solo a las salidas por stop.</td></tr>
+            <tr><td><strong>Carry</strong></td><td><em>por hora abierta</em></td><td>Lo que cuesta mantener un perpetuo. Solo aparece cuando el instrumento lo tiene.</td></tr>
+          </tbody>
+        </table>
+      </div>
 
       <p>Hay tres botones de partida —<strong>cuenta estándar</strong>, <strong>cuenta
         raw/ECN</strong> y <strong>sin costes</strong>— y la posibilidad de teclear las cifras
         exactas. El tercero está ahí para que veas cuánto se come el coste, no para que
         pruebes con él.</p>
+
+      <h3>El carry, que no se parece a los otros tres</h3>
+      <p>Los tres primeros se cobran al abrir y cerrar: da igual que la operación dure diez
+        minutos o diez días. El <strong>carry</strong> de un perpetuo no. Se cobra
+        <strong>por hora que la posición esté abierta</strong>, así que una estrategia que
+        aguanta las posiciones paga más que una que entra y sale, con las mismas reglas y el
+        mismo instrumento.</p>
+
+      <p>Y tiene <strong>signo</strong>. Con la tasa en positivo, el largo paga y el corto
+        cobra; con la tasa en negativo, al revés. Es el único coste del programa que puede
+        sumar en vez de restar, y explica por qué la misma idea puede salir a cuenta en un
+        sentido y no en el otro.</p>
+
+      <div class="note">
+        <p><b>Qué se teclea.</b> El campo se llama <em>Funding</em> y va en
+          <strong>% anual, lado largo</strong>, que es como lo publica todo el mundo. Por
+          dentro el motor cobra la parte proporcional cada hora. Solo aparece cuando el
+          instrumento tiene carry: en un par de divisas al contado el campo no existe, porque
+          un campo a cero invita a rellenarlo con algo.</p>
+      </div>
+
+      <p>Cuánto pesa, medido sobre BTC real: en 51 operaciones de unas 57 horas cada una,
+        sobre una cuenta de 10.000 $, el lado largo pagó <strong>215 $</strong> y el corto
+        cobró <strong>225 $</strong>. No es un decimal. Si importas desde Hyperliquid
+        (<a href="#datos">capítulo 4</a>) el campo viene relleno con la tasa que el sitio
+        estaba aplicando.</p>
 
       <div class="warn-box">
         <p><b>Comprueba el spread antes de nada.</b> Una estrategia con ventaja de 2 pips
@@ -778,26 +841,27 @@
     <!-- ================= 10 ================= -->
     <section id="reality">
       <p class="num">10 · Reality Check</p>
-      <h2>Once comprobaciones sobre el mismo resultado.</h2>
+      <h2>Doce comprobaciones sobre el mismo resultado.</h2>
 
       <p>El backtest dice si la estrategia ganó dinero sobre el histórico. El Reality Check
         contesta otra pregunta: si ese resultado se sostiene fuera de él. Para eso somete la
-        estrategia a once comprobaciones independientes, cada una de las cuales intenta
+        estrategia a doce comprobaciones independientes, cada una de las cuales intenta
         romperla por un sitio distinto.</p>
 
-      <h3>Las once comprobaciones</h3>
+      <h3>Las doce comprobaciones</h3>
       <p>Cada una tiene un peso, porque no todas dicen lo mismo sobre si la ventaja es real.</p>
 
       <div class="tbl-wrap">
         <table>
           <thead><tr><th>Comprobación</th><th>La pregunta que hace</th><th>Peso</th></tr></thead>
           <tbody>
-            <tr><td><strong>Fuera de muestra</strong></td><td>¿Sigue funcionando sobre histórico que nunca vio?</td><td class="n">0,16</td></tr>
-            <tr><td><strong>Walk-forward</strong></td><td>¿Sobreviviría a ser reajustada sobre la marcha?</td><td class="n">0,16</td></tr>
-            <tr><td><strong>Sensibilidad a parámetros</strong></td><td>¿Sigue funcionando si los números fueran algo distintos?</td><td class="n">0,13</td></tr>
-            <tr><td><strong>Tolerancia al ruido</strong></td><td>¿Sigue funcionando si los precios hubieran temblado un poco?</td><td class="n">0,13</td></tr>
-            <tr><td><strong>Caída máxima</strong></td><td>¿Cuánto tiempo hubo que aguantar bajo el agua?</td><td class="n">0,11</td></tr>
+            <tr><td><strong>Fuera de muestra</strong></td><td>¿Sigue funcionando sobre histórico que nunca vio?</td><td class="n">0,14</td></tr>
+            <tr><td><strong>Walk-forward</strong></td><td>¿Sobreviviría a ser reajustada sobre la marcha?</td><td class="n">0,14</td></tr>
+            <tr><td><strong>Sensibilidad a parámetros</strong></td><td>¿Sigue funcionando si los números fueran algo distintos?</td><td class="n">0,12</td></tr>
+            <tr><td><strong>Tolerancia al ruido</strong></td><td>¿Sigue funcionando si los precios hubieran temblado un poco?</td><td class="n">0,11</td></tr>
+            <tr><td><strong>Caída máxima</strong></td><td>¿Cuánto tiempo hubo que aguantar bajo el agua?</td><td class="n">0,10</td></tr>
             <tr><td><strong>Monte Carlo</strong></td><td>¿Qué mal pinta si las operaciones hubieran caído en otro orden?</td><td class="n">0,10</td></tr>
+            <tr><td><strong>Otros instrumentos</strong></td><td>¿La ventaja existe en otro sitio, o solo aquí?</td><td class="n">0,08</td></tr>
             <tr><td><strong>Consistencia por periodos</strong></td><td>¿Aguanta la ventaja a lo largo del tiempo, o fue una racha?</td><td class="n">0,06</td></tr>
             <tr><td><strong>Vela de inicio</strong></td><td>¿Funcionaría igual si la prueba hubiera empezado unas velas después?</td><td class="n">0,05</td></tr>
             <tr><td><strong>Resolución de vela</strong></td><td>¿Aguanta medida sobre velas más finas?</td><td class="n">0,05</td></tr>
@@ -816,18 +880,37 @@
 
       <h4>La más severa contra el sobreajuste</h4>
       <p><strong>Tolerancia al ruido</strong> mueve ligeramente los precios y vuelve a medir.
-        Es la única que pregunta si <em>este histórico concreto</em> fue la razón del
-        resultado, y una estrategia que memorizó el pasado se cae aquí. Por eso pesa 0,13,
-        tanto como la sensibilidad a parámetros.</p>
+        Sobre un solo instrumento es la única que pregunta si <em>este histórico concreto</em>
+        fue la razón del resultado, y una estrategia que memorizó el pasado se cae aquí.</p>
 
-      <h4>Una puede no aplicar</h4>
+      <h4>La que mira fuera</h4>
+      <p><strong>Otros instrumentos</strong> coge las reglas tal cual y las corre sobre los
+        demás instrumentos que tengas cargados en Data. Todo lo demás en este informe vuelve a
+        medir la misma serie; esta es la única que pregunta si hubo un comportamiento del
+        mercado o una forma de <em>esta</em> historia en particular.</p>
+      <p>Es deliberadamente generosa. Ganar en un par y perder en otros tres es un indicio de
+        sobreajuste, no una prueba: el horario, el tamaño del tick y el recorrido típico
+        difieren lo bastante como para que una buena estrategia de EURUSD falle en XAUUSD por
+        motivos honestos. Un pleno puntúa 1; un fracaso total sigue puntuando 0,25, y esta
+        comprobación nunca sale en rojo. Condenar a una estrategia legítimamente especializada
+        haría el veredicto entero menos fiable, no más.</p>
+
+      <h4>Dos pueden no aplicar</h4>
       <p><strong>Resolución de vela</strong> queda en «no aplicable» cuando el fichero no
-        contiene velas más finas que aquellas sobre las que se juzgó. Cuando eso pasa, su peso
-        se reparte entre las demás: no penaliza ni ayuda, solo hace el veredicto algo menos
-        seguro. El informe lo dice.</p>
+        contiene velas más finas que aquellas sobre las que se juzgó, y
+        <strong>otros instrumentos</strong> cuando no hay ningún otro cargado. Cuando eso pasa,
+        su peso se reparte entre las demás: no penalizan ni ayudan, solo hacen el veredicto
+        algo menos seguro. El informe lo dice.</p>
+
+      <div class="note">
+        <p><b>Cómo darle algo que mirar.</b> Basta con importar más símbolos en Data. Si
+          operas cripto, el barrido de Hyperliquid (<a href="#datos">capítulo 4</a>) trae de
+          una vez los más negociados, ordenados por volumen, y esta comprobación pasa de «no
+          aplicable» a una cifra.</p>
+      </div>
 
       <h3>El veredicto</h3>
-      <p>Las once puntuaciones se combinan según su peso en una nota de 0 a 100, y esa nota
+      <p>Las doce puntuaciones se combinan según su peso en una nota de 0 a 100, y esa nota
         cae en una de cuatro bandas:</p>
 
       <div class="tbl-wrap">
@@ -865,7 +948,7 @@
           <span class="id">Captura C-09</span>
           <span class="qué">Un Reality Check ejecutado, con veredicto</span>
           <p class="cómo"><b>La captura más importante del manual.</b> Pantalla <b>Reality
-            Check</b> después de pulsar «Run Reality Check», con el veredicto arriba y las once
+            Check</b> después de pulsar «Run Reality Check», con el veredicto arriba y las doce
             filas visibles, cada una con su estado. Lo ideal es una estrategia con resultado
             <b>mixto</b> —alguna en verde, alguna en ámbar— porque enseña para qué sirve la
             pantalla. Un aprobado perfecto no enseña nada.</p>
@@ -960,7 +1043,7 @@
     <!-- ================= 13 ================= -->
     <section id="exportar">
       <p class="num">13 · Exportar</p>
-      <h2>El código del robot, en cuatro formatos.</h2>
+      <h2>El código del robot, en cinco formatos.</h2>
 
       <p>La pestaña <strong>Export</strong> genera el robot completo a partir de la estrategia
         actual:</p>
@@ -973,15 +1056,55 @@
             <tr><td><strong>MQL4</strong></td><td>MetaTrader 4</td><td>Igual, en su propia carpeta <code>Experts</code></td></tr>
             <tr><td><strong>Java</strong></td><td>Dukascopy JForex</td><td>Estrategias de JForex</td></tr>
             <tr><td><strong>Pine Script</strong></td><td>TradingView</td><td>Pine Editor: pegar, guardar y añadir al gráfico</td></tr>
+            <tr><td><strong>Python</strong></td><td>Hyperliquid</td><td>Un programa suelto: <code>python3 bot.py</code></td></tr>
           </tbody>
         </table>
       </div>
 
-      <p>El fichero incluye los parámetros de entrada, <code>OnInit</code>,
+      <p>Los cuatro primeros incluyen los parámetros de entrada, <code>OnInit</code>,
         <code>OnTick</code>/<code>onBar</code>, los evaluadores de cada condición de entrada,
         la ejecución de las órdenes y —si los has activado— el trailing stop, el break-even y
         el tope de pérdida diaria. Puedes previsualizarlo, copiarlo al portapapeles o
         descargar el fichero.</p>
+
+      <h3>El de Python no se parece a los otros cuatro</h3>
+      <p>Los cuatro primeros se apoyan en la librería de indicadores de su plataforma: donde
+        la estrategia dice RSI, el fichero llama al RSI de MetaTrader o de TradingView, y se
+        acepta que difieran un poco del de aquí. El de Python no tiene plataforma debajo, así
+        que <strong>lleva las fórmulas del propio motor dentro</strong> —los cuarenta y cinco
+        indicadores, y las fórmulas propias que hayas escrito—. Es la única de las cinco que
+        calcula exactamente lo que calculó el backtest.</p>
+
+      <p>Como contrapartida, <strong>se niega antes que aproximar</strong>. Si la estrategia
+        lee una segunda serie —un filtro de H4 sobre una idea de H1—, el bot no se genera: solo
+        descarga una serie, y calcular ese filtro sobre las velas equivocadas daría señales
+        distintas de las que se juzgaron. La pantalla dice el motivo y deja apagados copiar y
+        descargar. Los otros cuatro sí saben pedir una segunda serie.</p>
+
+      <div class="warn-box">
+        <p><b>Este es el único que puede mandar órdenes.</b> Los otros cuatro producen código
+          para una plataforma que tú gobiernas; este es un programa que se conecta a
+          Hyperliquid por su cuenta. Trae tres frenos, y conviene entenderlos antes de
+          arrancarlo:</p>
+        <ul>
+          <li><strong>Arranca en seco.</strong> Imprime la orden que habría mandado y no manda
+            nada. Solo opera con <code>BFX_LIVE=1</code>.</li>
+          <li><strong>Y en la red de pruebas.</strong> Aun en vivo, apunta al <em>testnet</em>
+            mientras no pongas <code>BFX_MAINNET=1</code>.</li>
+          <li><strong>La clave no está dentro.</strong> Se lee de dos variables de entorno,
+            <code>HL_ACCOUNT_ADDRESS</code> y <code>HL_SECRET_KEY</code>, y no se escribe
+            nunca en el fichero.</li>
+        </ul>
+      </div>
+
+      <p>Sobre la clave: usa una <strong>API wallet</strong>, que se crea en la propia interfaz
+        de Hyperliquid, en el apartado API. Puede operar pero <strong>no puede retirar
+        fondos</strong>. Es la diferencia entre un error caro y uno total.</p>
+
+      <p>El bot pide las velas a la API pública —para leer no hace falta clave—, descarta la
+        vela en curso porque el backtest solo decidió sobre velas cerradas, y mira si hay vela
+        nueva cada pocos segundos, en proporción a la temporalidad. Deja pasar unos días en
+        seco comparando sus señales con las del backtest antes de arriesgar nada.</p>
 
       <h3>Qué coincide con el backtest y qué no</h3>
       <div class="tbl-wrap">
@@ -1297,6 +1420,26 @@
         —trailing, break-even, tope diario— se exporta pero no se simula aquí. La tabla del
         <a href="#exportar">capítulo 13</a> lo detalla.</p>
 
+      <h4>Me deja exportar a MQL5 pero no a Python. ¿Por qué?</h4>
+      <p>Porque el de Python calcula los indicadores él mismo, portados del motor, y hay una
+        cosa que no puede hacer: leer una segunda serie. Si tu estrategia tiene un filtro de
+        otra temporalidad o de otro instrumento, el bot solo descargaría una y ese filtro
+        saldría mal. La pantalla dice cuál es el motivo. Los otros cuatro se apoyan en la
+        plataforma de destino y sí saben pedirla.</p>
+
+      <h4>Si ejecuto el bot de Python, ¿empieza a operar con mi dinero?</h4>
+      <p>No. Arranca <strong>en seco</strong>: imprime la orden que habría mandado y no manda
+        nada. Hace falta <code>BFX_LIVE=1</code> para que opere, y aun entonces va a la red de
+        pruebas mientras no añadas <code>BFX_MAINNET=1</code>. La clave se lee del entorno y
+        nunca está dentro del fichero. Está detallado en el <a href="#exportar">capítulo 13</a>.</p>
+
+      <h4>Estoy en la versión de navegador y no me encuentra ningún MetaTrader.</h4>
+      <p>Y no va a encontrarlo: el conector habla con un terminal instalado en tu máquina, y
+        ahí no lo hay. En esa edición te quedan dos vías: subir un CSV tuyo, como siempre, o
+        traer precios de <strong>Hyperliquid</strong>, que se descarga sin cuenta ni clave y
+        trae de paso el spread real y el carry del instrumento
+        (<a href="#datos">capítulo 4</a>).</p>
+
       <h4>Dr. Quant me dice que no puede hacer eso y que cambie a modo agente.</h4>
       <p>Estás en modo Chat, que no ejecuta backtests ni guarda estrategias. Está diseñado
         así para que no se invente métricas. Pulsa el icono 🤖 de la cabecera del panel y
@@ -1323,9 +1466,9 @@
           <thead><tr><th>Límite</th><th>Detalle</th><th>Dónde</th></tr></thead>
           <tbody>
             <tr>
-              <td><strong>No ejecuta operaciones</strong></td>
-              <td>No hay conexión de órdenes ni se piden credenciales de bróker. El conector de MetaTrader es de solo lectura.</td>
-              <td class="ref"><a href="#mt5">Cap. 16</a></td>
+              <td><strong>El programa no opera</strong></td>
+              <td>No manda órdenes ni pide credenciales de nadie. El conector de MetaTrader y el de Hyperliquid son de solo lectura. Lo que sí puede operar es el bot de Python que exportas, y eso ocurre fuera de aquí: es un programa aparte, con su propia clave, que arranca en seco.</td>
+              <td class="ref"><a href="#exportar">Cap. 13</a></td>
             </tr>
             <tr>
               <td><strong>No simula la gestión avanzada</strong></td>
@@ -1339,7 +1482,7 @@
             </tr>
             <tr>
               <td><strong>No incluye histórico</strong></td>
-              <td>Los datos los aportas tú, por CSV o desde MetaTrader.</td>
+              <td>Los datos los aportas tú, por CSV o desde MetaTrader, o los traes de Hyperliquid — que da unas 5.000 velas por temporalidad y nada más atrás.</td>
               <td class="ref"><a href="#datos">Cap. 4</a></td>
             </tr>
             <tr>
@@ -1361,7 +1504,7 @@
     </section>
 
     <footer>
-      <span>BotFactoryFX v1.8.0 · Manual</span>
+      <span>BotFactoryFX v1.9.0 · Manual</span>
       <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
     </footer>
   </main>

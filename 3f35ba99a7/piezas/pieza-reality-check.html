@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Las once pruebas</title>
+<title>Las doce pruebas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450&display=swap">
@@ -101,7 +101,8 @@ body.marco .bar { display: none; }
 
   /* ---- propio de esta pieza: la tabla de comprobaciones ---- */
   /* Seis filas ahora, no cuatro: el hueco vertical baja de 1,6 % a 1 % para que
-     las once quepan entre el titular y el veredicto sin encoger la letra. */
+     las doce quepan entre el titular y el veredicto sin encoger la letra. Con
+     doce las seis filas van llenas; con once la última iba a medias. */
   .pruebas {
     display: grid; grid-template-columns: 1fr 1fr;
     gap: 1% 5%; margin-top: 1.2%;
@@ -144,22 +145,24 @@ body.marco .bar { display: none; }
 
   @keyframes llenar { from { transform: scaleX(0) } to { transform: scaleX(var(--v)) } }
 
-  /* Once compases: una prueba cada 0,85 s a partir del segundo 5. El intervalo
-     bajó de 1,15 s al pasar de ocho a once para que la última siga cayendo
-     antes del segundo 14 y el veredicto no se amontone contra el cierre. */
+  /* Doce compases: una prueba cada 0,78 s a partir del segundo 5. El intervalo
+     ha bajado dos veces por el mismo motivo —de 1,15 s con ocho, a 0,85 con once,
+     a 0,78 con doce—: la última tiene que caer antes del segundo 14 o el veredicto
+     se amontona contra el cierre. */
   .play .prueba { animation: sube .55s ease both; }
   .play .prueba i { animation: llenar .75s cubic-bezier(.25,.9,.35,1) both; }
   .play .p1,  .play .p1 i  { animation-delay:  5.00s; }
-  .play .p2,  .play .p2 i  { animation-delay:  5.85s; }
-  .play .p3,  .play .p3 i  { animation-delay:  6.70s; }
-  .play .p4,  .play .p4 i  { animation-delay:  7.55s; }
-  .play .p5,  .play .p5 i  { animation-delay:  8.40s; }
-  .play .p6,  .play .p6 i  { animation-delay:  9.25s; }
-  .play .p7,  .play .p7 i  { animation-delay: 10.10s; }
-  .play .p8,  .play .p8 i  { animation-delay: 10.95s; }
-  .play .p9,  .play .p9 i  { animation-delay: 11.80s; }
-  .play .p10, .play .p10 i { animation-delay: 12.65s; }
-  .play .p11, .play .p11 i { animation-delay: 13.50s; }
+  .play .p2,  .play .p2 i  { animation-delay:  5.78s; }
+  .play .p3,  .play .p3 i  { animation-delay:  6.56s; }
+  .play .p4,  .play .p4 i  { animation-delay:  7.34s; }
+  .play .p5,  .play .p5 i  { animation-delay:  8.12s; }
+  .play .p6,  .play .p6 i  { animation-delay:  8.90s; }
+  .play .p7,  .play .p7 i  { animation-delay:  9.68s; }
+  .play .p8,  .play .p8 i  { animation-delay: 10.46s; }
+  .play .p9,  .play .p9 i  { animation-delay: 11.24s; }
+  .play .p10, .play .p10 i { animation-delay: 12.02s; }
+  .play .p11, .play .p11 i { animation-delay: 12.80s; }
+  .play .p12, .play .p12 i { animation-delay: 13.58s; }
 
   .play .a1 { animation: sube .8s ease  0.9s both, ver .5s ease  3.6s reverse forwards; }
   .play .a2 { animation: sube .8s ease  4.0s both, ver .5s ease 14.6s reverse forwards; }
@@ -179,12 +182,12 @@ body.marco .bar { display: none; }
         <h1>Esta estrategia parece buena.</h1>
       </div>
       <div class="lyr a2">
-        <p class="kicker">Reality Check · once pruebas</p>
-        <h1>Vamos a intentar tumbarla once veces.</h1>
+        <p class="kicker">Reality Check · doce pruebas</p>
+        <h1>Vamos a intentar tumbarla doce veces.</h1>
       </div>
       <div class="lyr a3">
         <p class="kicker">Veredicto</p>
-        <h1>Aguanta ocho de once.</h1>
+        <h1>Aguanta nueve de doce.</h1>
       </div>
       <div class="lyr a5">
         <p class="kicker">Reality Check</p>
@@ -222,22 +225,26 @@ body.marco .bar { display: none; }
           <div class="pista"><i style="--v:.75"></i></div>
         </div>
         <div class="prueba ok p7">
+          <div class="fila"><span class="n">Otros instrumentos</span><span class="r">2 de 3</span></div>
+          <div class="pista"><i style="--v:.67"></i></div>
+        </div>
+        <div class="prueba ok p8">
           <div class="fila"><span class="n">Consistencia por periodos</span><span class="r">Aguanta</span></div>
           <div class="pista"><i style="--v:.69"></i></div>
         </div>
-        <div class="prueba ok p8">
+        <div class="prueba ok p9">
           <div class="fila"><span class="n">Vela de inicio</span><span class="r">Aguanta</span></div>
           <div class="pista"><i style="--v:.72"></i></div>
         </div>
-        <div class="prueba na p9">
+        <div class="prueba na p10">
           <div class="fila"><span class="n">Resolución de vela</span><span class="r">No aplica</span></div>
           <div class="pista"></div>
         </div>
-        <div class="prueba ok p10">
+        <div class="prueba ok p11">
           <div class="fila"><span class="n">Tamaño de la muestra</span><span class="r">412 op.</span></div>
           <div class="pista"><i style="--v:.88"></i></div>
         </div>
-        <div class="prueba warn p11">
+        <div class="prueba warn p12">
           <div class="fila"><span class="n">Margen de coste</span><span class="r">Justo</span></div>
           <div class="pista"><i style="--v:.41"></i></div>
         </div>

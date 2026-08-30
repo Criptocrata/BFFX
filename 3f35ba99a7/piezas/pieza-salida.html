@@ -130,7 +130,11 @@ body.marco .bar { display: none; }
   .cod .com { color: var(--muted); }
   .cod .str { color: #d9a441; }
 
-  .plats { display: flex; gap: 4%; flex-wrap: wrap; opacity: 0; }
+  /* Cinco pestañas desde la 1.9. El hueco baja de 4 % a 2,8 % para que
+     «Python · Hyperliquid» quepa en la misma línea que las otras cuatro:
+     partidas en dos filas, la pestaña activa deja de leerse como una fila de
+     pestañas y pasa a parecer dos listas. */
+  .plats { display: flex; gap: 2.8%; flex-wrap: wrap; opacity: 0; }
   .plat {
     font-family: var(--mono); font-size: clamp(.48rem, 1.08vw, .72rem);
     letter-spacing: .06em; color: var(--muted);
@@ -157,11 +161,14 @@ body.marco .bar { display: none; }
   .play .panel-cod { animation: sube .7s ease 5.8s both, ver .5s ease 23.6s reverse forwards; }
   .play .plats     { animation: ver  .6s ease 6.2s both, ver .5s ease 23.6s reverse forwards; }
 
-  /* Cada bloque de código vive su turno y cede al siguiente. */
-  .play .q1 { animation: ver .45s ease  6.4s both, ver .35s ease 10.2s reverse forwards; }
-  .play .q2 { animation: ver .45s ease 10.4s both, ver .35s ease 14.2s reverse forwards; }
-  .play .q3 { animation: ver .45s ease 14.4s both, ver .35s ease 18.2s reverse forwards; }
-  .play .q4 { animation: ver .45s ease 18.4s both, ver .35s ease 23.4s reverse forwards; }
+  /* Cada bloque de código vive su turno y cede al siguiente. Con el quinto
+     destino el turno baja de 4 s a 3,4 s: la ventana entera —del 6,4 al 23,4— no
+     se mueve, porque detrás de ella el cierre está compasado al segundo. */
+  .play .q1 { animation: ver .45s ease  6.4s both, ver .35s ease  9.6s reverse forwards; }
+  .play .q2 { animation: ver .45s ease  9.8s both, ver .35s ease 13.0s reverse forwards; }
+  .play .q3 { animation: ver .45s ease 13.2s both, ver .35s ease 16.4s reverse forwards; }
+  .play .q4 { animation: ver .45s ease 16.6s both, ver .35s ease 19.8s reverse forwards; }
+  .play .q5 { animation: ver .45s ease 20.0s both, ver .35s ease 23.4s reverse forwards; }
 
   .play .vu { animation: sube .7s ease 25.0s both, ver .5s ease 28.0s reverse forwards; }
 </style>
@@ -191,12 +198,13 @@ body.marco .bar { display: none; }
         <span class="plat" data-i="1">MQL4</span>
         <span class="plat" data-i="2">Java · JForex</span>
         <span class="plat" data-i="3">Pine Script v6</span>
+        <span class="plat" data-i="4">Python · Hyperliquid</span>
       </div>
 
       <div class="panel-cod" style="margin-top:1em">
         <div class="cab"><span id="fichero">EMACross.mq5</span><b id="dest">MetaTrader 5</b></div>
         <div class="cuerpo">
-<div class="cod q1"><span class="com">//--- BotFactoryFX · exportado 1.8.0</span>
+<div class="cod q1"><span class="com">//--- BotFactoryFX · exportado 1.9.0</span>
 <span class="kw">int</span> <span class="fn">OnInit</span>() {
    emaFast = <span class="fn">iMA</span>(_Symbol, PERIOD_H1, <span class="num">12</span>, <span class="num">0</span>, MODE_EMA, PRICE_CLOSE);
    emaSlow = <span class="fn">iMA</span>(_Symbol, PERIOD_H1, <span class="num">26</span>, <span class="num">0</span>, MODE_EMA, PRICE_CLOSE);
@@ -207,7 +215,7 @@ body.marco .bar { display: none; }
       trade.<span class="fn">Buy</span>(Lotes, _Symbol, <span class="num">0</span>, sl, tp);
 }</div>
 
-<div class="cod q2"><span class="com">//--- BotFactoryFX · exportado 1.8.0</span>
+<div class="cod q2"><span class="com">//--- BotFactoryFX · exportado 1.9.0</span>
 <span class="kw">int</span> <span class="fn">start</span>() {
    <span class="kw">double</span> rapida = <span class="fn">iMA</span>(NULL, <span class="num">0</span>, <span class="num">12</span>, <span class="num">0</span>, MODE_EMA, PRICE_CLOSE, <span class="num">0</span>);
    <span class="kw">double</span> lenta  = <span class="fn">iMA</span>(NULL, <span class="num">0</span>, <span class="num">26</span>, <span class="num">0</span>, MODE_EMA, PRICE_CLOSE, <span class="num">0</span>);
@@ -216,7 +224,7 @@ body.marco .bar { display: none; }
    <span class="kw">return</span>(<span class="num">0</span>);
 }</div>
 
-<div class="cod q3"><span class="com">// BotFactoryFX · exportado 1.8.0</span>
+<div class="cod q3"><span class="com">// BotFactoryFX · exportado 1.9.0</span>
 <span class="kw">public void</span> <span class="fn">onBar</span>(Instrument par, Period periodo,
                   IBar ask, IBar bid) <span class="kw">throws</span> JFException {
     <span class="kw">if</span> (<span class="fn">ema</span>(<span class="num">12</span>) &gt; <span class="fn">ema</span>(<span class="num">26</span>) &amp;&amp; <span class="fn">rsi</span>(<span class="num">14</span>) &lt; <span class="num">70</span>) {
@@ -232,6 +240,15 @@ lenta  = ta.<span class="fn">ema</span>(close, <span class="num">26</span>)
 <span class="kw">if</span> ta.<span class="fn">crossover</span>(rapida, lenta) <span class="kw">and</span> ta.<span class="fn">rsi</span>(close, <span class="num">14</span>) &lt; <span class="num">70</span>
     strategy.<span class="fn">entry</span>(<span class="str">"L"</span>, strategy.long)
 strategy.<span class="fn">exit</span>(<span class="str">"X"</span>, <span class="str">"L"</span>, loss = <span class="num">40</span>, profit = <span class="num">90</span>)</div>
+
+<div class="cod q5"><span class="com"># BotFactoryFX &middot; exportado 1.9.0</span>
+<span class="com"># Los indicadores van dentro, portados del motor: este ema() es el de aqui.</span>
+<span class="kw">def</span> <span class="fn">entry_long</span>(ind, i):
+    <span class="kw">return</span> <span class="fn">all</span>([
+        <span class="fn">crossed</span>(<span class="fn">at</span>(ind[<span class="str">"ind_ema_12"</span>], i - <span class="num">1</span>), <span class="fn">at</span>(ind[<span class="str">"ind_ema_26"</span>], i - <span class="num">1</span>),
+                <span class="fn">at</span>(ind[<span class="str">"ind_ema_12"</span>], i - <span class="num">0</span>), <span class="fn">at</span>(ind[<span class="str">"ind_ema_26"</span>], i - <span class="num">0</span>), <span class="kw">True</span>),
+        <span class="fn">lt</span>(<span class="fn">at</span>(ind[<span class="str">"ind_rsi_14"</span>], i - <span class="num">0</span>), <span class="num">70</span>),
+    ])</div>
         </div>
       </div>
     </div>
@@ -392,8 +409,9 @@ const BFX = (() => {
     ["EMACross.mq4", "MetaTrader 4"],
     ["EMACross.java", "Dukascopy JForex"],
     ["EMACross.pine", "TradingView"],
+    ["emacross_hyperliquid.py", "Hyperliquid"],
   ];
-  const TURNOS = [6.4, 10.4, 14.4, 18.4, 23.4];   // el último cierra el ciclo
+  const TURNOS = [6.4, 9.8, 13.2, 16.6, 20.0, 23.4];   // el último cierra el ciclo
 
   const stage = document.getElementById("stage");
   const cv = document.getElementById("lienzo");
@@ -419,7 +437,7 @@ const BFX = (() => {
 
     // Cabecera y pestaña de la plataforma que toca.
     let i = -1;
-    for (let n = 0; n < 4; n++) if (t >= TURNOS[n] && t < TURNOS[n + 1]) i = n;
+    for (let n = 0; n < DESTINOS.length; n++) if (t >= TURNOS[n] && t < TURNOS[n + 1]) i = n;
     if (i !== activa) {
       activa = i;
       pestanas.forEach((p, n) => p.classList.toggle("on", n === i));
