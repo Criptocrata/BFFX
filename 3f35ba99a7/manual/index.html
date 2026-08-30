@@ -1097,33 +1097,185 @@
         </ul>
       </div>
 
-      <p>Sobre la clave: usa una <strong>API wallet</strong>, que se crea en la propia interfaz
-        de Hyperliquid, en el apartado API. Puede operar pero <strong>no puede retirar
-        fondos</strong>. Es la diferencia entre un error caro y uno total.</p>
+      <p>Los pasos para ponerlo en marcha —y lo que <em>no</em> hace una vez dentro— están
+        abajo, con los de las otras cuatro plataformas.</p>
 
-      <p>El bot pide las velas a la API pública —para leer no hace falta clave—, descarta la
-        vela en curso porque el backtest solo decidió sobre velas cerradas, y mira si hay vela
-        nueva cada pocos segundos, en proporción a la temporalidad. Deja pasar unos días en
-        seco comparando sus señales con las del backtest antes de arriesgar nada.</p>
+      <h3>Instalarlo en cada plataforma</h3>
+      <p>El fichero ya está terminado; ponerlo a funcionar se hace distinto en cada sitio, y
+        casi todas las maneras de que falle son <strong>silenciosas</strong>: compila, no pasa
+        nada y ningún mensaje dice por qué. Lo que sigue son los pasos y las trampas concretas
+        con las que se atasca la gente.</p>
+
+      <div class="warn-box">
+        <p><b>Antes de nada, y para las cinco.</b> Pruébalo en una cuenta de demostración. El
+          código generado es funcional pero mínimo: sin filtro de noticias, sin modelo de
+          deslizamiento y sin ejecuciones parciales. Y recuerda que el trailing stop, el
+          break-even y los topes diarios se exportan pero <em>no</em> están en la curva que
+          aprobaste (la tabla del final del capítulo lo detalla).</p>
+      </div>
+
+      <h4>MetaTrader 4 · el <code>.mq4</code></h4>
+      <ol>
+        <li>En MetaTrader, <strong>Archivo → Abrir carpeta de datos</strong>. Este es el paso
+          que casi todo el mundo hace mal: la carpeta que buscas <strong>no</strong> es donde
+          está instalado el programa, y MetaTrader es lo único que sabe dónde está.</li>
+        <li>Copia el fichero dentro de <code>MQL4/Experts/</code>.</li>
+        <li><code>F4</code> abre MetaEditor. Abre el fichero y pulsa <code>F7</code> para
+          compilar. Tiene que decir <em>0 errores</em>; un aviso no importa.</li>
+        <li>Vuelve al terminal, botón derecho en el Navegador (<code>Ctrl+N</code>) y
+          <strong>Actualizar</strong>. El robot aparece bajo <strong>Asesores expertos</strong>.</li>
+        <li>Arrástralo a un gráfico <strong>del mismo símbolo y la misma temporalidad</strong>
+          con los que se construyó. En el diálogo, pestaña <strong>Común</strong>, marca
+          <strong>Permitir trading en vivo</strong>.</li>
+        <li>Enciende <strong>AutoTrading</strong> en la barra de herramientas. Tiene que estar
+          en verde.</li>
+      </ol>
+      <p>Una <strong>cara sonriente</strong> en la esquina superior derecha del gráfico
+        significa que está corriendo; una cara triste, que AutoTrading está apagado o que no
+        diste permiso de trading en vivo a ese gráfico. MT4 admite
+        <strong>un robot por gráfico</strong>: para operar dos, abre dos gráficos.</p>
+
+      <h4>MetaTrader 5 · el <code>.mq5</code></h4>
+      <p>Los mismos seis pasos, con <code>MQL5/Experts/</code> y el botón de la barra llamado
+        <strong>Algo Trading</strong>. Tres diferencias que conviene saber:</p>
+      <ul>
+        <li><strong>Si compila y no opera nunca, mira la pestaña Expertos</strong> de la caja
+          de herramientas (<code>Ctrl+T</code>). MQL5 crea los <em>handles</em> de los
+          indicadores en <code>OnInit</code>, y si uno falla el robot devuelve
+          <code>INIT_FAILED</code> y se para antes de su primer tick. Ese fallo se escribe ahí
+          y en ningún otro sitio.</li>
+        <li><strong>Cuenta de neteo o de cobertura.</strong> En una cuenta de neteo una segunda
+          compra <em>suma</em> a la posición que ya hay en vez de abrir otra, así que una
+          estrategia que espera varias posiciones abiertas se comporta distinto del backtest.
+          El tipo de cuenta está en el terminal, junto al nombre.</li>
+        <li><strong>Usa el Probador de estrategias</strong> (<code>Ctrl+R</code>) antes que el
+          gráfico en vivo. Es la manera más rápida de ver si el robot opera siquiera, y no
+          cuesta nada.</li>
+      </ul>
+
+      <h4>Dukascopy JForex · el <code>.java</code></h4>
+      <ol>
+        <li>En la plataforma JForex, abre el panel <strong>Strategies</strong> y elige
+          <strong>Open</strong>, o deja el fichero en tu espacio de trabajo, normalmente
+          <code>~/JForex/Strategies/</code>.</li>
+        <li>Compila dentro de la plataforma. La clase implementa <code>IStrategy</code>, con la
+          lógica en <code>onBar</code>.</li>
+        <li>Botón derecho sobre la estrategia y <strong>Start</strong>. Los parámetros marcados
+          con <code>@Configurable</code> salen en el diálogo de arranque, así que los periodos
+          y el riesgo se cambian ahí sin tocar el código.</li>
+      </ol>
+      <div class="warn-box">
+        <p><b>Java exige que el nombre del fichero y el de la clase coincidan.</b> Renombrar
+          <code>MiRobot.java</code> a <code>prueba.java</code> hace que deje de compilar, con un
+          error que habla de una clase pública y no del nombre. Renombra también la clase, o no
+          toques el fichero.</p>
+      </div>
+      <p>Pásalo primero por el <strong>Historical Tester</strong>, que viene en la plataforma y
+        usa los datos de tick de Dukascopy: es una segunda opinión de verdad sobre lo que
+        mediste aquí.</p>
+
+      <h4>TradingView · el script de Pine</h4>
+      <ol>
+        <li>Abre un gráfico del símbolo correcto y pon la temporalidad con la que se
+          construyó la estrategia.</li>
+        <li>Abre el <strong>Pine Editor</strong> en el panel inferior, y
+          <strong>Open → New blank strategy</strong>.</li>
+        <li>Selecciona todo lo que haya en el editor y pega el script encima. Guárdalo con un
+          nombre.</li>
+        <li><strong>Add to chart</strong>. La pestaña <strong>Strategy Tester</strong> de abajo
+          lo ejecuta.</li>
+      </ol>
+      <div class="warn-box">
+        <p><b>El script opera el gráfico en el que esté puesto.</b> En el par o la temporalidad
+          equivocados seguirá funcionando, seguirá dando resultados, y describirá una
+          estrategia que nadie construyó. Es la manera más común de que un resultado de Pine no
+          signifique nada.</p>
+      </div>
+      <p>Dos cosas más hacen que los números no cuadren con los de aquí. La función
+        <code>strategy()</code> de Pine recibe la <strong>comisión y el deslizamiento como
+        argumentos propios</strong>: si no coinciden con lo que tiene la pantalla Data para ese
+        instrumento, las dos pruebas están midiendo mundos distintos. Y el feed de TradingView
+        para un símbolo no es el de tu bróker: otras sesiones, otros cierres, otros huecos.</p>
+      <p><strong>TradingView no manda órdenes.</strong> Nada de lo que añadas a un gráfico opera
+        una cuenta. Para que actúe hacen falta una alerta, un webhook y un puente que convierta
+        la alerta en una orden en un bróker — tres piezas más, y ninguna sale de aquí.</p>
+
+      <h4>Hyperliquid · el bot de Python</h4>
+      <p>El único destino que se conecta solo, y el único donde una equivocación cuesta dinero
+        sin una plataforma de por medio. Necesita <strong>Python 3.8 o más nuevo</strong> y
+        nada más para funcionar en seco.</p>
+      <ol>
+        <li><strong>Ejecútalo en seco:</strong> <code>python3 tubot.py</code>. Descarga velas
+          reales, imprime la orden que habría mandado y no manda nada. Sin clave, sin instalar
+          nada y sin cuenta.</li>
+        <li><strong>Léelo.</strong> Los indicadores están dentro del fichero, portados de este
+          motor: eso es lo que distingue a este destino de los otros cuatro.</li>
+        <li><strong>Déjalo unos días en seco</strong> comparando sus señales con las del
+          backtest. Es el paso que todo el mundo se salta y el único que descubre un desajuste
+          antes de que salga caro.</li>
+        <li><strong>Crea una API wallet</strong> en Hyperliquid, en el apartado
+          <strong>API</strong>. Puede operar pero <strong>no puede retirar fondos</strong>. Esa
+          propiedad es la diferencia entre un error caro y uno total: no uses la clave de tu
+          cuenta.</li>
+        <li><strong>Exporta las credenciales</strong> e instala el SDK:</li>
+      </ol>
+      <pre><code>export HL_ACCOUNT_ADDRESS=0x...
+export HL_SECRET_KEY=0x...
+pip install hyperliquid-python-sdk eth-account</code></pre>
+      <p><code>BFX_LIVE=1 python3 tubot.py</code> opera en la <strong>red de pruebas</strong>,
+        donde el dinero no es real. Añadir <code>BFX_MAINNET=1</code> es lo que le pone dinero
+        de verdad detrás.</p>
+
+      <div class="warn-box">
+        <p><b>Lee esto antes de poner BFX_MAINNET=1. El bot entra; no gestiona.</b> Manda una
+          orden de mercado a secas y, tal como está hoy:</p>
+        <ul>
+          <li><strong>El stop loss y el objetivo se imprimen, no se mandan.</strong> La posición
+            que abre no lleva ninguna orden de protección puesta en el sitio.</li>
+          <li><strong>No comprueba si ya hay una posición abierta</strong>, así que puede volver
+            a entrar en la siguiente vela que dé señal. El máximo de posiciones está escrito en
+            el fichero pero nada lo hace cumplir.</li>
+          <li><strong>Ante una señal de salida imprime «exit signal» y no cierra nada.</strong></li>
+        </ul>
+        <p>Trátalo como un generador de señales que además sabe abrir una posición, y ten la
+          interfaz de Hyperliquid delante mientras corre. No lo dejes solo en mainnet.</p>
+      </div>
+
+      <p>Pregunta si hay vela nueva cada pocos segundos, en proporción a la temporalidad, y
+        nunca decide sobre la vela en curso. Si la máquina se duerme, el bot se para: en un
+        servidor, arráncalo con <code>screen</code>, <code>tmux</code> o una unidad de systemd.
+        Y no guarda nada entre arranques — no sabe nada de las posiciones que abrió antes de
+        que lo pararas.</p>
+
+      <div class="note">
+        <p><b>La clave nunca va dentro del fichero.</b> Se lee del entorno a propósito. No la
+          pegues en el script y no subas a ningún sitio un fichero que la lleve: una estrategia
+          está hecha para compartirse, y una clave dentro se comparte con ella.</p>
+      </div>
 
       <h3>Qué coincide con el backtest y qué no</h3>
       <div class="tbl-wrap">
         <table>
-          <thead><tr><th>&nbsp;</th><th>Simulado aquí</th><th>Exportado al robot</th></tr></thead>
+          <thead><tr><th>&nbsp;</th><th>Simulado aquí</th><th>En los cuatro primeros</th><th>En el bot de Python</th></tr></thead>
           <tbody>
-            <tr><td>Reglas de entrada</td><td>Sí</td><td>Sí</td></tr>
-            <tr><td>Stop loss y take profit</td><td>Sí</td><td>Sí</td></tr>
-            <tr><td>Tamaño de lote y modo de cálculo</td><td>Sí</td><td>Sí</td></tr>
-            <tr><td>Máximo de posiciones</td><td>Sí</td><td>Sí</td></tr>
-            <tr><td>Trailing stop</td><td><strong>No</strong></td><td>Sí</td></tr>
-            <tr><td>Break-even</td><td><strong>No</strong></td><td>Sí</td></tr>
-            <tr><td>Pérdida máxima diaria</td><td><strong>No</strong></td><td>Sí</td></tr>
-            <tr><td>Máximo de operaciones al día</td><td><strong>No</strong></td><td>Sí</td></tr>
+            <tr><td>Reglas de entrada</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+            <tr><td>Stop loss y take profit</td><td>Sí</td><td>Sí</td><td><strong>No</strong> — los imprime</td></tr>
+            <tr><td>Tamaño de lote y modo de cálculo</td><td>Sí</td><td>Sí</td><td>Lote fijo</td></tr>
+            <tr><td>Máximo de posiciones</td><td>Sí</td><td>Sí</td><td><strong>No</strong></td></tr>
+            <tr><td>Regla de salida</td><td>Sí</td><td>Sí</td><td><strong>No</strong> — la anuncia</td></tr>
+            <tr><td>Trailing stop</td><td><strong>No</strong></td><td>Sí</td><td>No</td></tr>
+            <tr><td>Break-even</td><td><strong>No</strong></td><td>Sí</td><td>No</td></tr>
+            <tr><td>Pérdida máxima diaria</td><td><strong>No</strong></td><td>Sí</td><td>No</td></tr>
+            <tr><td>Máximo de operaciones al día</td><td><strong>No</strong></td><td>Sí</td><td>No</td></tr>
           </tbody>
         </table>
       </div>
       <p>Con gestión avanzada activada, el robot y el backtest darán resultados distintos.
         Es esperable: la tabla dice exactamente en qué se diferencian.</p>
+      <p>La última columna es la que hay que leer despacio. El bot de Python calcula los
+        indicadores mejor que ninguno de los otros cuatro —son los del propio motor— y
+        <strong>gestiona la operación peor que todos ellos</strong>: entra, y ahí se acaba su
+        trabajo. Las dos cosas son ciertas a la vez.</p>
 
       <figure class="shot">
         <div class="slot">
