@@ -770,12 +770,13 @@
       <h3>Gestión avanzada</h3>
       <p>Trailing stop, break-even, pérdida máxima diaria y máximo de operaciones por día.</p>
 
-      <div class="warn-box">
-        <p><b>Lo avanzado se exporta pero no se simula.</b> Trailing stop, break-even, tope
-          de pérdida diaria y tope de operaciones diarias se escriben en el robot que exportas
-          —son parámetros suyos— pero <strong>no</strong> se aplican en el backtest de
-          BotFactoryFX. La curva de capital que ves aquí no los refleja. La pestaña Export
-          muestra un aviso azul cuando alguno está activo, para que no se te olvide.</p>
+      <div class="note">
+        <p><b>Lo avanzado se simula y se exporta.</b> Trailing stop, break-even, tope de pérdida
+          diaria y tope de operaciones diarias se aplican en el backtest <em>y</em> se escriben
+          en el robot, así que la curva de capital que ves aquí describe el mismo robot que te
+          descargas. Durante mucho tiempo sólo se exportaban, que es como un backtest acaba
+          bendiciendo un comportamiento que no llegó a medir; si lees eso en algún sitio, está
+          viejo.</p>
       </div>
     </section>
 
@@ -1226,26 +1227,45 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         donde el dinero no es real. Añadir <code>BFX_MAINNET=1</code> es lo que le pone dinero
         de verdad detrás.</p>
 
+      <p>Gestiona la operación como la gestionó el backtest. El stop y el objetivo salen
+        <strong>con la entrada</strong>, como órdenes <em>reduce-only</em> de disparo, y se quedan
+        puestas en el exchange: se llenan en el tick que las alcanza —dentro de la vela, como en
+        la simulación, no al cierre siguiente— y siguen llenándose aunque el programa se muera,
+        el portátil se duerma o se caiga la red una hora. Un stop que sólo existe dentro de un
+        proceso en marcha no es un stop. El break-even, el arrastre, el tope de pérdida diaria y
+        el de operaciones al día funcionan todos.</p>
+
+      <p>Mantiene <strong>una posición cada vez</strong>, porque es lo que midió el backtest: el
+        motor sólo abre estando plano, y el máximo de posiciones de la estrategia no llegó a
+        usarse nunca. Hyperliquid opina lo mismo desde el otro lado — los perpetuos se netean, así
+        que una segunda entrada no sería otra posición sino la misma del doble de tamaño, con el
+        stop de la primera cubriendo la mitad. Y si lo reinicias con una operación abierta, la
+        recoge en vez de abrir otra encima: respeta el stop que ya estuviera puesto, que puede
+        venir arrastrado desde muy arriba, y nunca lo afloja.</p>
+
       <div class="warn-box">
-        <p><b>Lee esto antes de poner BFX_MAINNET=1. El bot entra; no gestiona.</b> Manda una
-          orden de mercado a secas y, tal como está hoy:</p>
+        <p><b>Lee esto antes de poner BFX_MAINNET=1.</b> Quedan dos diferencias con el backtest, y
+          una de ellas se planta:</p>
         <ul>
-          <li><strong>El stop loss y el objetivo se imprimen, no se mandan.</strong> La posición
-            que abre no lleva ninguna orden de protección puesta en el sitio.</li>
-          <li><strong>No comprueba si ya hay una posición abierta</strong>, así que puede volver
-            a entrar en la siguiente vela que dé señal. El máximo de posiciones está escrito en
-            el fichero pero nada lo hace cumplir.</li>
-          <li><strong>Ante una señal de salida imprime «exit signal» y no cierra nada.</strong></li>
+          <li><strong>Mira el <code>PIP_SIZE</code> de arriba del fichero.</strong> Todas las
+            distancias de la estrategia se cuentan en pips, y ése se deduce del nombre del
+            símbolo: acierta con un par de divisas y con BTC, y se equivoca por diez en ETH y por
+            cien en SOL. El bot lo compara con el precio real en su primera vela y
+            <strong>se niega a operar en vivo</strong> si no cuadran, diciéndote qué número
+            poner.</li>
+          <li><strong>Opera un lote fijo</strong>, el <code>LOT</code> de arriba, y no el tamaño
+            por riesgo que calculaba el backtest en cada operación. Mismas señales, distinto
+            tamaño.</li>
         </ul>
-        <p>Trátalo como un generador de señales que además sabe abrir una posición, y ten la
-          interfaz de Hyperliquid delante mientras corre. No lo dejes solo en mainnet.</p>
+        <p>Tampoco te cobra horquilla, comisión ni <em>funding</em>, porque no puede saberlos: su
+          cuenta corriente es bruta, y el tope de pérdida diaria lee ese número bruto.</p>
       </div>
 
       <p>Pregunta si hay vela nueva cada pocos segundos, en proporción a la temporalidad, y
         nunca decide sobre la vela en curso. Si la máquina se duerme, el bot se para: en un
         servidor, arráncalo con <code>screen</code>, <code>tmux</code> o una unidad de systemd.
-        Y no guarda nada entre arranques — no sabe nada de las posiciones que abrió antes de
-        que lo pararas.</p>
+        La operación sobrevive a eso — su stop y su objetivo están en el exchange, no en el
+        proceso.</p>
 
       <div class="note">
         <p><b>La clave nunca va dentro del fichero.</b> Se lee del entorno a propósito. No la
@@ -1259,23 +1279,28 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
           <thead><tr><th>&nbsp;</th><th>Simulado aquí</th><th>En los cuatro primeros</th><th>En el bot de Python</th></tr></thead>
           <tbody>
             <tr><td>Reglas de entrada</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
-            <tr><td>Stop loss y take profit</td><td>Sí</td><td>Sí</td><td><strong>No</strong> — los imprime</td></tr>
-            <tr><td>Tamaño de lote y modo de cálculo</td><td>Sí</td><td>Sí</td><td>Lote fijo</td></tr>
-            <tr><td>Máximo de posiciones</td><td>Sí</td><td>Sí</td><td><strong>No</strong></td></tr>
-            <tr><td>Regla de salida</td><td>Sí</td><td>Sí</td><td><strong>No</strong> — la anuncia</td></tr>
-            <tr><td>Trailing stop</td><td><strong>No</strong></td><td>Sí</td><td>No</td></tr>
-            <tr><td>Break-even</td><td><strong>No</strong></td><td>Sí</td><td>No</td></tr>
-            <tr><td>Pérdida máxima diaria</td><td><strong>No</strong></td><td>Sí</td><td>No</td></tr>
-            <tr><td>Máximo de operaciones al día</td><td><strong>No</strong></td><td>Sí</td><td>No</td></tr>
+            <tr><td>Stop loss y take profit</td><td>Sí</td><td>Sí</td><td>Sí — puestos en el exchange</td></tr>
+            <tr><td>Regla de salida</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+            <tr><td>Trailing stop</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+            <tr><td>Break-even</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+            <tr><td>Pérdida máxima diaria</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+            <tr><td>Máximo de operaciones al día</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+            <tr><td>Máximo de posiciones</td><td>Una siempre</td><td>Las que pongas</td><td>Una, como el motor</td></tr>
+            <tr><td>Tamaño de lote y modo de cálculo</td><td>Sí</td><td>Sí</td><td><strong>No</strong> — lote fijo</td></tr>
+            <tr><td>Tamaño del pip</td><td>Del precio</td><td>Del bróker</td><td><strong>Del nombre</strong> — compruébalo</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Con gestión avanzada activada, el robot y el backtest darán resultados distintos.
-        Es esperable: la tabla dice exactamente en qué se diferencian.</p>
-      <p>La última columna es la que hay que leer despacio. El bot de Python calcula los
-        indicadores mejor que ninguno de los otros cuatro —son los del propio motor— y
-        <strong>gestiona la operación peor que todos ellos</strong>: entra, y ahí se acaba su
-        trabajo. Las dos cosas son ciertas a la vez.</p>
+      <p>Las tres últimas filas son las que hay que leer despacio, porque son las que quedan
+        sin cuadrar. Las dos primeras dependen de ti: el lote es fijo y el pip se deduce del
+        nombre del símbolo. La tercera es al revés de lo que parece — el máximo de posiciones
+        <em>no</em> lo cumple el backtest, que abre de una en una haya lo que haya escrito ahí,
+        así que un robot de MetaTrader con tres posiciones simultáneas está operando algo que
+        nadie midió.</p>
+      <p>Y ninguna tabla arregla lo que no cabe en un fichero: la horquilla real de tu bróker
+        en el momento del llenado, el deslizamiento de una vela rápida, un llenado parcial, un
+        <em>requote</em>, la horquilla abierta durante una noticia. El backtest los supuso; el
+        robot se los encuentra.</p>
 
       <figure class="shot">
         <div class="slot">
@@ -1567,10 +1592,11 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         medias en un mismo bloque. Puedes ignorarlos.</p>
 
       <h4>¿El robot exportado da lo mismo que el backtest?</h4>
-      <p>Las reglas de entrada, el stop, el take profit, el lote, el máximo de posiciones y el
-        modo de cálculo del tamaño sí se simulan en los dos. La <strong>gestión avanzada</strong>
-        —trailing, break-even, tope diario— se exporta pero no se simula aquí. La tabla del
-        <a href="#exportar">capítulo 13</a> lo detalla.</p>
+      <p>Las reglas, el stop, el take profit, el lote, el modo de cálculo del tamaño y la
+        <strong>gestión avanzada</strong> entera —trailing, break-even, los dos topes diarios—
+        se simulan aquí y se escriben en el robot. Lo que no cuadra es el máximo de posiciones,
+        que el backtest no cumple: abre de una en una, ponga lo que ponga. La tabla del
+        <a href="#exportar">capítulo 13</a> lo detalla, columna por columna.</p>
 
       <h4>Me deja exportar a MQL5 pero no a Python. ¿Por qué?</h4>
       <p>Porque el de Python calcula los indicadores él mismo, portados del motor, y hay una
@@ -1584,6 +1610,15 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         nada. Hace falta <code>BFX_LIVE=1</code> para que opere, y aun entonces va a la red de
         pruebas mientras no añadas <code>BFX_MAINNET=1</code>. La clave se lee del entorno y
         nunca está dentro del fichero. Está detallado en el <a href="#exportar">capítulo 13</a>.</p>
+
+      <h4>Se me apaga el ordenador con una operación abierta. ¿Qué pasa?</h4>
+      <p>La operación sigue protegida. El stop y el objetivo no viven dentro del programa: son
+        órdenes <em>reduce-only</em> puestas en Hyperliquid en el mismo momento de la entrada, y
+        se llenan las mire quien las mire. Lo que se pierde mientras el bot está parado es el
+        <strong>arrastre</strong> —nadie va subiendo el stop— y las señales de salida. Cuando lo
+        vuelves a arrancar, recoge la posición que encuentre abierta en vez de abrir otra encima,
+        y respeta el stop que ya estuviera puesto aunque venga arrastrado de muy arriba: mover un
+        stop en tu contra es lo único que ese programa no hace nunca.</p>
 
       <h4>Estoy en la versión de navegador y no me encuentra ningún MetaTrader.</h4>
       <p>Y no va a encontrarlo: el conector habla con un terminal instalado en tu máquina, y
