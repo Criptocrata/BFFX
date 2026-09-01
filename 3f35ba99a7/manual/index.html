@@ -204,7 +204,7 @@
       </svg>
       <b>BotFactory<i>FX</i></b>
     </a>
-    <span class="tag">Manual · v1.9.0</span>
+    <span class="tag">Manual · v1.9.2</span>
     <a class="back" href="../">← Volver a la web</a>
   </div>
 </header>
@@ -225,6 +225,8 @@
       <li><a href="#reality">Reality Check</a></li>
       <li><a href="#biblioteca">Biblioteca</a></li>
       <li><a href="#cartera">Cartera</a></li>
+      <li><a href="#cuarentena">Cuarentena</a></li>
+      <li><a href="#envivo">En vivo</a></li>
       <li><a href="#exportar">Exportar</a></li>
       <li><a href="#quant">Dr. Quant</a></li>
       <li><a href="#autopilot">Autopilot</a></li>
@@ -252,7 +254,7 @@
         el código de las que sobreviven para tu plataforma.</p>
 
       <p>No manda órdenes ni toca tu cuenta: lee histórico y escribe ficheros de código. Los
-        límites están enumerados en el <a href="#limites">capítulo 20</a>.</p>
+        límites están enumerados en el <a href="#limites">capítulo 22</a>.</p>
 
       <h3>Dos ediciones</h3>
       <div class="tbl-wrap">
@@ -292,8 +294,8 @@
           desde el terminal.</li>
         <li>Doble clic.</li>
       </ol>
-      <pre><code>chmod +x BotFactoryFX-1.9.0.AppImage
-./BotFactoryFX-1.9.0.AppImage</code></pre>
+      <pre><code>chmod +x BotFactoryFX-1.9.2.AppImage
+./BotFactoryFX-1.9.2.AppImage</code></pre>
 
       <p>Tus estrategias, tus históricos importados y tus ajustes se quedan en tu disco entre
         sesiones. Borrar el AppImage no los borra.</p>
@@ -336,7 +338,7 @@
             <tr><td><strong>Backtesting</strong></td><td>La prueba: la estrategia contra el histórico, con costes.</td></tr>
             <tr><td><strong>Reality Check</strong></td><td>El examen: doce intentos de tumbar el resultado.</td></tr>
             <tr><td><strong>Library</strong></td><td>Lo que sobrevive se guarda, con su histórico y su veredicto pegados.</td></tr>
-            <tr><td><strong>Portfolio</strong></td><td>Cómo se llevan entre sí las que has guardado.</td></tr>
+            <tr><td><strong>Portfolio</strong></td><td>Tres pestañas: cómo se llevan entre sí las que has guardado, las que están en cuarentena, y lo que hacen tus cuentas de verdad.</td></tr>
           </tbody>
         </table>
       </div>
@@ -378,7 +380,7 @@
       <h4>2 · Directamente de MetaTrader 5</h4>
       <p>Con el conector instalado, «Import from MetaTrader 5» trae cualquier instrumento que
         ofrezca tu bróker, en cualquier temporalidad, sin exportar un solo fichero a mano.
-        Está explicado entero en el <a href="#mt5">capítulo 16</a>.</p>
+        Está explicado entero en el <a href="#mt5">capítulo 18</a>.</p>
 
       <h4>3 · Directamente de Hyperliquid</h4>
       <p>«Import from Hyperliquid» descarga el histórico de cualquiera de los perpetuos que
@@ -555,7 +557,7 @@
         leer una página que tú indicas <strong>no cuesta nada</strong> —la descarga el
         servidor de BotFactoryFX— y además usa la fuente oficial en vez de lo que un buscador
         crea relevante. Escribir solo el nombre del bróker también funciona, pero eso sí es
-        una búsqueda y se cobra (unos 0,007 $; ver el <a href="#quant">capítulo 14</a>).</p>
+        una búsqueda y se cobra (unos 0,007 $; ver el <a href="#quant">capítulo 16</a>).</p>
 
       <figure class="shot">
         <div class="slot">
@@ -1004,7 +1006,11 @@
       <p class="num">12 · Cartera</p>
       <h2>Combinar varias estrategias.</h2>
 
-      <p>Portfolio combina varias estrategias, cada una con su <strong>peso</strong>. El
+      <p>Portfolio tiene tres pestañas, y son tres cosas distintas: <strong>Simulada</strong>
+        —lo que este capítulo describe—, <strong>Cuarentena</strong> (capítulo 13) y
+        <strong>En vivo</strong> (capítulo 14).</p>
+
+      <p>La primera combina varias estrategias, cada una con su <strong>peso</strong>. El
         capital y el tamaño de lote escalan proporcionalmente, y se obtiene una curva agregada
         con el desglose por estrategia.</p>
 
@@ -1042,8 +1048,142 @@
     </section>
 
     <!-- ================= 13 ================= -->
+    <section id="cuarentena">
+      <p class="num">13 · Cuarentena</p>
+      <h2>Probar sobre velas de ahora, sin dinero.</h2>
+
+      <p>Un backtest mide el pasado. Operar mide el presente con dinero encima. La cuarentena
+        es lo que va en medio: la estrategia corre sobre las velas que el bróker va publicando,
+        las órdenes son de mentira, y se acumula un expediente que se puede comparar con el
+        backtest que la aprobó.</p>
+
+      <p>Es la segunda pestaña de <strong>Portfolio</strong>. No caduca, no pide cuenta en
+        ningún sitio y no hay límite de expedientes.</p>
+
+      <h3>Meter una estrategia</h3>
+      <p>Cuatro campos, y el segundo es el que importa:</p>
+      <ul>
+        <li><strong>Estrategia</strong> — una de la biblioteca. Se copia su nombre y las
+          cifras de su último backtest, de modo que el expediente se sigue leyendo aunque
+          luego borres la estrategia.</li>
+        <li><strong>Bróker o sitio</strong> — Hyperliquid, o cualquier terminal de MetaTrader
+          que tengas abierto. No es un detalle: es la mitad de la pregunta. La misma
+          estrategia sobre el mismo instrumento y la misma hora se comporta distinto en cada
+          sitio, porque cambian la horquilla, el carry y las horas de liquidez.</li>
+        <li><strong>Instrumento</strong> — de los que ofrece ese sitio.</li>
+        <li><strong>Vela</strong> — de M1 a D1.</li>
+      </ul>
+
+      <p>A partir de ahí, cada vez que abres la pestaña se piden las velas nuevas y se vuelve
+        a correr la estrategia entera sobre todas las acumuladas. No hay ningún proceso de
+        fondo: la aplicación no tiene que estar abierta para que el mercado siga, solo para
+        recoger lo que ha pasado.</p>
+
+      <h3>El veredicto es una banda, no un porcentaje</h3>
+      <p>Con pocas operaciones, un porcentaje de acierto no dice nada. «62&nbsp;% de acierto»
+        sobre seis operaciones es mentir con un número correcto, así que en su lugar se calcula
+        un <strong>intervalo de confianza al 95&nbsp;%</strong> —el de Wilson, que a diferencia
+        del habitual no se sale de 0 a 100 cuando la muestra es pequeña— y se mira si el
+        acierto del backtest cae dentro.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Estado</th><th>Qué significa</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Sin operaciones</strong></td><td>Las reglas no han disparado todavía. También es información: una estrategia que operaba cada semana en el backtest y no ha hecho nada en tres semanas ya está diciendo algo.</td></tr>
+            <tr><td><strong>Todavía no se puede decir</strong></td><td>El backtest cae dentro, pero la banda es tan ancha —más de 35 puntos— que cabría dentro casi cualquier cosa. Aquí la pantalla estima cuántas operaciones harían falta para que dejara de ser así.</td></tr>
+            <tr><td><strong>Sigue pareciéndose</strong></td><td>El acierto del backtest cae dentro de lo que estas operaciones pueden sostener. No prueba que funcione: es la ausencia de prueba de que se haya roto.</td></tr>
+            <tr><td><strong>Se ha ido</strong></td><td>El acierto del backtest queda fuera. O la ventaja no estaba, o este sitio no es aquel en el que se midió.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>El gráfico</h3>
+      <p>Debajo va el gráfico de velas con las operaciones simuladas encima, entrada y salida.
+        <strong>No dibuja órdenes en espera</strong>, y no por falta de ganas: el motor evalúa
+        las reglas al cierre de cada vela y entra a mercado, así que un <em>buy stop</em> o un
+        <em>sell limit</em> no llegan a existir. Está dicho debajo del propio gráfico.</p>
+
+      <div class="warn-box">
+        <p><b>Esto no es una cuenta de pruebas.</b> No coloca órdenes en ningún sitio, así que
+          no mide deslizamiento, ni llenados parciales, ni rechazos, ni latencia — cosas que
+          una demo de bróker sí toca en alguna medida. Lo que mide es si la estrategia se
+          sigue pareciendo a su propio backtest sobre un mercado que es el de verdad. Para lo
+          otro está <b>En vivo</b>.</p>
+      </div>
+
+      <figure class="shot">
+        <div class="slot">
+          <span class="id">Captura C-17</span>
+          <span class="qué">Un expediente de cuarentena con veredicto</span>
+          <p class="cómo">Pestaña <b>Cuarentena</b> de Portfolio con una estrategia dentro que
+            lleve ya unas cuantas operaciones. Deben verse el veredicto con su banda, el
+            contador de días y operaciones, y el gráfico con las entradas y salidas marcadas.</p>
+        </div>
+      </figure>
+    </section>
+
+    <!-- ================= 14 ================= -->
+    <section id="envivo">
+      <p class="num">14 · En vivo</p>
+      <h2>Lo que hizo la cuenta, en la misma pantalla.</h2>
+
+      <p>La tercera pestaña de <strong>Portfolio</strong> lee cuentas de verdad y dibuja sus
+        operaciones sobre el gráfico. Un bot suelto contra un exchange opera a ciegas: los
+        llenados salen por la consola y el gráfico está en otra ventana, de otro programa, con
+        otra escala.</p>
+
+      <p>Lee de dos sitios:</p>
+      <ul>
+        <li><strong>Hyperliquid</strong> — con la dirección de la cartera. Capital, posiciones
+          abiertas, órdenes puestas, operaciones cerradas y la curva de la cuenta.</li>
+        <li><strong>MetaTrader 5</strong> — por el mismo conector que trae el histórico, sin
+          clave y sin abrir ningún puerto. Lee <em>operaciones</em> y no apuntes: junta cada
+          entrada con su salida, calcula el neto restando comisión y swap, y separa los robots
+          por número mágico.</li>
+      </ul>
+
+      <div class="note">
+        <p><b>Leer una cuenta de Hyperliquid no necesita clave.</b> Su API responde a la
+          dirección, que es pública y está en la cadena; la «cartera API» que ofrece el
+          exchange sirve para <em>firmar órdenes</em>, y aquí no se firma ninguna. Guardar un
+          secreto que no se usa es riesgo sin beneficio, así que no se pide.</p>
+      </div>
+
+      <h3>Las carteras se añaden en Ajustes</h3>
+      <p>Una dirección es de quien tiene la llave, no de un sitio, así que la lista no es «la
+        cuenta de Hyperliquid» sino las carteras que quieras, con el nombre que tú les pongas.
+        Al pegar una dirección se prueba contra los sitios que se saben leer y se rellena
+        sola. El campo limpia además los espacios invisibles que arrastra un copia y pega
+        desde una página web, que hacían que una dirección buena se rechazara sin que se viera
+        nada raro.</p>
+
+      <h3>Y en Inicio se elige qué curva se mira</h3>
+      <p>La pantalla de bienvenida enseñaba una curva y no decía cuál. Ahora se elige entre las
+        tres, y debajo del título pone qué es cada una: lo que <em>habría</em> pasado sobre
+        histórico, lo que <em>habría</em> pasado sobre velas ya llegadas, o lo que
+        <em>pasó</em> con dinero.</p>
+
+      <div class="note">
+        <p><b>Las tres no se suman nunca.</b> Cada una arranca de su propia línea de partida.
+          Una medida y otra supuesta en el mismo trazo darían un número bonito que no
+          significa nada.</p>
+      </div>
+
+      <figure class="shot">
+        <div class="slot">
+          <span class="id">Captura C-18</span>
+          <span class="qué">El televisor con una cuenta conectada</span>
+          <p class="cómo">Pestaña <b>En vivo</b> de Portfolio con una cartera añadida. Deben
+            verse el gráfico con las operaciones reales marcadas y la columna de cuentas con su
+            capital. Tapa o recorta la dirección antes de publicarla.</p>
+        </div>
+      </figure>
+    </section>
+
+    <!-- ================= 15 ================= -->
     <section id="exportar">
-      <p class="num">13 · Exportar</p>
+      <p class="num">15 · Exportar</p>
       <h2>El código del robot, en cinco formatos.</h2>
 
       <p>La pestaña <strong>Export</strong> genera el robot completo a partir de la estrategia
@@ -1313,9 +1453,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </figure>
     </section>
 
-    <!-- ================= 14 ================= -->
+    <!-- ================= 16 ================= -->
     <section id="quant">
-      <p class="num">14 · Dr. Quant</p>
+      <p class="num">16 · Dr. Quant</p>
       <h2>El asistente de IA.</h2>
 
       <p>Dr. Quant conoce tu estrategia actual, el último backtest y la serie cargada. Se abre
@@ -1334,10 +1474,41 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
 
       <h3>Corre con tu propia cuenta de IA</h3>
       <p>Aquí no viene ningún modelo incluido y nada pasa por servidores de terceros. En
-        <strong>Settings</strong> añades un proveedor —OpenAI, Anthropic, Google u
-        OpenRouter— con tu propia clave. Cada uno permite listar sus modelos desde el propio
-        formulario. Las preguntas te las factura tu proveedor a sus precios, y
-        <strong>la clave se queda en tu máquina</strong>.</p>
+        <strong>Settings</strong> añades un proveedor con tu propia clave. Las preguntas te
+        las factura tu proveedor a sus precios, y <strong>la clave se queda en tu
+        máquina</strong>.</p>
+
+      <p>La lista de proveedores empieza <strong>vacía</strong>, y no por descuido: cualquier
+        lista corta se queda corta. Pegas la clave y el programa dice de quién es —
+        <code>sk-ant-…</code> es Anthropic, <code>gsk_…</code> es Groq—, y si la forma no
+        distingue te ofrece los candidatos en vez de elegir por ti. Hay diecisiete
+        reconocidos:</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Por API</th><th>En tu máquina</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>OpenAI · Anthropic · Google Gemini · OpenRouter · Groq · DeepSeek ·
+                Mistral · xAI (Grok) · Perplexity · Cerebras · Fireworks · Together AI ·
+                Moonshot (Kimi) · Z.ai (GLM) · NVIDIA NIM</td>
+              <td>Ollama · LM Studio</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Los dos de la derecha <strong>no piden clave y no mandan nada a ninguna parte</strong>:
+        corren en tu ordenador. Los eliges en «Tipo» y el botón de cargar modelos lista los que
+        tengas descargados — que es donde más falta hace, porque los nombres de Ollama llevan
+        etiqueta (<code>qwen2.5:3b</code>) y nadie los teclea de memoria.</p>
+
+      <div class="note">
+        <p><b>Los modelos locales solo funcionan en la aplicación de escritorio.</b> Ollama y
+          LM Studio escuchan en <code>http://127.0.0.1</code>, y la edición de navegador se
+          sirve por <code>https</code>: el navegador bloquea esa petición por contenido mixto
+          antes de que salga. La pantalla lo dice allí también.</p>
+      </div>
       <p>Si tienes más de un proveedor activo, aparece un desplegable en la cabecera del panel
         para elegir cuál responde. Si el elegido se satura con un error 429, el agente pasa
         solo al siguiente.</p>
@@ -1378,9 +1549,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </figure>
     </section>
 
-    <!-- ================= 15 ================= -->
+    <!-- ================= 17 ================= -->
     <section id="autopilot">
-      <p class="num">15 · Autopilot</p>
+      <p class="num">17 · Autopilot</p>
       <h2>Los seis pasos, encadenados.</h2>
 
       <p>El Autopilot ejecuta el recorrido entero de principio a fin, sin intervención, y va
@@ -1419,9 +1590,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </figure>
     </section>
 
-    <!-- ================= 16 ================= -->
+    <!-- ================= 18 ================= -->
     <section id="mt5">
-      <p class="num">16 · MetaTrader 5 en Linux</p>
+      <p class="num">18 · MetaTrader 5 en Linux</p>
       <h2>Histórico directo del terminal.</h2>
 
       <p>BotFactoryFX puede sacar precios directamente de un MetaTrader 5 en marcha: todos los
@@ -1496,15 +1667,20 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </figure>
     </section>
 
-    <!-- ================= 17 ================= -->
+    <!-- ================= 19 ================= -->
     <section id="ajustes">
-      <p class="num">17 · Ajustes</p>
-      <h2>Tres apartados, ninguno obligatorio.</h2>
+      <p class="num">19 · Ajustes</p>
+      <h2>Cuatro apartados, ninguno obligatorio.</h2>
 
       <ul>
-        <li><strong>Proveedores de IA</strong> — las claves de Dr. Quant. Se quedan en tu
-          máquina. Sin esto la aplicación funciona entera menos el asistente; el Autopilot
-          incluido.</li>
+        <li><strong>Proveedores de IA</strong> — las claves de Dr. Quant, y los dos modelos
+          locales, que no la piden. Se quedan en tu máquina. Sin esto la aplicación funciona
+          entera menos el asistente; el Autopilot incluido. Los diecisiete están en el
+          capítulo 16.</li>
+        <li><strong>Carteras y cuentas</strong> — las direcciones y terminales que alimentan
+          la pestaña <strong>En vivo</strong>. Botón de añadir y una lista, con el nombre que
+          tú pongas. Ninguna pide clave: leer una cuenta no necesita firmar nada. Se
+          desarrolla en el capítulo 14.</li>
         <li><strong>Apariencia</strong> — tema claro u oscuro, idioma (español o inglés) y
           color de acento, con siete a elegir. <strong>El acento por defecto es el azul</strong>;
           el ámbar de las capturas de este manual es uno de los siete.</li>
@@ -1512,9 +1688,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </ul>
     </section>
 
-    <!-- ================= 18 ================= -->
+    <!-- ================= 20 ================= -->
     <section id="glosario">
-      <p class="num">18 · Glosario</p>
+      <p class="num">20 · Glosario</p>
       <h2>Las métricas, y qué es un buen número.</h2>
 
       <div class="tbl-wrap">
@@ -1561,9 +1737,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         el take profit se evalúan dentro de la vela, no solo al cierre.</p>
     </section>
 
-    <!-- ================= 19 ================= -->
+    <!-- ================= 21 ================= -->
     <section id="faq">
-      <p class="num">19 · Preguntas frecuentes</p>
+      <p class="num">21 · Preguntas frecuentes</p>
       <h2>Dudas habituales.</h2>
 
       <h4>Mi estrategia no da ninguna operación. ¿Qué pasa?</h4>
@@ -1596,7 +1772,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         <strong>gestión avanzada</strong> entera —trailing, break-even, los dos topes diarios—
         se simulan aquí y se escriben en el robot. Lo que no cuadra es el máximo de posiciones,
         que el backtest no cumple: abre de una en una, ponga lo que ponga. La tabla del
-        <a href="#exportar">capítulo 13</a> lo detalla, columna por columna.</p>
+        <a href="#exportar">capítulo 15</a> lo detalla, columna por columna.</p>
 
       <h4>Me deja exportar a MQL5 pero no a Python. ¿Por qué?</h4>
       <p>Porque el de Python calcula los indicadores él mismo, portados del motor, y hay una
@@ -1609,7 +1785,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       <p>No. Arranca <strong>en seco</strong>: imprime la orden que habría mandado y no manda
         nada. Hace falta <code>BFX_LIVE=1</code> para que opere, y aun entonces va a la red de
         pruebas mientras no añadas <code>BFX_MAINNET=1</code>. La clave se lee del entorno y
-        nunca está dentro del fichero. Está detallado en el <a href="#exportar">capítulo 13</a>.</p>
+        nunca está dentro del fichero. Está detallado en el <a href="#exportar">capítulo 15</a>.</p>
 
       <h4>Se me apaga el ordenador con una operación abierta. ¿Qué pasa?</h4>
       <p>La operación sigue protegida. El stop y el objetivo no viven dentro del programa: son
@@ -1643,9 +1819,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         La matriz de correlación te dirá si de verdad están diversificadas o solo lo parecen.</p>
     </section>
 
-    <!-- ================= 20 ================= -->
+    <!-- ================= 22 ================= -->
     <section id="limites">
-      <p class="num">20 · Límites</p>
+      <p class="num">22 · Límites</p>
       <h2>Lo que el programa no hace.</h2>
 
       <div class="tbl-wrap">
@@ -1655,12 +1831,12 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
             <tr>
               <td><strong>El programa no opera</strong></td>
               <td>No manda órdenes ni pide credenciales de nadie. El conector de MetaTrader y el de Hyperliquid son de solo lectura. Lo que sí puede operar es el bot de Python que exportas, y eso ocurre fuera de aquí: es un programa aparte, con su propia clave, que arranca en seco.</td>
-              <td class="ref"><a href="#exportar">Cap. 13</a></td>
+              <td class="ref"><a href="#exportar">Cap. 15</a></td>
             </tr>
             <tr>
-              <td><strong>No simula la gestión avanzada</strong></td>
-              <td>Trailing stop, break-even y topes diarios se exportan al robot pero no entran en la curva de capital de aquí.</td>
-              <td class="ref"><a href="#exportar">Cap. 13</a></td>
+              <td><strong>No simula el libro de órdenes</strong></td>
+              <td>Trailing stop, break-even y topes diarios sí entran en la curva de capital: los simula el motor y se exportan con los mismos valores. Lo que no hay es profundidad de mercado, llenados parciales ni órdenes en espera — el motor decide al cierre de la vela y entra a mercado.</td>
+              <td class="ref"><a href="#exportar">Cap. 15</a></td>
             </tr>
             <tr>
               <td><strong>El backtest es sobre velas</strong></td>
@@ -1675,7 +1851,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
             <tr>
               <td><strong>No incluye modelo de IA</strong></td>
               <td>Dr. Quant necesita tu proveedor y tu clave. El Autopilot funciona sin ninguno de los dos.</td>
-              <td class="ref"><a href="#quant">Cap. 14</a></td>
+              <td class="ref"><a href="#quant">Cap. 16</a></td>
             </tr>
             <tr>
               <td><strong>Solo Linux, por ahora</strong></td>
@@ -1691,7 +1867,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
     </section>
 
     <footer>
-      <span>BotFactoryFX v1.9.0 · Manual</span>
+      <span>BotFactoryFX v1.9.2 · Manual</span>
       <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
     </footer>
   </main>
