@@ -204,7 +204,7 @@
       </svg>
       <b>BotFactory<i>FX</i></b>
     </a>
-    <span class="tag">Manual · v1.9.2</span>
+    <span class="tag">Manual · v1.10.0</span>
     <a class="back" href="../">← Volver a la web</a>
   </div>
 </header>
@@ -221,7 +221,6 @@
       <li><a href="#mano">Construir a mano</a></li>
       <li><a href="#evolucion">Construir por evolución</a></li>
       <li><a href="#dinero">Gestión monetaria</a></li>
-      <li><a href="#backtesting">Backtesting</a></li>
       <li><a href="#reality">Reality Check</a></li>
       <li><a href="#biblioteca">Biblioteca</a></li>
       <li><a href="#cartera">Cartera</a></li>
@@ -254,7 +253,7 @@
         el código de las que sobreviven para tu plataforma.</p>
 
       <p>No manda órdenes ni toca tu cuenta: lee histórico y escribe ficheros de código. Los
-        límites están enumerados en el <a href="#limites">capítulo 22</a>.</p>
+        límites están enumerados en el <a href="#limites">capítulo 21</a>.</p>
 
       <h3>Dos ediciones</h3>
       <div class="tbl-wrap">
@@ -294,8 +293,8 @@
           desde el terminal.</li>
         <li>Doble clic.</li>
       </ol>
-      <pre><code>chmod +x BotFactoryFX-1.9.2.AppImage
-./BotFactoryFX-1.9.2.AppImage</code></pre>
+      <pre><code>chmod +x BotFactoryFX-1.10.0.AppImage
+./BotFactoryFX-1.10.0.AppImage</code></pre>
 
       <p>Tus estrategias, tus históricos importados y tus ajustes se quedan en tu disco entre
         sesiones. Borrar el AppImage no los borra.</p>
@@ -335,8 +334,7 @@
             <tr><td><strong>Home</strong></td><td>Dónde estás: KPIs, curva agregada y tus últimas estrategias.</td></tr>
             <tr><td><strong>Data</strong></td><td>El histórico sobre el que vas a probar, y lo que tu bróker te cobra.</td></tr>
             <tr><td><strong>Build</strong></td><td>Escribes las reglas, o dejas que un algoritmo genético las busque.</td></tr>
-            <tr><td><strong>Backtesting</strong></td><td>La prueba: la estrategia contra el histórico, con costes.</td></tr>
-            <tr><td><strong>Reality Check</strong></td><td>El examen: doce intentos de tumbar el resultado.</td></tr>
+            <tr><td><strong>Reality Check</strong></td><td>El examen: doce intentos de tumbar el resultado. Sobre una estrategia tuya, sobre una lista corta entera, o sobre la de otro.</td></tr>
             <tr><td><strong>Library</strong></td><td>Lo que sobrevive se guarda, con su histórico y su veredicto pegados.</td></tr>
             <tr><td><strong>Portfolio</strong></td><td>Tres pestañas: cómo se llevan entre sí las que has guardado, las que están en cuarentena, y lo que hacen tus cuentas de verdad.</td></tr>
           </tbody>
@@ -380,7 +378,7 @@
       <h4>2 · Directamente de MetaTrader 5</h4>
       <p>Con el conector instalado, «Import from MetaTrader 5» trae cualquier instrumento que
         ofrezca tu bróker, en cualquier temporalidad, sin exportar un solo fichero a mano.
-        Está explicado entero en el <a href="#mt5">capítulo 18</a>.</p>
+        Está explicado entero en el <a href="#mt5">capítulo 17</a>.</p>
 
       <h4>3 · Directamente de Hyperliquid</h4>
       <p>«Import from Hyperliquid» descarga el histórico de cualquiera de los perpetuos que
@@ -557,7 +555,7 @@
         leer una página que tú indicas <strong>no cuesta nada</strong> —la descarga el
         servidor de BotFactoryFX— y además usa la fuente oficial en vez de lo que un buscador
         crea relevante. Escribir solo el nombre del bróker también funciona, pero eso sí es
-        una búsqueda y se cobra (unos 0,007 $; ver el <a href="#quant">capítulo 16</a>).</p>
+        una búsqueda y se cobra (unos 0,007 $; ver el <a href="#quant">capítulo 15</a>).</p>
 
       <figure class="shot">
         <div class="slot">
@@ -747,9 +745,9 @@
       <p class="num">08 · Gestión monetaria</p>
       <h2>Cuánto arriesgas en cada operación.</h2>
 
-      <p>La pestaña <strong>Money</strong> es la misma en el constructor manual, en el
-        genético y en Backtesting, y edita la misma estrategia: lo que cambies en una lo
-        verás cambiado en las otras dos.</p>
+      <p>La pestaña <strong>Money</strong> es la misma en el constructor manual y en el
+        genético, y edita la misma estrategia: lo que cambies en una lo verás cambiado en la
+        otra.</p>
 
       <h3>Riesgo básico</h3>
       <ul>
@@ -783,73 +781,29 @@
     </section>
 
     <!-- ================= 09 ================= -->
-    <section id="backtesting">
-      <p class="num">09 · Backtesting</p>
-      <h2>La estrategia contra el histórico.</h2>
-
-      <p>Backtesting ejecuta una estrategia sobre la serie cargada y produce la curva de
-        capital, las métricas y la tabla de operaciones. Acepta dos orígenes de estrategia.</p>
-
-      <h3>Estrategias propias</h3>
-      <p>Cualquiera de tu biblioteca, o la que tengas abierta en el constructor.</p>
-
-      <h3>Estrategias externas</h3>
-      <p>Puedes traer código de fuera: MetaTrader 4 (<code>.mq4</code>), MetaTrader 5
-        (<code>.mq5</code>), JForex (<code>.java</code>) o TradingView (<code>.pine</code>),
-        con la posibilidad de adjuntar además el informe nativo de esa plataforma.</p>
-
-      <div class="note">
-        <p><b>El inspector de código no ejecuta el robot.</b> Extrae sus parámetros de
-          entrada, sus propiedades y las funciones <code>OnInit</code>, <code>OnTick</code> y
-          <code>OnBar</code> para que puedas leerlas. No lo interpreta ni lo corre.</p>
-      </div>
-
-      <h3>Comparar con TradingView</h3>
-      <p>En el Strategy Tester de TradingView, pestaña <strong>List of Trades</strong>,
-        exporta. Aquí, <strong>External → TradingView</strong>, adjunta ese fichero, y la
-        pestaña de comparación pone los dos resultados lado a lado.</p>
-
-      <div class="warn-box">
-        <p><b>Exporta la lista de operaciones, no el resumen.</b> Cada cifra de la
-          comparación se recalcula desde las operaciones individuales, así que el resumen de
-          totales no sirve. Incluido el capital inicial: TradingView no lo declara en esa
-          exportación, pero se deduce de sus columnas de beneficio y beneficio porcentual.</p>
-      </div>
-
-      <h4>Si las dos no coinciden</h4>
-      <ul>
-        <li><strong>Los costes.</strong> La función <code>strategy()</code> de Pine lleva
-          comisión y deslizamiento como argumentos propios. Si no coinciden con lo que hay en
-          Data, las dos pruebas están midiendo mundos distintos.</li>
-        <li><strong>Los datos.</strong> El feed de TradingView para un símbolo no es el de tu
-          bróker: otras sesiones, otros cierres, otros huecos.</li>
-        <li><strong>La vela en que entra la orden.</strong> Pine entra por defecto en la
-          apertura de la vela siguiente, y este motor también — pero una estrategia escrita
-          para entrar en la vela de la señal se verá mejor en uno que en otro, y ninguno
-          miente.</li>
-      </ul>
-
-      <figure class="shot">
-        <div class="slot">
-          <span class="id">Captura C-08</span>
-          <span class="qué">Un backtest terminado</span>
-          <p class="cómo">Pantalla <b>Backtesting</b> con un resultado completo: KPIs arriba
-            (P&amp;L, acierto, profit factor, caída máxima), curva de capital, y parte de la
-            tabla de operaciones. Que se vea una estrategia con resultado realista, no una
-            espectacular.</p>
-        </div>
-      </figure>
-    </section>
-
-    <!-- ================= 10 ================= -->
+    <!-- ================= 9 ================= -->
     <section id="reality">
-      <p class="num">10 · Reality Check</p>
+      <p class="num">09 · Reality Check</p>
       <h2>Doce comprobaciones sobre el mismo resultado.</h2>
 
       <p>El backtest dice si la estrategia ganó dinero sobre el histórico. El Reality Check
         contesta otra pregunta: si ese resultado se sostiene fuera de él. Para eso somete la
         estrategia a doce comprobaciones independientes, cada una de las cuales intenta
         romperla por un sitio distinto.</p>
+
+      <p>La pantalla tiene tres entradas, en las pestañas de arriba: <strong>una estrategia
+        mía</strong>, <strong>varias a la vez</strong> y <strong>una de fuera</strong>. Las
+        tres comparten el mismo histórico y los mismos costes de bróker, que es la razón de
+        que vivan juntas: no pueden discrepar sobre en qué mundo se está midiendo.</p>
+
+      <div class="note">
+        <p><b>Ya no hay una sección de Backtesting.</b> No hacía falta: todo camino de
+          construcción termina en un resultado medido sobre el histórico cargado. El buscador
+          genético puntúa cada individuo que cría, el constructor manual lleva su propio botón
+          de backtest en la barra de abajo, y Explorar criba con el mismo motor. Una sección
+          entera dedicada a repetir esa medición dibujaba el mismo gráfico dos veces y dejaba
+          la duda de cuál de los dos números contaba.</p>
+      </div>
 
       <h3>Las doce comprobaciones</h3>
       <p>Cada una tiene un peso, porque no todas dicen lo mismo sobre si la ventaja es real.</p>
@@ -946,6 +900,91 @@
       <p>Son decenas de backtests encadenados: sobre un histórico grande ocupa buena parte de
         un minuto. Mientras corre indica en qué comprobación va.</p>
 
+      <h3>Varias a la vez</h3>
+      <p>Una búsqueda genética devuelve la población ordenada por <em>fitness</em>, y ése es
+        justo el número del que conviene desconfiar: el individuo de arriba es, por
+        construcción, el que mejor se ajustó a los datos con los que se le entrenó — que es
+        también la definición de estar sobreajustado. Leer esa lista de arriba abajo es el
+        error que esta pantalla existe para evitar.</p>
+
+      <p>Así que en la pestaña <strong>Población</strong> del buscador se marcan las que
+        merezcan una segunda mirada y se pulsa <strong>Mandar al Reality Check</strong>.
+        Llegan aquí como lista, se juzgan todas, y vuelven ordenadas <strong>de mejor a
+        peor por veredicto</strong>. Cada fila se abre y enseña sus doce comprobaciones.</p>
+
+      <div class="note">
+        <p><b>Tres escalones, no uno.</b> Primero las puntuadas, por su nota. Después las que
+          se informaron sin evidencia bastante para poner nota — que no es lo mismo que un
+          cero: decir «no he podido medirla» no es decir «es mala». Y al final las que no se
+          pudieron juzgar. A igualdad de nota va delante la que tenga menos comprobaciones sin
+          ejecutar: dos 62 no son el mismo 62 si uno de ellos llegó ahí con tres de las doce
+          en blanco.</p>
+      </div>
+
+      <p>Corre en tantos núcleos como aguante la máquina y se puede parar a medias: lo que
+        haya terminado se conserva y se ordena igual.</p>
+
+      <h3>Una de fuera</h3>
+      <p>Alguien te manda un robot, o la captura de un backtest que parece demasiado bueno.
+        Adjunta aquí su fichero: el <strong>código</strong> —MetaTrader 4 (<code>.mq4</code>),
+        MetaTrader 5 (<code>.mq5</code>), JForex (<code>.java</code>) o TradingView
+        (<code>.pine</code>)— y/o el <strong>informe</strong> que exportó su plataforma.</p>
+
+      <p>Verás lo que el código declara —símbolo, marco temporal, lote, stop, objetivo, sus
+        parámetros de entrada y sus propiedades— y lo que el informe afirma, recalculado desde
+        su propia lista de operaciones y no copiado de su página de totales. Después,
+        <strong>Ejecutar la mía sobre este histórico</strong> mide la estrategia elegida
+        arriba sobre tus velas y a tus costes, y las dos quedan en una tabla.</p>
+
+      <div class="note">
+        <p><b>El código se lee, no se ejecuta.</b> BotFactoryFX no interpreta MQL, Java ni
+          Pine. Extrae los parámetros, las propiedades y las funciones <code>OnInit</code>,
+          <code>OnTick</code> y <code>OnBar</code> para que puedas leerlas — nada más.</p>
+      </div>
+
+      <div class="warn-box">
+        <p><b>Son dos preguntas distintas.</b> Su columna es lo que su plataforma dio sobre su
+          histórico y con sus costes. La tuya es lo que hacen tus reglas sobre el histórico
+          cargado aquí. Sólo se pueden comparar si las dos cubren el mismo periodo y el mismo
+          instrumento; si no, lee las columnas y no la diferencia.</p>
+      </div>
+
+      <h4>Comparar con TradingView</h4>
+      <p>En el Strategy Tester, pestaña <strong>List of Trades</strong>, exporta. Aquí, elige
+        TradingView como plataforma, adjunta ese fichero y pulsa <strong>Ejecutar la mía sobre
+        este histórico</strong>.</p>
+
+      <div class="warn-box">
+        <p><b>Exporta la lista de operaciones, no el resumen.</b> Cada cifra se recalcula
+          desde las operaciones individuales, así que el resumen de totales no sirve. Incluido
+          el capital inicial: TradingView no lo declara en esa exportación, pero se deduce de
+          sus columnas de beneficio y beneficio porcentual.</p>
+      </div>
+
+      <h4>Si las dos no coinciden</h4>
+      <ul>
+        <li><strong>Los costes.</strong> La función <code>strategy()</code> de Pine lleva
+          comisión y deslizamiento como argumentos propios. Si no coinciden con lo que hay en
+          Datos, las dos pruebas están midiendo mundos distintos.</li>
+        <li><strong>Los datos.</strong> El feed de TradingView para un símbolo no es el de tu
+          bróker: otras sesiones, otros cierres, otros huecos.</li>
+        <li><strong>La vela en que entra la orden.</strong> Pine entra por defecto en la
+          apertura de la vela siguiente, y este motor también — pero una estrategia escrita
+          para entrar en la vela de la señal se verá mejor en uno que en otro, y ninguno
+          miente.</li>
+      </ul>
+
+      <figure class="shot">
+        <div class="slot">
+          <span class="id">Captura C-08</span>
+          <span class="qué">La lista corta, ordenada por veredicto</span>
+          <p class="cómo">Pestaña <b>Varias a la vez</b> con seis o más estrategias ya
+            juzgadas. Lo que tiene que enseñar es el desorden: que el nº1 por fitness NO sea
+            el nº1 por veredicto. Si sale una tabla donde el orden coincide, no vale — la
+            captura existe para enseñar precisamente que no coinciden.</p>
+        </div>
+      </figure>
+
       <figure class="shot">
         <div class="slot">
           <span class="id">Captura C-09</span>
@@ -969,9 +1008,9 @@
       </figure>
     </section>
 
-    <!-- ================= 11 ================= -->
+    <!-- ================= 10 ================= -->
     <section id="biblioteca">
-      <p class="num">11 · Biblioteca</p>
+      <p class="num">10 · Biblioteca</p>
       <h2>Qué se guarda con cada estrategia.</h2>
 
       <p>La biblioteca guarda cada estrategia junto con el histórico sobre el que se midió,
@@ -1001,9 +1040,9 @@
       </figure>
     </section>
 
-    <!-- ================= 12 ================= -->
+    <!-- ================= 11 ================= -->
     <section id="cartera">
-      <p class="num">12 · Cartera</p>
+      <p class="num">11 · Cartera</p>
       <h2>Combinar varias estrategias.</h2>
 
       <p>Portfolio tiene tres pestañas, y son tres cosas distintas: <strong>Simulada</strong>
@@ -1047,9 +1086,9 @@
       </figure>
     </section>
 
-    <!-- ================= 13 ================= -->
+    <!-- ================= 12 ================= -->
     <section id="cuarentena">
-      <p class="num">13 · Cuarentena</p>
+      <p class="num">12 · Cuarentena</p>
       <h2>Probar sobre velas de ahora, sin dinero.</h2>
 
       <p>Un backtest mide el pasado. Operar mide el presente con dinero encima. La cuarentena
@@ -1123,9 +1162,9 @@
       </figure>
     </section>
 
-    <!-- ================= 14 ================= -->
+    <!-- ================= 13 ================= -->
     <section id="envivo">
-      <p class="num">14 · En vivo</p>
+      <p class="num">13 · En vivo</p>
       <h2>Lo que hizo la cuenta, en la misma pantalla.</h2>
 
       <p>La tercera pestaña de <strong>Portfolio</strong> lee cuentas de verdad y dibuja sus
@@ -1181,9 +1220,9 @@
       </figure>
     </section>
 
-    <!-- ================= 15 ================= -->
+    <!-- ================= 14 ================= -->
     <section id="exportar">
-      <p class="num">15 · Exportar</p>
+      <p class="num">14 · Exportar</p>
       <h2>El código del robot, en cinco formatos.</h2>
 
       <p>La pestaña <strong>Export</strong> genera el robot completo a partir de la estrategia
@@ -1453,9 +1492,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </figure>
     </section>
 
-    <!-- ================= 16 ================= -->
+    <!-- ================= 15 ================= -->
     <section id="quant">
-      <p class="num">16 · Dr. Quant</p>
+      <p class="num">15 · Dr. Quant</p>
       <h2>El asistente de IA.</h2>
 
       <p>Dr. Quant conoce tu estrategia actual, el último backtest y la serie cargada. Se abre
@@ -1549,9 +1588,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </figure>
     </section>
 
-    <!-- ================= 17 ================= -->
+    <!-- ================= 16 ================= -->
     <section id="autopilot">
-      <p class="num">17 · Autopilot</p>
+      <p class="num">16 · Autopilot</p>
       <h2>Los seis pasos, encadenados.</h2>
 
       <p>El Autopilot ejecuta el recorrido entero de principio a fin, sin intervención, y va
@@ -1590,9 +1629,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </figure>
     </section>
 
-    <!-- ================= 18 ================= -->
+    <!-- ================= 17 ================= -->
     <section id="mt5">
-      <p class="num">18 · MetaTrader 5 en Linux</p>
+      <p class="num">17 · MetaTrader 5 en Linux</p>
       <h2>Histórico directo del terminal.</h2>
 
       <p>BotFactoryFX puede sacar precios directamente de un MetaTrader 5 en marcha: todos los
@@ -1667,9 +1706,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </figure>
     </section>
 
-    <!-- ================= 19 ================= -->
+    <!-- ================= 18 ================= -->
     <section id="ajustes">
-      <p class="num">19 · Ajustes</p>
+      <p class="num">18 · Ajustes</p>
       <h2>Cuatro apartados, ninguno obligatorio.</h2>
 
       <ul>
@@ -1688,9 +1727,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       </ul>
     </section>
 
-    <!-- ================= 20 ================= -->
+    <!-- ================= 19 ================= -->
     <section id="glosario">
-      <p class="num">20 · Glosario</p>
+      <p class="num">19 · Glosario</p>
       <h2>Las métricas, y qué es un buen número.</h2>
 
       <div class="tbl-wrap">
@@ -1737,9 +1776,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         el take profit se evalúan dentro de la vela, no solo al cierre.</p>
     </section>
 
-    <!-- ================= 21 ================= -->
+    <!-- ================= 20 ================= -->
     <section id="faq">
-      <p class="num">21 · Preguntas frecuentes</p>
+      <p class="num">20 · Preguntas frecuentes</p>
       <h2>Dudas habituales.</h2>
 
       <h4>Mi estrategia no da ninguna operación. ¿Qué pasa?</h4>
@@ -1772,7 +1811,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         <strong>gestión avanzada</strong> entera —trailing, break-even, los dos topes diarios—
         se simulan aquí y se escriben en el robot. Lo que no cuadra es el máximo de posiciones,
         que el backtest no cumple: abre de una en una, ponga lo que ponga. La tabla del
-        <a href="#exportar">capítulo 15</a> lo detalla, columna por columna.</p>
+        <a href="#exportar">capítulo 14</a> lo detalla, columna por columna.</p>
 
       <h4>Me deja exportar a MQL5 pero no a Python. ¿Por qué?</h4>
       <p>Porque el de Python calcula los indicadores él mismo, portados del motor, y hay una
@@ -1785,7 +1824,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
       <p>No. Arranca <strong>en seco</strong>: imprime la orden que habría mandado y no manda
         nada. Hace falta <code>BFX_LIVE=1</code> para que opere, y aun entonces va a la red de
         pruebas mientras no añadas <code>BFX_MAINNET=1</code>. La clave se lee del entorno y
-        nunca está dentro del fichero. Está detallado en el <a href="#exportar">capítulo 15</a>.</p>
+        nunca está dentro del fichero. Está detallado en el <a href="#exportar">capítulo 14</a>.</p>
 
       <h4>Se me apaga el ordenador con una operación abierta. ¿Qué pasa?</h4>
       <p>La operación sigue protegida. El stop y el objetivo no viven dentro del programa: son
@@ -1819,9 +1858,9 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
         La matriz de correlación te dirá si de verdad están diversificadas o solo lo parecen.</p>
     </section>
 
-    <!-- ================= 22 ================= -->
+    <!-- ================= 21 ================= -->
     <section id="limites">
-      <p class="num">22 · Límites</p>
+      <p class="num">21 · Límites</p>
       <h2>Lo que el programa no hace.</h2>
 
       <div class="tbl-wrap">
@@ -1831,17 +1870,17 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
             <tr>
               <td><strong>El programa no opera</strong></td>
               <td>No manda órdenes ni pide credenciales de nadie. El conector de MetaTrader y el de Hyperliquid son de solo lectura. Lo que sí puede operar es el bot de Python que exportas, y eso ocurre fuera de aquí: es un programa aparte, con su propia clave, que arranca en seco.</td>
-              <td class="ref"><a href="#exportar">Cap. 15</a></td>
+              <td class="ref"><a href="#exportar">Cap. 14</a></td>
             </tr>
             <tr>
               <td><strong>No simula el libro de órdenes</strong></td>
               <td>Trailing stop, break-even y topes diarios sí entran en la curva de capital: los simula el motor y se exportan con los mismos valores. Lo que no hay es profundidad de mercado, llenados parciales ni órdenes en espera — el motor decide al cierre de la vela y entra a mercado.</td>
-              <td class="ref"><a href="#exportar">Cap. 15</a></td>
+              <td class="ref"><a href="#exportar">Cap. 14</a></td>
             </tr>
             <tr>
               <td><strong>El backtest es sobre velas</strong></td>
               <td>No tick a tick. La comprobación de resolución de vela mide cuánto afecta eso a cada estrategia.</td>
-              <td class="ref"><a href="#reality">Cap. 10</a></td>
+              <td class="ref"><a href="#reality">Cap. 9</a></td>
             </tr>
             <tr>
               <td><strong>No incluye histórico</strong></td>
@@ -1851,7 +1890,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
             <tr>
               <td><strong>No incluye modelo de IA</strong></td>
               <td>Dr. Quant necesita tu proveedor y tu clave. El Autopilot funciona sin ninguno de los dos.</td>
-              <td class="ref"><a href="#quant">Cap. 16</a></td>
+              <td class="ref"><a href="#quant">Cap. 15</a></td>
             </tr>
             <tr>
               <td><strong>Solo Linux, por ahora</strong></td>
@@ -1867,7 +1906,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
     </section>
 
     <footer>
-      <span>BotFactoryFX v1.9.2 · Manual</span>
+      <span>BotFactoryFX v1.10.0 · Manual</span>
       <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
     </footer>
   </main>
