@@ -9,8 +9,8 @@
 // is to stop doing arithmetic where the interface lives.
 
 import { runGeneticAlgorithm, type GAConfig, type GenerationStats } from "@/lib/application/genetic-builder";
-import { seriesFromBuffer, seriesFromCandles, type Series } from "@/lib/domain/series";
-import type { Candle, Strategy } from "@/lib/domain/types";
+import { seriesFromBuffer, seriesFromCandles, type Series } from "@bfx/engine/domain/series";
+import type { Candle, Strategy } from "@bfx/engine/domain/types";
 
 /** Everything about a run except which series it is over. */
 export interface GaRunParams {

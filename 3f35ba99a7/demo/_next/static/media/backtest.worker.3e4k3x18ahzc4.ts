@@ -13,10 +13,10 @@
 // copied and nothing is materialised as objects — same arrangement as the
 // genetic and Reality Check workers.
 
-import { runBacktest } from "@/lib/application/run-backtest";
-import { seriesFromBuffer } from "@/lib/domain/series";
-import type { BacktestResult, CostModel, Strategy } from "@/lib/domain/types";
-import type { InstrumentSpec } from "@/lib/domain/instrument";
+import { runBacktest } from "@bfx/engine/sim/run-backtest";
+import { seriesFromBuffer } from "@bfx/engine/domain/series";
+import type { BacktestResult, CostModel, Strategy } from "@bfx/engine/domain/types";
+import type { InstrumentSpec } from "@bfx/engine/domain/instrument";
 
 export interface BacktestWorkerRequest {
   strategy: Strategy;

@@ -8,9 +8,9 @@
 // it has got to rather than looking hung.
 
 import { runRealityCheck, type RealityCheckReport } from "@/lib/application/reality-check";
-import { seriesFromBuffer, type Series } from "@/lib/domain/series";
-import type { InstrumentSpec } from "@/lib/domain/instrument";
-import type { Candle, CostModel, Strategy } from "@/lib/domain/types";
+import { seriesFromBuffer, type Series } from "@bfx/engine/domain/series";
+import type { InstrumentSpec } from "@bfx/engine/domain/instrument";
+import type { Candle, CostModel, Strategy } from "@bfx/engine/domain/types";
 
 interface RealityCheckCommon {
   strategy: Strategy;
