@@ -1,116 +1,172 @@
+<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>BotFactoryFX — not on sale for this system yet</title>
-<meta name="description" content="The Windows and macOS builds exist. The way to buy them does not, yet.">
+<title>BotFactoryFX — todavía no para este sistema</title>
+<meta name="description" content="Windows y macOS están compilados, pero no verificados en una máquina real. Hasta que lo estén, no se venden.">
 
 <style>
-  /* Deliberately the sales page's own palette and type, at a quarter of its
-     ambition. Somebody arriving here has just pressed a Buy button, and a page
-     that looks like a different site — or worse, like a broken one — is how a
-     stranger decides the whole thing is a fake and closes the tab. It has to
-     read as the same shop, briefly closed for this counter. */
+  /* La paleta y la tipografía de la página de venta, a la cuarta parte de su
+     ambición. Quien llega aquí acaba de pulsar un botón, y una página que
+     parece de otro sitio —o peor, rota— es como un desconocido decide que
+     todo esto es un fraude y cierra la pestaña. Tiene que leerse como la
+     misma tienda, con un mostrador cerrado. */
   :root {
-    --paper: #f1f4f7;
-    --card:  #ffffff;
-    --ink:   #0f141a;
-    --muted: #5b6775;
-    --accent: #1d4ed8;
-    --line:  #dbe2ea;
+    --ink:       #eeedea;
+    --surface:   #ffffff;
+    --line:      #d6d3cc;
+    --text:      #14171c;
+    --text-soft: #454b54;
+    --muted:     #5b6169;
+    --phosphor:  #b8730f;
+    --phos-deep: #8a5207;
+    --phos-wash: #f7ecdc;
+
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; min-height: 100vh;
-    background: var(--paper); color: var(--ink);
-    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-    font-size: 17px; line-height: 1.62;
+    background: var(--ink); color: var(--text);
+    font-family: var(--sans); font-size: 16px; line-height: 1.62;
     -webkit-font-smoothing: antialiased;
     display: grid; place-items: center; padding: 2rem 1.25rem;
   }
-  main { max-width: 34rem; display: flex; flex-direction: column; gap: 1.15rem; }
+  main { max-width: 36rem; display: flex; flex-direction: column; gap: 1.15rem; }
   .brand {
-    font-weight: 800; letter-spacing: -0.045em; font-size: 1.3rem;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    text-decoration: none; color: var(--ink); align-self: flex-start;
+    font-family: var(--mono); font-weight: 600; font-size: 1.05rem;
+    letter-spacing: -.03em; text-decoration: none; color: var(--text);
+    align-self: flex-start;
   }
-  .brand em { font-style: normal; color: var(--accent); }
+  .brand i { font-style: normal; color: var(--phosphor); }
   .eyebrow {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--accent); margin: 0;
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--phosphor); margin: 0;
   }
-  h1 { font-size: 1.5rem; font-weight: 700; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
-  p { margin: 0; color: var(--muted); }
+  h1 {
+    font-family: var(--mono); font-weight: 600; font-size: 1.55rem;
+    margin: 0; letter-spacing: -.03em; text-wrap: balance; line-height: 1.15;
+  }
+  p { margin: 0; color: var(--text-soft); }
   .card {
-    background: var(--card); border: 1px solid var(--line);
-    border-radius: 10px; padding: 1.1rem 1.2rem;
-    display: flex; flex-direction: column; gap: 0.6rem;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 3px; padding: 1.15rem 1.25rem;
+    display: flex; flex-direction: column; gap: .65rem;
   }
-  .card h2 { font-size: 0.95rem; margin: 0; font-weight: 650; color: var(--ink); }
-  .card p { font-size: 0.92rem; }
-  a { color: var(--accent); text-underline-offset: 3px; }
-  .row { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 0.2rem; }
+  .card.act { background: var(--phos-wash); }
+  .card h2 { font-family: var(--mono); font-size: .95rem; margin: 0; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
+  .card p { font-size: .92rem; }
+  a { color: var(--phos-deep); text-underline-offset: 3px; }
+  .row { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: .2rem; }
   .btn {
-    display: inline-flex; align-items: center; gap: 0.45rem;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 0.8rem; font-weight: 600; text-decoration: none;
-    padding: 0.72rem 1.15rem; border-radius: 6px; border: 1px solid transparent;
+    display: inline-flex; align-items: center; gap: .45rem;
+    font-family: var(--mono); font-size: .78rem; font-weight: 500;
+    letter-spacing: .04em; text-transform: uppercase; text-decoration: none;
+    padding: .7rem 1.1rem; border-radius: 2px; border: 1px solid var(--phosphor);
+    color: var(--phosphor); background: transparent;
   }
-  .btn-primary { background: var(--ink); color: #fff; }
-  .btn-ghost { background: var(--card); color: var(--ink); border-color: #c3cedb; }
-  .fine { font-size: 0.82rem; }
+  .btn:hover { background: var(--phos-wash); }
+  .btn-primary { background: var(--phosphor); color: #fff; }
+  .btn-primary:hover { background: var(--phos-deep); border-color: var(--phos-deep); }
+  .fine { font-size: .85rem; color: var(--muted); }
 </style>
 
 <main>
-  <a class="brand" href="../">BotFactory<em>FX</em></a>
+  <a class="brand" href="../">BotFactory<i id="sufijo">FX</i></a>
 
-  <p class="eyebrow" id="eyebrow">Not on sale yet</p>
-  <h1 id="headline">This system is not on sale yet.</h1>
+  <p class="eyebrow" id="eyebrow">Todavía no</p>
+  <h1 id="titular">Este sistema todavía no está.</h1>
 
-  <p>
-    Not a mistake, and nothing went wrong with your click. The build for it is finished — compiled,
-    packed and checksummed — but the way to take your money for it is not, and I would rather show
-    you this page than take a payment I cannot yet deliver against.
+  <p id="explica">
+    No es un error tuyo ni un enlace roto. El paquete para tu sistema se compila —existe,
+    y arranca— pero no está probado en una máquina real de las tuyas, y sin eso no se
+    publica. Prefiero enseñarte esta página antes que venderte algo que no he visto
+    funcionar donde tú lo vas a usar.
   </p>
 
-  <div class="card">
-    <h2>What is actually ready</h2>
-    <p>
-      Linux is on sale today. Windows and macOS are built and waiting on the purchase and licensing
-      side, which is being finished now rather than promised for later.
+  <div class="card act">
+    <h2 id="listo-t">Lo que sí está listo</h2>
+    <p id="listo-p">
+      Linux, hoy, verificado en una máquina de verdad: AppImage que arranca sin instalar,
+      con el conector de MetaTrader 5 funcionando bajo Wine.
     </p>
     <div class="row">
-      <a class="btn btn-primary" href="../#price">Buy the Linux version</a>
-      <a class="btn btn-ghost" href="../demo/">Run the whole thing free</a>
+      <a class="btn btn-primary" id="b1" href="../#precio">Ver la versión de Linux</a>
+      <a class="btn" id="b2" href="../demo/">Probarlo entero, gratis</a>
     </div>
   </div>
 
   <div class="card">
-    <h2>If you want this one</h2>
+    <h2>Si el que quieres es éste</h2>
     <p>
-      Write to <a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a> saying which system,
-      and you will hear the day it opens. Nothing is stored, there is no list, and you will not get
-      anything else — this is a person answering a message, not a signup.
+      Escribe a <a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a> diciendo qué
+      sistema, y te aviso el día que abra. No se guarda nada, no hay lista y no vas a recibir
+      ninguna otra cosa: esto es una persona contestando un correo, no un alta.
     </p>
   </div>
 
-  <p class="fine">
-    Meanwhile the browser edition is the same software with a shorter history, on every system,
-    costing nothing: <a href="../demo/">open it here</a>. It runs in the tab you are reading this in.
+  <p class="fine" id="fine">
+    Mientras tanto, la versión del navegador es el mismo programa con menos histórico,
+    funciona en cualquier sistema y no cuesta nada:
+    <a href="../demo/" id="b3">ábrela aquí</a>. Corre en la pestaña en la que estás leyendo esto.
   </p>
 </main>
 
 <script>
-  // Names the system the visitor asked for, from the query the button carried.
-  // A page that says "this system" to someone who pressed "Buy for macOS"
-  // reads as a template; saying "macOS" reads as an answer.
+  // Esta página la comparten dos productos, y decirle a los dos lo mismo sería
+  // mandar a la tienda a quien venía a por lo gratuito.
+  //
+  //   soon/?system=windows              → BotFactoryFX, el programa de pago
+  //   soon/?system=windows&de=banco     → BotFactoryBench, que es gratis
+  //
+  // Sin `de`, manda el de pago: es el camino más transitado y, si el
+  // JavaScript no corre, lo que queda escrito en el HTML es exactamente eso.
+  //
+  // Nombrar el sistema que pidió el visitante tampoco es un adorno: una página
+  // que dice «este sistema» a quien acaba de pulsar «Avisadme» en la tarjeta de
+  // macOS se lee como una plantilla, y decir «macOS» se lee como una respuesta.
   (function () {
-    const names = { windows: "Windows", macos: "macOS", linux: "Linux" };
-    const asked = new URLSearchParams(location.search).get("system");
-    const label = names[String(asked).toLowerCase()];
-    if (!label) return;
-    document.getElementById("headline").textContent = label + " is not on sale yet.";
-    document.getElementById("eyebrow").textContent = label + " — not on sale yet";
-    document.title = "BotFactoryFX — " + label + " is not on sale yet";
+    const q = new URLSearchParams(location.search);
+    const nombres = { windows: "Windows", macos: "macOS", linux: "Linux" };
+    const sistema = nombres[String(q.get("system")).toLowerCase()];
+
+    if (sistema) {
+      document.getElementById("titular").textContent = sistema + " todavía no está.";
+      document.getElementById("eyebrow").textContent = sistema + " — todavía no";
+      document.title = "BotFactoryFX — " + sistema + " todavía no";
+    }
+
+    if (q.get("de") !== "banco") return;
+
+    // El banco: gratuito, se descarga de /bench/ y se prueba en /bench/probar/.
+    // Rutas absolutas porque el banco cuelga de la raíz del sitio en las dos
+    // modalidades de publicación, y esta página no siempre está al mismo nivel.
+    document.getElementById("sufijo").textContent = "Bench";
+    document.title = "BotFactoryBench — " + (sistema || "este sistema") + " todavía no";
+    document.querySelector(".brand").setAttribute("href", "/bench/");
+
+    document.getElementById("explica").textContent =
+      "No es un error tuyo ni un enlace roto. El banco se compila para tu sistema, pero no "
+      + "está probado en una máquina real de las tuyas, y sin eso no se publica — ni siquiera "
+      + "siendo gratis, porque un programa que no te cuesta nada puede costarte igual la tarde.";
+
+    document.getElementById("listo-t").textContent = "Lo que sí está listo";
+    document.getElementById("listo-p").textContent =
+      "Linux, hoy: un AppImage que se descarga y arranca, sin instalación y sin cuenta. "
+      + "Y la prueba en el navegador, que funciona en cualquier sistema — incluido el tuyo.";
+
+    const b1 = document.getElementById("b1");
+    b1.textContent = "Descargar el banco para Linux";
+    b1.setAttribute("href", "/bench/");
+
+    const b2 = document.getElementById("b2");
+    b2.textContent = "Probarlo en el navegador";
+    b2.setAttribute("href", "/bench/probar/");
+
+    document.getElementById("fine").innerHTML =
+      "La prueba del navegador es el programa entero, sin recortes y sin registro, y funciona "
+      + 'en tu sistema hoy: <a href="/bench/probar/">ábrela aquí</a>. Corre en la pestaña en la '
+      + "que estás leyendo esto.";
   })();
 </script>

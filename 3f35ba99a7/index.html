@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
 <!-- Sin esto el CSS responsive de más abajo no llega a existir: servida como
@@ -1522,6 +1523,46 @@
     marco.removeAttribute("src");
     marco.src = src;
   });
+})();
+
+/* Llegar de fuera con un ancla y quedarse arriba del todo.
+   Comprobado el 3 de septiembre de 2026: abrir /#precio o /#banco en una
+   pestaña nueva dejaba la página en scrollY 0, con el destino a diez mil
+   píxeles y el documento ya completo. Todos los enlaces de dentro funcionaban
+   —esos saltan con la página ya medida— así que no se veía nunca navegando;
+   sólo lo sufría quien llegaba desde fuera, que es justo el que viene de un
+   enlace compartido o del botón de soon/.
+
+   Es `scroll-behavior: smooth` contra una página que crece mientras carga: el
+   navegador arranca el desplazamiento suave hacia una posición que todavía no
+   es la definitiva —faltan siete capturas y dos tipografías— y lo que llega
+   después lo cancela.
+
+   Se rehace el salto cuando ya no queda nada por cargar, y de golpe en vez de
+   suave, porque un desplazamiento instantáneo no se puede interrumpir a mitad.
+   Si el visitante ya ha empezado a moverse por su cuenta, no se le toca: que
+   la página te arrebate el scroll es peor que aparecer en el sitio de siempre.
+
+   «instant» y no «auto». No son sinónimos: `auto` significa «lo que diga el
+   CSS», y el CSS de esta página dice `smooth`, así que con `auto` el parche
+   arranca precisamente el desplazamiento suave que viene a sustituir y se
+   cancela igual que el original. Estuvo escrito «auto» unos minutos y
+   funcionaba sólo porque a la página le faltaba el doctype: en modo quirks el
+   `scroll-behavior` no se aplicaba y `auto` salía instantáneo por accidente. */
+(function () {
+  const destino = location.hash
+    && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (!destino) return;
+
+  let suyo = false;
+  const marcar = () => { suyo = true; };
+  addEventListener("wheel", marcar, { once: true, passive: true });
+  addEventListener("touchstart", marcar, { once: true, passive: true });
+  addEventListener("keydown", marcar, { once: true });
+
+  const ir = () => { if (!suyo) destino.scrollIntoView({ behavior: "instant", block: "start" }); };
+  ir();
+  addEventListener("load", () => { ir(); requestAnimationFrame(ir); });
 })();
 
 /* El botón de comprar de la barra: aparece cuando la portada se va.
