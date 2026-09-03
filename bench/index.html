@@ -1,1 +1,329 @@
-<!DOCTYPE html><html lang="es" class="dark"><head><meta name="robots" content="noindex, nofollow"><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/bench/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/bench/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="stylesheet" href="/bench/_next/static/chunks/0_nqw0bni69yh.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/bench/_next/static/chunks/3obfewke3_gct.js"/><script src="/bench/_next/static/chunks/1eb91austet_-.js" async=""></script><script src="/bench/_next/static/chunks/11wjr7r9hs-rf.js" async=""></script><script src="/bench/_next/static/chunks/2ibt73okkaw9h.js" async=""></script><script src="/bench/_next/static/chunks/turbopack-1zfltgniqdelg.js" async=""></script><script src="/bench/_next/static/chunks/40570_nboodek.js" async="" crossorigin=""></script><script src="/bench/_next/static/chunks/2u3t40yhs_fjy.js" async="" crossorigin=""></script><script src="/bench/_next/static/chunks/2p6w7m1-j43ln.js" async="" crossorigin=""></script><title>BotFactoryBench — ¿es real ese backtest?</title><meta name="description" content="Sube el informe del robot que te vendieron y su histórico. Comprueba si sus cuentas cuadran con sus propias operaciones, si sus precios existieron y qué queda de su ventaja a tus costes. Gratis, y sin que el fichero salga de tu ordenador."/><meta name="keywords" content="backtest,auditoría,MetaTrader,TradingView,forex,robot,EA"/><meta name="next-size-adjust" content=""/><script src="/bench/_next/static/chunks/0cz1d0mv5g_q7.js" noModule=""></script></head><body class="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__variable"><div hidden=""><!--$--><!--/$--></div><header data-print-hide="true" class="border-b" style="border-color:var(--bfx-line)"><div class="mx-auto max-w-[62rem] px-5 md:px-8 py-3 flex flex-wrap items-center justify-between gap-3"><div class="flex items-start gap-2.5"><a class="shrink-0" aria-label="BotFactoryBench" href="/bench/"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" style="color:var(--bfx-phosphor)" role="img" aria-label="BotFactoryBench"><path d="M6 40 L42 40 M6 40 L6 8" stroke="currentColor" stroke-opacity="0.35" stroke-width="2" stroke-linecap="round"></path><path d="M9 34 L15 30 L20 32 L26 22 L32 25 L39 12" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="31" cy="19" r="10.5" fill="var(--bfx-bg, #0e1013)" fill-opacity="0.55"></circle><circle cx="31" cy="19" r="10.5" stroke="currentColor" stroke-width="2.6"></circle><circle cx="31" cy="19" r="7" stroke="currentColor" stroke-opacity="0.28" stroke-width="1"></circle><path d="M38.6 26.4 L44 32" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"></path></svg></a><span class="leading-tight"><a class="block font-bold text-[15px] tracking-tight no-underline" style="color:var(--bfx-fg)" href="/bench/">BotFactoryBench</a><a href="https://botfactoryfx.com" target="_blank" rel="noreferrer" class="block text-[11px] bfx-mono hover:underline" style="color:var(--bfx-phosphor)">botfactoryfx.com</a></span></div><nav class="flex items-center gap-4 text-[12.5px]"><a class="bfx-muted hover:text-[color:var(--bfx-fg)] no-underline" href="/bench/">Herramienta</a><a class="bfx-muted hover:text-[color:var(--bfx-fg)] no-underline" href="/bench/ajustes/">Ajustes</a><a class="bfx-muted hover:text-[color:var(--bfx-fg)] no-underline" href="/bench/ayuda/">Ayuda</a></nav></div></header><main class="min-h-screen px-5 py-10 md:px-8"><div class="mx-auto max-w-[62rem] space-y-8"><header class="space-y-2"><span class="inline-block bfx-mono text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-sm" style="color:var(--bfx-phosphor);border:1px solid var(--bfx-phosphor)">Gratis · no sale de tu ordenador</span><h1 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight">Te han enseñado un backtest.<br/>Vamos a ver si es real.</h1><p class="text-[15px] leading-relaxed bfx-muted max-w-[44rem]">Sube el robot que te vendieron y te digo qué lleva dentro: si dobla el lote tras perder, si abre sin stop, si sólo funciona en la cuenta de quien lo vende. Y si además tienes su informe, se comprueba contra su propia aritmética y contra tus precios, y se rehace entero con tu capital y tus costes.</p></header><section class="grid gap-4 md:grid-cols-2"><div class="card p-5 space-y-3"><div class="flex items-baseline gap-2"><span class="bfx-mono text-xs" style="color:var(--bfx-phosphor)">01</span><h2 class="text-sm font-semibold">El robot</h2><span class="text-[10px] bfx-mono uppercase tracking-widest" style="color:var(--bfx-muted)">recomendado</span></div><label class="block text-xs bfx-muted">Plataforma que lo generó</label><select class="w-full bfx-mono text-sm rounded px-2 py-1.5" style="background:var(--bfx-bg);border:1px solid var(--bfx-line)"><option value="MT5" selected="">MetaTrader 5<!-- --> — <!-- -->.mq5</option><option value="MT4">MetaTrader 4<!-- --> — <!-- -->.mq4</option><option value="TRADINGVIEW">TradingView<!-- --> — <!-- -->.pine</option><option value="JFOREX">JForex<!-- --> — <!-- -->.java</option></select><input type="file" class="hidden" accept=".mq4,.mq5,.mqh,.txt"/><button class="w-full rounded px-3 py-2 text-sm font-semibold" style="background:var(--bfx-phosphor);color:#0e1013">Elegir el robot</button><p class="text-[11px] bfx-muted leading-relaxed">El .mq4, .mq5, .java o .pine que te dieron. Se lee; no se ejecuta.</p></div><div class="card p-5 space-y-3"><div class="flex items-baseline gap-2"><span class="bfx-mono text-xs" style="color:var(--bfx-phosphor)">02</span><h2 class="text-sm font-semibold">Su informe</h2><span class="text-[10px] bfx-mono uppercase tracking-widest" style="color:var(--bfx-muted)">opcional</span></div><p class="text-[11px] bfx-muted leading-relaxed">El backtest que te enseñaron. Sin él se puede auditar el robot igual, pero es lo único que trae sus operaciones — y sin operaciones no hay curva de capital ni informe con tu dinero.</p><input type="file" accept=".htm,.html,.csv,.tsv,.txt,.pdf" class="hidden"/><button class="w-full rounded px-3 py-2 text-sm" style="border:1px solid var(--bfx-line)">Elegir su informe</button><p class="text-[11px] bfx-muted leading-relaxed">El .htm del Strategy Tester, su lista de operaciones en CSV, o un PDF del informe.</p></div></section><section class="card p-5 space-y-3"><div class="flex items-baseline gap-2"><span class="bfx-mono text-xs" style="color:var(--bfx-phosphor)">03</span><h2 class="text-sm font-semibold">Tu histórico</h2><span class="text-[10px] bfx-mono uppercase tracking-widest" style="color:var(--bfx-muted)">opcional</span></div><div class="flex flex-wrap items-center gap-3"><p class="text-[11.5px] bfx-muted leading-relaxed flex-1 min-w-[18rem]">Con las velas de tu bróker salen tres comprobaciones más —las que saben si sus precios existieron de verdad— y el gráfico con sus operaciones encima.</p><input type="file" accept=".csv,.tsv,.txt" class="hidden"/><button class="rounded px-3 py-2 text-sm" style="border:1px solid var(--bfx-line)">Elegir un CSV del mismo instrumento</button></div></section><section class="card p-5 space-y-4"><div class="flex items-baseline gap-2"><span class="bfx-mono text-xs" style="color:var(--bfx-phosphor)">04</span><h2 class="text-sm font-semibold">Tu cuenta y tu bróker</h2></div><p class="text-[11.5px] bfx-muted leading-relaxed max-w-[46rem]">Su informe se corrió con el capital de otro, su tamaño de posición y su diferencial. Aquí se pone el tuyo. Si has subido su informe, sus operaciones se rehacen con esto encima y todo lo de abajo se recalcula al tocar cualquier campo.</p><div class="grid gap-5 md:grid-cols-2"><div class="space-y-2"><p class="text-[10px] uppercase tracking-widest bfx-muted">Gestión monetaria</p><label class="flex items-center justify-between gap-3 text-[12px]"><span class="bfx-muted">Capital inicial ($)</span><input type="number" step="500" class="w-28 bfx-mono text-right rounded px-2 py-1" style="background:var(--bfx-bg);border:1px solid var(--bfx-line)" value="10000"/></label><div class="flex items-center justify-between gap-3 text-[12px]"><span class="bfx-muted">Tamaño de posición</span><div class="flex gap-1"><button class="rounded px-2 py-1 text-[11px]" style="background:var(--bfx-phosphor);color:#0e1013">Lote fijo</button><button class="rounded px-2 py-1 text-[11px]" style="border:1px solid var(--bfx-line);color:var(--bfx-muted)">% de riesgo</button></div></div><label class="flex items-center justify-between gap-3 text-[12px]"><span class="bfx-muted">Lote</span><input type="number" step="0.01" class="w-28 bfx-mono text-right rounded px-2 py-1" style="background:var(--bfx-bg);border:1px solid var(--bfx-line)" value="0.1"/></label></div><div class="space-y-2"><p class="text-[10px] uppercase tracking-widest bfx-muted">Lo que te cobran a ti</p><label class="flex items-center justify-between gap-3 text-[12px]"><span class="bfx-muted">Diferencial (pips)</span><input type="number" step="0.1" class="w-28 bfx-mono text-right rounded px-2 py-1" style="background:var(--bfx-bg);border:1px solid var(--bfx-line)" value="1.2"/></label><label class="flex items-center justify-between gap-3 text-[12px]"><span class="bfx-muted">Comisión ($/lote, ida y vuelta)</span><input type="number" step="0.5" class="w-28 bfx-mono text-right rounded px-2 py-1" style="background:var(--bfx-bg);border:1px solid var(--bfx-line)" value="7"/></label><label class="flex items-center justify-between gap-3 text-[12px]"><span class="bfx-muted">Deslizamiento (pips)</span><input type="number" step="0.1" class="w-28 bfx-mono text-right rounded px-2 py-1" style="background:var(--bfx-bg);border:1px solid var(--bfx-line)" value="0.5"/></label></div></div></section><section class="card p-6 space-y-4"><h2 class="text-sm font-semibold">Qué hace, exactamente</h2><ul class="space-y-2.5 text-[13.5px] leading-relaxed bfx-muted"><li><b class="text-[color:var(--bfx-fg)]">Sus cuentas contra sus operaciones.</b> Un resumen es una afirmación; una lista de operaciones es una prueba. Cambiar solo el resumen es lo más fácil que hay.</li><li><b class="text-[color:var(--bfx-fg)]">Precios que no existieron.</b> Si dicen que entraron a 1,0840 en una vela cuyo mínimo fue 1,0851, el mercado no estuvo ahí.</li><li><b class="text-[color:var(--bfx-fg)]">Operaciones sin vela.</b> Entradas en fines de semana o parones, donde no había mercado que operar.</li><li><b class="text-[color:var(--bfx-fg)]">Entradas demasiado buenas.</b> Comprar en el mínimo exacto de la vela pasa un 10 % de las veces por azar. Tres veces eso es mirar el futuro.</li><li><b class="text-[color:var(--bfx-fg)]">El tamaño de la muestra.</b> Un 78 % de acierto sobre catorce operaciones es mentir con un número correcto.</li><li><b class="text-[color:var(--bfx-fg)]">Y luego lo rehace con tu dinero.</b> Su capital, su lote y su diferencial no son los tuyos. Cambia los tres y sale otra curva, otro informe y otras operaciones — las que habrías tenido tú.</li></ul><p class="text-[12.5px] bfx-muted">Más detalle, y por qué esto no ejecuta el robot, en<!-- --> <a class="underline underline-offset-2" style="color:var(--bfx-phosphor)" href="/bench/ayuda/">Ayuda</a>.</p></section><footer data-print-hide="true" class="pt-6 text-[11.5px] bfx-muted leading-relaxed" style="border-top:1px solid var(--bfx-line)"><p class="bfx-mono mb-2">BotFactoryBench v<!-- -->1.2.0<!-- --> · el mismo motor de medición que<!-- --> <a href="https://botfactoryfx.com" target="_blank" rel="noreferrer" class="underline underline-offset-2" style="color:var(--bfx-phosphor)">BotFactoryFX</a></p><p class="mb-1"><b>Tu fichero no se envía a ninguna parte.</b> Todo lo de arriba ocurre dentro de esta pestaña: no hay servidor que reciba nada, no hay cuenta y no hay registro. Puedes comprobarlo desconectando la red antes de subir el informe.</p><p>Un backtest que pase estas comprobaciones sigue sin ser una promesa de nada. Y la réplica con tu dinero repite <em>sus</em> operaciones: no vuelve a ejecutar sus reglas, que nadie tiene.</p></footer></div></main><!--$--><!--/$--><script src="/bench/_next/static/chunks/3obfewke3_gct.js" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[22016,[\"/bench/_next/static/chunks/40570_nboodek.js\"],\"\"]\n3:I[39756,[\"/bench/_next/static/chunks/40570_nboodek.js\"],\"default\"]\n4:I[37457,[\"/bench/_next/static/chunks/40570_nboodek.js\"],\"default\"]\n5:I[47257,[\"/bench/_next/static/chunks/40570_nboodek.js\"],\"ClientPageRoot\"]\n6:I[82044,[\"/bench/_next/static/chunks/40570_nboodek.js\",\"/bench/_next/static/chunks/2u3t40yhs_fjy.js\",\"/bench/_next/static/chunks/2p6w7m1-j43ln.js\"],\"default\"]\n9:I[97367,[\"/bench/_next/static/chunks/40570_nboodek.js\"],\"OutletBoundary\"]\na:\"$Sreact.suspense\"\nc:I[97367,[\"/bench/_next/static/chunks/40570_nboodek.js\"],\"ViewportBoundary\"]\n10:I[68027,[\"/bench/_next/static/chunks/40570_nboodek.js\"],\"default\",1]\n:HL[\"/bench/_next/static/chunks/0_nqw0bni69yh.css\",\"style\"]\n:HL[\"/bench/_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/bench/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n0:{\"P\":null,\"c\":[\"\",\"\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"__PAGE__\",{},\"$undefined\",\"$undefined\",4608]},\"$undefined\",\"$undefined\",4624],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/bench/_next/static/chunks/0_nqw0bni69yh.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/bench/_next/static/chunks/40570_nboodek.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"es\",\"className\":\"dark\",\"children\":[\"$\",\"body\",null,{\"className\":\"geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__variable\",\"children\":[[\"$\",\"header\",null,{\"data-print-hide\":true,\"className\":\"border-b\",\"style\":{\"borderColor\":\"var(--bfx-line)\"},\"children\":[\"$\",\"div\",null,{\"className\":\"mx-auto max-w-[62rem] px-5 md:px-8 py-3 flex flex-wrap items-center justify-between gap-3\",\"children\":[[\"$\",\"div\",null,{\"className\":\"flex items-start gap-2.5\",\"children\":[[\"$\",\"$L2\",null,{\"href\":\"/\",\"className\":\"shrink-0\",\"aria-label\":\"BotFactoryBench\",\"children\":[\"$\",\"svg\",null,{\"width\":30,\"height\":30,\"viewBox\":\"0 0 48 48\",\"fill\":\"none\",\"className\":\"$undefined\",\"style\":{\"color\":\"var(--bfx-phosphor)\"},\"role\":\"img\",\"aria-label\":\"BotFactoryBench\",\"children\":[[\"$\",\"path\",null,{\"d\":\"M6 40 L42 40 M6 40 L6 8\",\"stroke\":\"currentColor\",\"strokeOpacity\":\"0.35\",\"strokeWidth\":\"2\",\"strokeLinecap\":\"round\"}],[\"$\",\"path\",null,{\"d\":\"M9 34 L15 30 L20 32 L26 22 L32 25 L39 12\",\"stroke\":\"currentColor\",\"strokeWidth\":\"2.6\",\"strokeLinecap\":\"round\",\"strokeLinejoin\":\"round\"}],[\"$\",\"circle\",null,{\"cx\":\"31\",\"cy\":\"19\",\"r\":\"10.5\",\"fill\":\"var(--bfx-bg, #0e1013)\",\"fillOpacity\":\"0.55\"}],[\"$\",\"circle\",null,{\"cx\":\"31\",\"cy\":\"19\",\"r\":\"10.5\",\"stroke\":\"currentColor\",\"strokeWidth\":\"2.6\"}],[\"$\",\"circle\",null,{\"cx\":\"31\",\"cy\":\"19\",\"r\":\"7\",\"stroke\":\"currentColor\",\"strokeOpacity\":\"0.28\",\"strokeWidth\":\"1\"}],[\"$\",\"path\",null,{\"d\":\"M38.6 26.4 L44 32\",\"stroke\":\"currentColor\",\"strokeWidth\":\"3.2\",\"strokeLinecap\":\"round\"}]]}]}],[\"$\",\"span\",null,{\"className\":\"leading-tight\",\"children\":[[\"$\",\"$L2\",null,{\"href\":\"/\",\"className\":\"block font-bold text-[15px] tracking-tight no-underline\",\"style\":{\"color\":\"var(--bfx-fg)\"},\"children\":\"BotFactoryBench\"}],[\"$\",\"a\",null,{\"href\":\"https://botfactoryfx.com\",\"target\":\"_blank\",\"rel\":\"noreferrer\",\"className\":\"block text-[11px] bfx-mono hover:underline\",\"style\":{\"color\":\"var(--bfx-phosphor)\"},\"children\":\"botfactoryfx.com\"}]]}]]}],[\"$\",\"nav\",null,{\"className\":\"flex items-center gap-4 text-[12.5px]\",\"children\":[[\"$\",\"$L2\",null,{\"href\":\"/\",\"className\":\"bfx-muted hover:text-[color:var(--bfx-fg)] no-underline\",\"children\":\"Herramienta\"}],[\"$\",\"$L2\",null,{\"href\":\"/ajustes/\",\"className\":\"bfx-muted hover:text-[color:var(--bfx-fg)] no-underline\",\"children\":\"Ajustes\"}],[\"$\",\"$L2\",null,{\"href\":\"/ayuda/\",\"className\":\"bfx-muted hover:text-[color:var(--bfx-fg)] no-underline\",\"children\":\"Ayuda\"}]]}]]}]}],[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"$L5\",null,{\"Component\":\"$6\",\"serverProvidedParams\":{\"searchParams\":{},\"params\":{},\"promises\":[\"$@7\",\"$@8\"]}}],[[\"$\",\"script\",\"script-0\",{\"src\":\"/bench/_next/static/chunks/2u3t40yhs_fjy.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/bench/_next/static/chunks/2p6w7m1-j43ln.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$L9\",null,{\"children\":[\"$\",\"$a\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@b\"}]}]]}],{},null,false,null]},null,false,null],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$Lc\",null,{\"children\":\"$Ld\"}],\"$Le\",\"$Lf\"]}],false]],\"m\":\"$undefined\",\"G\":[\"$10\",[\"$L11\"]],\"S\":true,\"h\":null,\"r\":\"$undefined\",\"s\":\"$undefined\",\"a\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"_qgfsPpGdtUfyA0aH3HlH\"}\n12:I[97367,[\"/bench/_next/static/chunks/40570_nboodek.js\"],\"MetadataBoundary\"]\ne:[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$L12\",null,{\"children\":[\"$\",\"$a\",null,{\"name\":\"Next.Metadata\",\"children\":\"$L13\"}]}]}]\nf:[\"$\",\"meta\",null,{\"name\":\"next-size-adjust\",\"content\":\"\"}]\n11:[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/bench/_next/static/chunks/0_nqw0bni69yh.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]\n7:{}\n8:\"$0:f:0:1:1:children:0:props:children:0:props:serverProvidedParams:params\"\nd:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\nb:null\n13:[[\"$\",\"title\",\"0\",{\"children\":\"BotFactoryBench — ¿es real ese backtest?\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Sube el informe del robot que te vendieron y su histórico. Comprueba si sus cuentas cuadran con sus propias operaciones, si sus precios existieron y qué queda de su ventaja a tus costes. Gratis, y sin que el fichero salga de tu ordenador.\"}],[\"$\",\"meta\",\"2\",{\"name\":\"keywords\",\"content\":\"backtest,auditoría,MetaTrader,TradingView,forex,robot,EA\"}]]\n"])</script></body></html>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BotFactoryBench — ¿es real ese backtest?</title>
+<meta name="description" content="Programa gratuito que audita el robot que te vendieron y comprueba su backtest contra su propia aritmética y contra precios reales. Descarga para Linux, sin cuenta y sin servidor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450;600&display=swap">
+
+<style>
+  /* La paleta y la tipografía de la página de venta, sin discusión: quien llega
+     aquí desde ella tiene que reconocer la misma tienda, y quien llega de fuera
+     y luego va allí también. Los tokens son los mismos nombres y los mismos
+     valores que en index.html — copiados a propósito, porque esta página se
+     sirve suelta desde /bench/ y no comparte hoja con nadie. */
+  :root {
+    --ink:        #eeedea;
+    --surface:    #ffffff;
+    --surface-2:  #e7e5e0;
+    --line:       #d6d3cc;
+    --text:       #14171c;
+    --text-soft:  #454b54;
+    --muted:      #5b6169;
+    --phosphor:   #b8730f;
+    --phos-deep:  #8a5207;
+    --phos-wash:  #f7ecdc;
+    --profit:     #0b7d55;
+
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+    --s1: .35rem; --s2: .7rem; --s3: 1.15rem;
+    --s4: 1.9rem; --s5: 3rem; --s6: 5rem;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0; background: var(--ink); color: var(--text);
+    font-family: var(--sans); font-size: 1rem; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 66rem; margin: 0 auto; padding: 0 var(--s3); }
+
+  /* ---------- barra ---------- */
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 3.7rem; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--text); }
+  .brand b { font-family: var(--mono); font-weight: 600; font-size: 1.02rem; letter-spacing: -.03em; }
+  .brand b i { font-style: normal; color: var(--phosphor); }
+  .topbar nav { display: flex; gap: var(--s3); align-items: center; }
+  .topbar nav a { font-size: .87rem; color: var(--text-soft); text-decoration: none; }
+  .topbar nav a:hover { color: var(--text); }
+
+  /* ---------- botones ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: var(--mono); font-size: .82rem; font-weight: 500;
+    letter-spacing: .04em; text-transform: uppercase;
+    padding: .72rem 1.15rem; border-radius: 2px; text-decoration: none;
+    border: 1px solid var(--phosphor); color: var(--phosphor);
+    background: transparent; transition: background .15s, color .15s, border-color .15s;
+  }
+  .btn:hover { background: var(--phos-wash); }
+  .btn.solid { background: var(--phosphor); color: #fff; }
+  .btn.solid:hover { background: var(--phos-deep); border-color: var(--phos-deep); }
+  .btn.ghost { border-color: var(--line); color: var(--text-soft); }
+  .btn.ghost:hover { border-color: var(--muted); color: var(--text); background: transparent; }
+  .btn.sm { font-size: .74rem; padding: .5rem .8rem; }
+  .btn.big { font-size: .92rem; padding: .95rem 1.5rem; }
+
+  /* ---------- secciones ---------- */
+  section { padding: var(--s5) 0; border-bottom: 1px solid var(--line); }
+  .eyebrow {
+    font-family: var(--mono); font-size: .72rem; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--phosphor);
+    margin: 0 0 var(--s2) 0;
+  }
+  h1 { font-family: var(--mono); font-weight: 600; font-size: clamp(2rem, 5.4vw, 3.15rem); line-height: 1.07; letter-spacing: -.035em; margin: 0 0 var(--s3) 0; text-wrap: balance; }
+  h2 { font-family: var(--mono); font-weight: 600; font-size: clamp(1.45rem, 3.4vw, 2rem); line-height: 1.15; letter-spacing: -.03em; margin: 0 0 var(--s3) 0; text-wrap: balance; }
+  h3 { font-family: var(--mono); font-weight: 600; font-size: 1rem; margin: 0 0 var(--s1) 0; letter-spacing: -.01em; }
+  p { margin: 0 0 var(--s3) 0; color: var(--text-soft); }
+  p:last-child { margin-bottom: 0; }
+  .lead { font-size: 1.08rem; color: var(--text-soft); max-width: 44rem; }
+  a { color: var(--phos-deep); text-underline-offset: 3px; }
+
+  /* ---------- portada ---------- */
+  .hero { padding-top: var(--s5); padding-bottom: var(--s5); }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); align-items: center; margin-top: var(--s4); }
+  .meta { font-family: var(--mono); font-size: .76rem; color: var(--muted); letter-spacing: .02em; }
+  .meta b { color: var(--text-soft); font-weight: 500; }
+
+  /* ---------- rejillas ---------- */
+  .plats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+  .plat { background: var(--surface); padding: var(--s4) var(--s3); }
+  .plat .os { font-family: var(--mono); font-weight: 600; font-size: 1rem; margin-bottom: var(--s1); }
+  .plat .state { font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; padding: .2em .55em; border-radius: 2px; display: inline-block; margin-bottom: var(--s2); border: 1px solid var(--line); color: var(--muted); }
+  .plat.live .state { border-color: var(--profit); color: var(--profit); }
+  .plat p { font-size: .88rem; margin: 0 0 var(--s3) 0; }
+  @media (max-width: 46rem) { .plats { grid-template-columns: 1fr; } }
+
+  .checks { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s3); margin-top: var(--s4); }
+  .check { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: var(--s3); }
+  .check p { font-size: .89rem; margin: 0; }
+  @media (max-width: 46rem) { .checks { grid-template-columns: 1fr; } }
+
+  /* ---------- primer arranque ---------- */
+  .steps { counter-reset: paso; display: flex; flex-direction: column; gap: var(--s3); margin-top: var(--s4); }
+  .paso { display: grid; grid-template-columns: 2.2rem 1fr; gap: var(--s3); align-items: start; }
+  .paso::before {
+    counter-increment: paso; content: counter(paso, decimal-leading-zero);
+    font-family: var(--mono); font-size: .8rem; color: var(--phosphor); padding-top: .18rem;
+  }
+  .paso p { margin: 0; font-size: .92rem; }
+  code {
+    font-family: var(--mono); font-size: .84em; background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: 2px; padding: .12em .4em;
+    overflow-wrap: anywhere;
+  }
+
+  .sha { font-family: var(--mono); font-size: .72rem; color: var(--muted); overflow-wrap: anywhere; }
+
+  footer { padding: var(--s4) 0 var(--s5); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); justify-content: space-between; }
+  footer span { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
+</style>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/3f35ba99a7/"><b>BotFactory<i>Bench</i></b></a>
+    <nav>
+      <a href="#descargas">Descargas</a>
+      <a href="#arranque">Primer arranque</a>
+      <a href="/bench/probar/">Probar en el navegador</a>
+    </nav>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Gratis · sin cuenta · no sale de tu ordenador</p>
+    <h1>Te han enseñado un backtest.<br>Vamos a ver si es real.</h1>
+    <p class="lead">
+      Le das el robot que te vendieron y te dice qué lleva dentro: si dobla el lote
+      después de perder, si abre sin stop, si sólo funciona en la cuenta de quien lo
+      vende. Y si además tienes su informe, lo comprueba contra su propia aritmética y
+      contra los precios de tu bróker — y lo rehace entero con tu capital y tus costes.
+    </p>
+
+    <div class="hero-cta">
+      <a class="btn solid big" href="https://github.com/Criptocrata/BFFX/releases/download/bench-v1.3.0/BotFactoryBench-1.3.0.AppImage" rel="noopener">Descargar para Linux</a>
+      <span class="meta">
+        <b>v1.3.0</b> · AppImage · 129 MB · no necesita instalación
+      </span>
+    </div>
+    <p class="meta" style="margin-top:var(--s3)">
+      ¿Windows o macOS? <a href="#descargas">Todavía no</a>. ¿Sólo quieres mirarlo un
+      momento? <a href="/bench/probar/">Se puede probar en el navegador</a>, sin descargar nada.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Qué comprueba</p>
+    <h2>Once comprobaciones, y ninguna<br>que dependa de creerle a nadie.</h2>
+    <p class="lead">
+      Cinco miran el código del robot; seis miran su informe. Ninguna le pregunta al
+      vendedor. El robot <strong>se lee, nunca se ejecuta</strong>: un fichero que
+      alguien te ha pasado no se pone a correr en tu máquina para ver qué hace.
+    </p>
+
+    <div class="checks">
+      <div class="check">
+        <h3>Dobla después de perder</h3>
+        <p>Una martingala produce una curva que sube casi en línea recta durante años y
+          desaparece en una tarde. Es la única trampa que puede vaciar la cuenta entera
+          de una vez.</p>
+      </div>
+      <div class="check">
+        <h3>Órdenes sin stop</h3>
+        <p>Sin stop, una operación no pierde hasta que se cierra a mano — así que el
+          backtest esconde cuánto llegó a ir en contra.</p>
+      </div>
+      <div class="check">
+        <h3>Sus cuentas contra sus operaciones</h3>
+        <p>Recalcula cada cifra desde su propia lista de operaciones, nunca desde su
+          página de totales. Un resumen es una afirmación; una lista de operaciones es
+          una prueba.</p>
+      </div>
+      <div class="check">
+        <h3>Precios que no existieron</h3>
+        <p>Si dicen que entraron a 1,0840 en una vela cuyo mínimo fue 1,0851, el mercado
+          no estuvo ahí. Antes de acusar, alinea los relojes de los dos ficheros: un
+          informe exportado en otro huso horario no es un informe inventado.</p>
+      </div>
+      <div class="check">
+        <h3>Entradas demasiado buenas</h3>
+        <p>Comprar en el mínimo exacto de la vela pasa un 10 % de las veces por azar.
+          Tres veces eso es haber calculado la señal con la vela ya cerrada.</p>
+      </div>
+      <div class="check">
+        <h3>Y luego, con tu dinero</h3>
+        <p>Su informe se corrió con el capital de otro y su diferencial. Pon el tuyo y
+          sale otra curva, otras operaciones y otro informe — el que habrías tenido tú.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="descargas">
+  <div class="wrap">
+    <p class="eyebrow">Descargas</p>
+    <h2>Linux hoy. Windows y macOS cuando estén.</h2>
+    <p class="lead" style="margin-bottom:var(--s4)">
+      El mismo criterio que el programa de pago: se publica lo que está probado en una
+      máquina real, y lo demás se anuncia cuando lo esté.
+    </p>
+
+    <div class="plats">
+      <div class="plat live">
+        <div class="os">Linux</div>
+        <span class="state">Disponible</span>
+        <p>AppImage de 129 MB, sin instalación: se descarga, se le da permiso de
+          ejecución y arranca. Probado en Linux Mint 22.3.</p>
+        <a class="btn solid sm" href="https://github.com/Criptocrata/BFFX/releases/download/bench-v1.3.0/BotFactoryBench-1.3.0.AppImage" rel="noopener">Descargar v1.3.0</a>
+      </div>
+      <div class="plat">
+        <div class="os">Windows</div>
+        <span class="state">En preparación</span>
+        <p>El paquete se compila, pero no está verificado en una máquina real y no lleva
+          firma. No se publica hasta que las dos cosas estén.</p>
+        <a class="btn ghost sm" href="/3f35ba99a7/soon/?system=windows">Avisadme</a>
+      </div>
+      <div class="plat">
+        <div class="os">macOS</div>
+        <span class="state">En preparación</span>
+        <p>Mismo caso, con el añadido de que macOS es el sistema que más pelea da con un
+          programa sin firmar. Cuando esté, estará explicado.</p>
+        <a class="btn ghost sm" href="/3f35ba99a7/soon/?system=macos">Avisadme</a>
+      </div>
+    </div>
+
+    <p class="meta" style="margin-top:var(--s3)">
+      Mientras tanto, en cualquier sistema:
+      <a href="/bench/probar/">la prueba en el navegador</a> hace exactamente lo mismo — es el
+      mismo programa dentro de una pestaña.
+    </p>
+  </div>
+</section>
+
+<section id="arranque">
+  <div class="wrap">
+    <p class="eyebrow">Primer arranque</p>
+    <h2>Tres órdenes, y ninguna sorpresa.</h2>
+    <p class="lead">
+      Un AppImage no se instala: es un fichero que se ejecuta. Linux le quita el permiso
+      de ejecución a todo lo que baja de internet, así que hay que devolvérselo — eso es
+      todo lo que hacen estos pasos.
+    </p>
+
+    <div class="steps">
+      <div class="paso">
+        <p>Descarga el fichero <code>BotFactoryBench-1.3.0.AppImage</code>.</p>
+      </div>
+      <div class="paso">
+        <p>Dale permiso para ejecutarse:
+          <code>chmod +x BotFactoryBench-1.3.0.AppImage</code> — o, si prefieres el
+          ratón, propiedades del fichero → permisos → «permitir ejecutar».</p>
+      </div>
+      <div class="paso">
+        <p>Ábrelo con doble clic, o
+          <code>./BotFactoryBench-1.3.0.AppImage</code> desde la terminal.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:var(--s4)">
+      <strong>No lleva firma de código</strong>, y conviene decirlo antes de que lo
+      descubras tú: los certificados cuestan dinero, y este programa no cobra nada. Si eso
+      te hace desconfiar —y es razonable que te lo haga— comprueba tú mismo que el fichero
+      que has bajado es el que se publicó aquí:
+    </p>
+    <p><code>sha256sum BotFactoryBench-1.3.0.AppImage</code></p>
+    <p class="sha">074a0666174b6232753340263fa548b7249dc8d9a595ddd88484231e468965cd</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Privacidad</p>
+    <h2>Tu informe no sale de tu ordenador.</h2>
+    <p class="lead">
+      No hay servidor que reciba nada, no hay cuenta y no hay registro. El programa
+      descargado no necesita conexión en ningún momento: puedes desenchufar la red antes
+      de abrirlo y funciona igual, que es la única forma de comprobar una promesa así en
+      vez de creérsela.
+    </p>
+    <p class="lead">
+      El robot que le des <strong>no se ejecuta nunca</strong>. Se lee como texto, se
+      buscan las trampas conocidas, y se cierra el fichero.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Y si quieres la otra mitad</p>
+    <h2>El banco te dice qué pasó.<br>El Reality Check te dice si es verdad.</h2>
+    <p class="lead">
+      Esto audita el robot de otro y comprueba su backtest. Someter una estrategia propia
+      a doce pruebas —fuera de muestra, walk-forward, otros instrumentos, sensibilidad a
+      parámetros, Monte Carlo— y criar las siguientes con un algoritmo genético es lo que
+      hace <strong>BotFactoryFX</strong>, que es de pago y es de donde sale este.
+    </p>
+    <div class="hero-cta" style="margin-top:var(--s3)">
+      <a class="btn" href="/3f35ba99a7/">Ver BotFactoryFX</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>BotFactoryBench v1.3.0 · gratis, y sin nada que registrar</span>
+    <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
+  </div>
+</footer>
