@@ -63,12 +63,21 @@
     background: var(--surface); border-bottom: 1px solid var(--line);
     position: sticky; top: 0; z-index: 20;
   }
-  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 3.7rem; flex-wrap: wrap; }
+  /* La barra puede ser más ancha que la columna de lectura, y aquí tiene que
+     serlo: marca (151) + menú (889) + botón (142) son 1.182 px, y la columna
+     mide 1.056. Con el ancho de los textos, el botón de comprar caía a una
+     tercera fila él solo, huérfano y feo. Una barra de navegación no está
+     obligada a medir lo que mide un párrafo. */
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 3.7rem; flex-wrap: nowrap; max-width: 78rem; }
   .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--text); }
   .brand b { font-family: var(--mono); font-weight: 600; font-size: 1.02rem; letter-spacing: -.03em; }
   .brand b i { font-style: normal; color: var(--phosphor); }
 
-  .nav { display: flex; gap: 0; align-items: stretch; margin-left: auto; }
+  /* min-width:0 para que el menú pueda encogerse: sin eso un contenedor flex
+     se niega a bajar del ancho de su contenido y es el botón el que sale
+     expulsado. Cuando ya no cabe, el menú se desliza en vez de partirse. */
+  .nav { display: flex; gap: 0; align-items: stretch; margin-left: auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
   .nav a {
     font-size: .87rem; color: var(--text-soft); text-decoration: none;
     padding: 1.15rem .85rem .95rem; border-bottom: 2px solid transparent;
@@ -76,9 +85,20 @@
   }
   .nav a:hover, .nav a:focus-visible { color: var(--text); border-bottom-color: var(--phosphor); }
   .nav a[aria-current] { color: var(--text); border-bottom-color: var(--phosphor); font-weight: 600; }
+
+  /* El botón de la barra. No encoge nunca: si algo tiene que ceder ancho es el
+     menú, no el único sitio de la página donde se paga. */
+  .barra-comprar { margin-left: var(--s3); flex-shrink: 0; }
+  .barra-comprar[hidden] { display: none; }
+  .barra-comprar .cifra { font-variant-numeric: tabular-nums; opacity: .75; font-weight: 400; }
   @media (max-width: 56rem) {
-    .topbar .wrap { padding-top: .6rem; padding-bottom: 0; }
-    .nav { margin-left: 0; width: 100%; overflow-x: auto; }
+    .barra-comprar { order: 2; margin-left: auto; }
+  }
+  @media (max-width: 56rem) {
+    /* En estrecho sí se envuelve: marca y botón arriba, menú deslizante debajo.
+       Es el orden que importa — lo primero que se ve es el precio y el botón. */
+    .topbar .wrap { padding-top: .6rem; padding-bottom: 0; flex-wrap: wrap; }
+    .nav { margin-left: 0; width: 100%; order: 3; }
     .nav a { padding: .7rem .7rem .6rem; }
   }
 
@@ -126,6 +146,59 @@
   /* ---------- héroe ---------- */
   .hero { padding-top: var(--s5); }
   .hero-cta { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s2); }
+
+  /* La banda de cifras.
+     Las cuatro ya estaban en la página, enterradas dentro de párrafos: los
+     8.455.409 en el pie de una captura, las 4.180 en una etiqueta, las doce
+     comprobaciones a mitad de un texto de once líneas. Son lo más concreto que
+     tiene esto que decir y no se leían. Aquí arriba se leen en dos segundos.
+
+     Se llaman .dato y no .cifra porque .cifra ya es el precio del botón de la
+     barra, y dos cosas distintas con el mismo nombre acaban heredando la una
+     de la otra el día que alguien toque una de las dos. */
+  .datos {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: var(--surface); margin-top: var(--s4);
+  }
+  .dato { padding: var(--s3); border-left: 1px solid var(--line); }
+  .dato:first-child { border-left: 0; }
+  .dato b {
+    display: block; font-family: var(--mono); font-weight: 600; font-size: 1.35rem;
+    letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.15;
+    color: var(--text);
+  }
+  .dato span { font-size: .76rem; color: var(--muted); }
+  @media (max-width: 46rem) {
+    .datos { grid-template-columns: repeat(2, 1fr); }
+    .dato:nth-child(3) { border-left: 0; border-top: 1px solid var(--line); }
+    .dato:nth-child(4) { border-top: 1px solid var(--line); }
+  }
+
+  /* La tira de compatibilidad.
+     Nombres, no logotipos: decir que tu programa lee ficheros de MetaTrader es
+     uso nominativo y es terreno firme; reproducir su logotipo entra en las
+     normas de marca de cada empresa. El distintivo de al lado es una figura
+     neutra —no imita el de nadie— y está para dar ritmo a la fila.
+
+     Va aquí y lejos del botón de pagar a propósito: al lado del precio dejaría
+     de decir «esto lee tus ficheros» para insinuar «estas empresas nos
+     respaldan», que es pedir prestada una credibilidad que no se tiene. Es
+     justo lo que esta página acusa de hacer a los demás. */
+  .compat { padding: var(--s3) 0 0; }
+  .compat-et {
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 var(--s2) 0;
+  }
+  .marcas { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s4); }
+  .marcas .m {
+    display: inline-flex; align-items: center; gap: .45rem;
+    font-family: var(--mono); font-size: .87rem; color: var(--text-soft);
+    letter-spacing: -.01em;
+  }
+  .marcas .m svg { flex-shrink: 0; opacity: .8; }
+  .marcas .m.otros { color: var(--muted); }
+  .compat-pie { font-size: .72rem; color: var(--muted); margin: var(--s2) 0 0; }
   .runs-on {
     font-family: var(--mono); font-size: .78rem; color: var(--muted);
     margin: 0; letter-spacing: .02em;
@@ -227,6 +300,12 @@
   .price-fig .unit { font-size: .85rem; font-weight: 400; color: var(--muted); letter-spacing: .06em; }
   .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
   .price-grid > div { background: var(--surface); padding: var(--s3); }
+  .price-cta {
+    padding: var(--s3) var(--s4) var(--s4); border-top: 1px solid var(--line);
+    background: var(--phos-wash);
+    display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); align-items: center;
+  }
+  .price-cta .runs-on { flex-basis: 100%; }
   @media (max-width: 40rem) { .price-grid { grid-template-columns: 1fr; } }
 
   /* ---------- plataformas ---------- */
@@ -458,17 +537,33 @@
       <a href="#cuarentena">Cuarentena</a>
       <a href="#salida">Exportación</a>
       <a href="#perfiles">Para quién es</a>
-      <a href="#precio">Precio</a>
       <a href="#plataformas">Descargas</a>
       <a href="#banco">El banco</a>
       <a href="manual/">Documentación</a>
     </nav>
+
+    <!-- El precio y el botón, pegados al lector a partir de la portada.
+         La barra ya era fija; lo que faltaba era que llevara a algún sitio. Sale
+         cuando la portada se va de la pantalla —arriba estorbaría, porque ahí ya
+         hay dos botones más grandes diciendo lo mismo— y desde entonces
+         acompaña las tres mil palabras que antes no tenían ni una salida.
+         Empieza oculto en el marcado (hidden) para que quien llegue con el
+         JavaScript apagado no vea un botón que no se va nunca. -->
+    <a class="btn solid sm barra-comprar" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="comprar-barra" hidden>
+      <span class="cifra">499&nbsp;USD</span> Comprar
+    </a>
   </div>
 </div>
 
 <section class="hero">
   <div class="wrap">
-    <p class="eyebrow">v1.10.0 <span class="dim">· pago único · sin suscripción</span></p>
+    <!-- El precio, en la primera pantalla y no en la sección 8 de 10.
+         Nadie decide comprar aquí arriba, pero el que lo va a descartar por caro
+         lo descarta igual tres mil palabras después: enseñarlo pronto no pierde
+         una venta, ahorra una lectura. Y «pago único» al lado de la cifra es lo
+         que la hace pequeña, porque todo lo que compite con esto se cobra cada
+         mes. -->
+    <p class="eyebrow">499 USD <span class="dim">· pago único · sin suscripción · v1.10.0</span></p>
     <h1>Genera miles de estrategias.<br>Quédate con las que aguantan.</h1>
     <p class="lead">Un algoritmo genético explora combinaciones a una velocidad que
       ningún trader alcanza a mano. Un examen de robustez descarta las que solo
@@ -481,6 +576,47 @@
     </div>
     <p class="runs-on">Escritorio: <b>Linux</b> · Windows y macOS en preparación &nbsp;—&nbsp;
       la versión web funciona en cualquier navegador, sin instalar y sin registro.</p>
+
+    <!-- Las cuatro cifras son las que ya afirma esta misma página más abajo, y
+         están dichas como lo que son: «en un histórico» y «en una búsqueda»,
+         no como un ritmo garantizado. Redondearlas hacia arriba en la portada
+         y matizarlas en la letra pequeña sería el truco que este producto
+         existe para denunciar. -->
+    <div class="datos">
+      <div class="dato"><b>8.455.409</b><span>velas en un solo histórico</span></div>
+      <div class="dato"><b>4.180</b><span>candidatas en una búsqueda</span></div>
+      <div class="dato"><b>12</b><span>comprobaciones de robustez</span></div>
+      <div class="dato"><b>5</b><span>lenguajes de salida</span></div>
+    </div>
+
+    <div class="compat">
+      <p class="compat-et">Lee tu histórico y escribe tu robot para</p>
+      <div class="marcas">
+        <span class="m">
+          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+            <rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M4.5 10.5V6l3.5 3 3.5-3v4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>MetaTrader 4 · 5</span>
+        <span class="m">
+          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+            <rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M4 11l2.6-3.4 2 2L11 5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>TradingView</span>
+        <span class="m">
+          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+            <rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+            <circle cx="8" cy="8" r="3.1" fill="none" stroke="currentColor" stroke-width="1.3"/>
+          </svg>Dukascopy JForex</span>
+        <span class="m">
+          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+            <rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M4 9.5l2.4-2.6 1.9 1.7L12 5.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 11.6h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>Hyperliquid</span>
+        <span class="m otros">CSV de cualquier bróker</span>
+      </div>
+      <p class="compat-pie">Marcas de sus respectivos titulares. Sin afiliación ni patrocinio.</p>
+    </div>
 
     <div class="shot">
       <figure>
@@ -1118,6 +1254,25 @@
             juzgues el producto antes de pagar, no como cebo recortado.</p>
         </div>
       </div>
+
+      <!-- El botón que faltaba.
+           Hasta aquí la página enseñaba 499 y no ofrecía nada que pulsar: quien
+           acababa de decidirse tenía que seguir bajando hasta Descargas a buscar
+           dónde pagar. Nueve mil píxeles de página sin un solo botón terminaban
+           justo en el punto de máxima intención de compra.
+
+           El sistema, al lado y no en letra pequeña: se cobra en cripto, y una
+           cripto no se devuelve. Alguien en Windows que pague hoy no tiene
+           reembolso posible, así que se lo decimos antes de que pague y no
+           después. -->
+      <div class="price-cta">
+        <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="comprar-precio">Comprar licencia · 499 USD</a>
+        <a class="btn ghost" href="demo/" id="probar-precio">Probar gratis, sin registro</a>
+        <p class="runs-on" style="width:100%;margin:0">
+          Hoy sólo <b>Linux</b> (AppImage). Windows y macOS en preparación — si ese es tu
+          sistema, <a href="#plataformas">avísanos</a> y te escribimos el día que abra,
+          en vez de cobrarte por algo que aún no puedes ejecutar.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -1295,5 +1450,26 @@
     marco.removeAttribute("src");
     marco.src = src;
   });
+})();
+
+/* El botón de comprar de la barra: aparece cuando la portada se va.
+   Con IntersectionObserver y no escuchando el scroll: el observador avisa dos
+   veces en toda la visita —al salir la portada y al volver— mientras que un
+   listener de scroll se dispara cientos de veces por segundo para contestar la
+   misma pregunta.
+
+   Si el navegador no lo tiene, el botón se queda visible desde el principio. Es
+   el fallo correcto: peor es que no salga nunca y que la página se quede otra
+   vez sin un solo sitio donde pagar. */
+(function () {
+  const boton = document.getElementById("comprar-barra");
+  const portada = document.querySelector(".hero");
+  if (!boton || !portada) return;
+  if (!("IntersectionObserver" in window)) { boton.hidden = false; return; }
+
+  new IntersectionObserver(
+    ([entrada]) => { boton.hidden = entrada.isIntersecting; },
+    { rootMargin: "-60px 0px 0px 0px" },
+  ).observe(portada);
 })();
 </script>
