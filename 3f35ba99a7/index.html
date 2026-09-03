@@ -306,6 +306,28 @@
     display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); align-items: center;
   }
   .price-cta .runs-on { flex-basis: 100%; }
+
+  /* ---------- el cierre ---------- */
+  .cierre { background: var(--phos-wash); border-bottom: 0; }
+  .cierre h2 { max-width: 34rem; }
+  .dos-vias {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: 3px;
+    overflow: hidden; margin-top: var(--s4);
+  }
+  .via { background: var(--surface); padding: var(--s4) var(--s3); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); }
+  /* La de pago va sobre blanco puro y con el borde de la marca: de las dos
+     columnas, ésta es la que tiene que ganar la mirada. */
+  .via.destacada { box-shadow: inset 0 3px 0 var(--phosphor); }
+  .via h3 { margin: 0; }
+  .via p { margin: 0; font-size: .92rem; flex-grow: 1; }
+  .via .btn { margin-top: var(--s1); }
+  @media (max-width: 46rem) { .dos-vias { grid-template-columns: 1fr; } }
+
+  .cierre-nota {
+    margin-top: var(--s4); font-size: .92rem; max-width: 46rem;
+    padding-top: var(--s3); border-top: 1px solid var(--line);
+  }
   @media (max-width: 40rem) { .price-grid { grid-template-columns: 1fr; } }
 
   /* ---------- plataformas ---------- */
@@ -1368,6 +1390,56 @@
     <div class="hero-cta" style="margin-top:var(--s3)">
       <a class="btn solid" href="/bench/" id="ir-al-banco">Descargar el banco</a>
     </div>
+  </div>
+</section>
+
+<!-- ══ El cierre ═════════════════════════════════════════════════════════════
+     Va detrás del banco y no delante: hasta hoy lo último que leía cualquiera
+     era un botón de descarga gratuita, de modo que la página terminaba
+     regalando algo en vez de pedir la venta.
+
+     Sin número en el epígrafe, a diferencia de las diez secciones anteriores.
+     Es deliberado: esto no es otro capítulo del recorrido, es el final, y la
+     numeración lo haría parecer una parada más.
+
+     Comparte el fondo ámbar con la sección de precio para que ese color
+     signifique una sola cosa en toda la página: aquí se actúa. -->
+<section id="empezar" class="cierre">
+  <div class="wrap">
+    <p class="eyebrow">Empezar</p>
+    <h2>No compras estrategias.<br>Compras la forma de descartarlas.</h2>
+    <p class="lead">
+      La búsqueda genética, las doce comprobaciones, la cuarentena — todo sirve para lo
+      mismo: quitarte de encima las ideas que sólo funcionaban sobre el papel, antes de
+      que te lo cuente tu cuenta. Lo que sobreviva es tuyo, en código que compila y se
+      va contigo.
+    </p>
+
+    <div class="dos-vias">
+      <div class="via">
+        <h3>Antes de pagar</h3>
+        <p>La versión del navegador es el programa entero: sin límite de tiempo, sin
+          registro y sin funciones recortadas. Carga tu histórico, construye una
+          estrategia y pásale el examen. Si no te convence, ya lo sabes — y no has
+          puesto un euro.</p>
+        <a class="btn" href="demo/" id="probar-cierre">Probar gratis en el navegador</a>
+      </div>
+      <div class="via destacada">
+        <h3>Cuando te convenza</h3>
+        <p>Un pago de <strong>499 USD</strong> y ya está. Sin suscripción, sin
+          renovación y sin límite de estrategias. Actualizaciones de la rama 1.x
+          incluidas.</p>
+        <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="comprar-cierre">Comprar licencia · 499 USD</a>
+      </div>
+    </div>
+
+    <p class="cierre-nota">
+      Se paga en criptomoneda, y una criptomoneda no se devuelve. <strong>Por eso la
+      versión gratuita es el programa completo y no un cebo recortado</strong>: cuando el
+      pago no tiene vuelta atrás, la prueba tiene que ir antes y tiene que ser de verdad.
+      Hoy sólo hay compilación para Linux, y no lleva firma de código — las dos cosas
+      están dichas arriba, antes del botón, y no en una nota a pie de página.
+    </p>
   </div>
 </section>
 
