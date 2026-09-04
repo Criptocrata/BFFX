@@ -139,6 +139,11 @@
   h3 { font-family: var(--mono); font-weight: 600; font-size: 1rem; margin: 0 0 var(--s1) 0; letter-spacing: -.01em; }
   p { margin: 0 0 var(--s3) 0; color: var(--text-soft); }
   p.lead { font-size: 1.15rem; max-width: 44rem; }
+  /* Sólo el de la portada. Ya no tiene un titular encima —lo dice el pórtico—
+     así que es lo primero que se lee en la parte clara y tiene que aguantar
+     ese peso solo. Los otros ocho `.lead` de la página sí llevan su h2
+     delante y no necesitan crecer. */
+  .hero .lead { font-size: 1.3rem; line-height: 1.55; max-width: 46rem; }
   p:last-child { margin-bottom: 0; }
   strong { color: var(--text); font-weight: 600; }
 
@@ -159,6 +164,50 @@
     display: grid; grid-template-columns: repeat(4, 1fr);
     border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
     background: var(--surface); margin-top: var(--s4);
+  }
+
+  /* La criba, en la portada.
+     El titular AFIRMA que sobreviven pocas. Esto lo enseña, en cinco segundos
+     y encima de las cifras que lo repiten. Es la única parte de la página que
+     demuestra algo en vez de contarlo, y por eso va arriba: quien no lea nada
+     más habrá visto morir novecientas curvas antes de irse.
+     Al terminar, el pie se convierte en la frase — que es donde la frase se
+     ha ganado, y no tres mil palabras antes. */
+  .criba-banda {
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: var(--surface); margin-top: var(--s4);
+  }
+  .criba-banda .datos { border: 0; border-top: 1px solid var(--line); margin-top: 0; background: none; }
+
+  .criba { margin: 0; padding: var(--s3) var(--s3) var(--s2); }
+  .criba canvas { display: block; width: 100%; height: 190px; }
+  /* Las dos mitades del pie ocupan la MISMA casilla de la rejilla y se
+     cruzan ahí. En el flujo normal darían un salto de alto al cambiar, y
+     arrastrarían media portada con él; en posición absoluta se salen del pie
+     y en pantalla estrecha aterrizan encima de las cifras. Con la rejilla, el
+     alto lo marca sola la más alta de las dos, a cualquier ancho. */
+  .criba figcaption {
+    display: grid; padding-top: var(--s2);
+    font-family: var(--mono); font-size: .74rem; letter-spacing: .02em;
+  }
+  .criba-vivo, .criba-frase {
+    grid-area: 1 / 1;
+    display: flex; flex-wrap: wrap; gap: 0 var(--s3); align-items: baseline;
+    transition: opacity .5s ease;
+  }
+  .criba-frase { opacity: 0; color: var(--phos-deep); }
+  .criba-frase b { font-weight: 600; }
+  .criba-cifra { margin-left: auto; color: var(--muted); font-weight: 400; }
+  .criba-fin .criba-vivo { opacity: 0; }
+  .criba-fin .criba-frase { opacity: 1; }
+  .criba-vivo { color: var(--muted); }
+  .criba-vivo b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .criba-paso { margin-left: auto; }
+
+  @media (max-width: 46rem) {
+    .criba canvas { height: 140px; }
+    .criba figcaption { font-size: .68rem; line-height: 1.45; }
+    .criba-vivo > span:first-child, .criba-frase b { flex: 1 0 100%; }
   }
   .dato { padding: var(--s3); border-left: 1px solid var(--line); }
   .dato:first-child { border-left: 0; }
@@ -625,6 +674,56 @@
   .vida p { font-size: .84rem; margin: 0; }
   @media (max-width: 46rem) { .vida { grid-template-columns: repeat(2, 1fr); } }
 
+
+  /* ── El pórtico ─────────────────────────────────────────────────────────────
+     Los últimos segundos de la animación cuatro, a la entrada del sitio: fondo
+     oscuro, la marca, el nombre y el eslogan emergiendo en ese orden. Es el
+     mismo remate, con los mismos tiempos y la misma curva, reescrito en CSS en
+     vez de traído en un iframe: son tres elementos apareciendo, y montar un
+     marco con su propio documento para eso costaría medio segundo de la
+     primera pintura a cambio de nada.
+
+     El nombre en la barra de arriba se apaga mientras esto se ve. Tenerlo dos
+     veces en la misma pantalla, uno grande emergiendo y otro pequeño quieto,
+     es la clase de detalle que no se sabe nombrar pero se nota. */
+  .portico {
+    background: #0b0d10; color: #eef1f5;
+    padding: clamp(var(--s4), 6.5vh, var(--s6)) 0;
+    overflow: hidden;
+  }
+  .portico-marca { display: flex; align-items: center; gap: var(--s3); }
+  .portico-marca svg { width: clamp(2.1rem, 4.4vw, 3.2rem); height: auto; flex: none; }
+  .portico-nombre {
+    font-family: var(--mono); font-weight: 600;
+    font-size: clamp(1.3rem, 3.3vw, 2.05rem); letter-spacing: -.035em;
+  }
+  .portico-nombre i { font-style: normal; color: #e08a1e; }
+  .portico-frase {
+    font-family: var(--mono); font-weight: 600; color: #fbfaf8;
+    font-size: clamp(1.45rem, 4.2vw, 2.6rem); line-height: 1.1;
+    letter-spacing: -.03em; margin: var(--s3) 0 0; text-wrap: balance;
+  }
+
+  /* `both` deja puesto el fotograma inicial durante la espera, así que el
+     estado natural de estos elementos es «ya visible»: quitando la animación
+     —abajo, para quien no quiera movimiento— queda el remate quieto y no un
+     hueco en blanco. */
+  @keyframes portico-ver  { from { opacity: 0 } to { opacity: 1 } }
+  @keyframes portico-sube { from { opacity: 0; transform: translateY(1em) } to { opacity: 1; transform: none } }
+
+  .portico-marca { animation: portico-sube .9s ease .35s both; }
+  .portico-frase { animation: portico-sube .9s ease 1.15s both; }
+  /* Se apaga el NOMBRE, no la marca entera: el icono sostiene la fila. Al
+     ocultar el enlace completo, en pantalla estrecha la barra se queda con
+     una fila en blanco encima del menú. */
+  .topbar .brand b { transition: opacity .6s ease; }
+  .portico-arriba .topbar .brand b { opacity: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portico-marca, .portico-frase { animation: none; }
+    .portico-arriba .topbar .brand b { opacity: 1; }
+  }
+
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -668,6 +767,24 @@
   </div>
 </div>
 
+<!-- El pórtico. Se puede quitar entero borrando esta sección: no hay nada más
+     que dependa de ella salvo la clase `portico-arriba` del script de abajo. -->
+<section class="portico" aria-label="BotFactoryFX">
+  <div class="wrap">
+    <p class="portico-marca">
+      <svg width="52" height="52" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#e08a1e" stroke-width="2.5" opacity="0.28"/>
+        <line x1="32" y1="11" x2="32" y2="53" stroke="#e08a1e" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+        <rect x="23" y="17" width="18" height="15" rx="2" fill="#e08a1e"/>
+        <rect x="23" y="37" width="18" height="11" rx="2" fill="#e08a1e" opacity="0.38"/>
+        <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="#e08a1e" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+      </svg>
+      <span class="portico-nombre">BotFactory<i>FX</i></span>
+    </p>
+    <h1 class="portico-frase">Genera miles.<br>Quédate con las que aguantan.</h1>
+  </div>
+</section>
+
 <section class="hero">
   <div class="wrap">
     <!-- El precio, en la primera pantalla y no en la sección 8 de 10.
@@ -677,7 +794,9 @@
          que la hace pequeña, porque todo lo que compite con esto se cobra cada
          mes. -->
     <p class="eyebrow">499 USD <span class="dim">· pago único · sin suscripción · v1.10.0</span></p>
-    <h1>Genera miles de estrategias.<br>Quédate con las que aguantan.</h1>
+    <!-- Aquí iba el titular, y lo dice ahora el pórtico de arriba. Repetirlo a
+         cien píxeles del banner era un tartamudeo que le quitaba fuerza a los
+         dos, así que la portada arranca directamente explicando. -->
     <p class="lead">Un algoritmo genético explora combinaciones a una velocidad que
       ningún trader alcanza a mano. Un examen de robustez descarta las que solo
       funcionaban sobre el papel. Lo que sale al final son <strong>pocas candidatas,
@@ -690,16 +809,37 @@
     <p class="runs-on">Escritorio: <b>Linux</b> · Windows y macOS en preparación &nbsp;—&nbsp;
       la versión web funciona en cualquier navegador, sin instalar y sin registro.</p>
 
-    <!-- Las cuatro cifras son las que ya afirma esta misma página más abajo, y
-         están dichas como lo que son: «en un histórico» y «en una búsqueda»,
-         no como un ritmo garantizado. Redondearlas hacia arriba en la portada
-         y matizarlas en la letra pequeña sería el truco que este producto
-         existe para denunciar. -->
-    <div class="datos">
-      <div class="dato"><b>8.455.409</b><span>velas en un solo histórico</span></div>
-      <div class="dato"><b>4.180</b><span>candidatas en una búsqueda</span></div>
-      <div class="dato"><b>12</b><span>comprobaciones de robustez</span></div>
-      <div class="dato"><b>5</b><span>lenguajes de salida</span></div>
+    <!-- La criba, con las mismas reglas que la animación cuatro y en cinco
+         segundos en vez de treinta y dos. Un solo pase: termina y se queda
+         quieta para siempre. Un bucle en la primera pantalla compite con el
+         texto que hay al lado, y el texto es el que vende. -->
+    <div class="criba-banda">
+      <figure class="criba">
+        <canvas id="criba" role="img"
+                aria-label="Novecientas estrategias candidatas trazadas a la vez. Al llegar al tramo de histórico que no habían visto, casi todas se apagan; seis siguen subiendo."></canvas>
+        <figcaption>
+          <span class="criba-vivo">
+            <span><b id="criba-vivas">0</b> candidatas en pie</span>
+            <span class="criba-paso" id="criba-paso">generando</span>
+          </span>
+          <span class="criba-frase" aria-hidden="true">
+            <b>Genera miles. Quédate con las que aguantan.</b>
+            <span class="criba-cifra">6 de 900, fuera de muestra</span>
+          </span>
+        </figcaption>
+      </figure>
+
+      <!-- Las cuatro cifras son las que ya afirma esta misma página más abajo, y
+           están dichas como lo que son: «en un histórico» y «en una búsqueda»,
+           no como un ritmo garantizado. Redondearlas hacia arriba en la portada
+           y matizarlas en la letra pequeña sería el truco que este producto
+           existe para denunciar. -->
+      <div class="datos">
+        <div class="dato"><b>8.455.409</b><span>velas en un solo histórico</span></div>
+        <div class="dato"><b>4.180</b><span>candidatas en una búsqueda</span></div>
+        <div class="dato"><b>12</b><span>comprobaciones de robustez</span></div>
+        <div class="dato"><b>5</b><span>lenguajes de salida</span></div>
+      </div>
     </div>
 
     <div class="compat">
@@ -1802,29 +1942,51 @@
 
 /* Quien llega recomendado, con ?ref=… en la dirección.
    ═══════════════════════════════════════════════════════════════════════════
-   Se le enseña de parte de quién viene, justo encima del botón de pagar, que
-   es el único sitio donde ese dato sirve de algo: el que recomendó cobra su
-   10 % porque el comprador lo menciona, y nadie menciona lo que no recuerda.
+   El código es un NÚMERO DE PEDIDO, no un correo. No es cosmética: con el
+   10 % a cada lado, un código que cualquiera pueda inventarse es un 20 % de
+   descuento para quien se recomiende a sí mismo con dos direcciones. Un
+   número de pedido lleva su sello, tiene que constar pagado, y de paso no es
+   un dato personal de nadie.
 
-   NO se guarda. Ni cookie, ni localStorage, ni una petición a ninguna parte —
-   el pie de esta página promete que no se guarda nada en el navegador del
-   visitante, y un programa de referidos no es motivo para romper la única
-   promesa que la página hace sobre él. El dato viaja mientras el parámetro
-   esté en la dirección y desaparece con él.
+   Se comprueba contra el servidor ANTES de enseñar nada. Enseñar 449,10 sin
+   comprobarlo y que luego la factura ponga 499 es peor que no enseñarlo.
 
-   El texto se compone con textContent y no con innerHTML: eso que se pinta
-   viene de la barra de direcciones, o sea de cualquiera, y ahí es donde se
-   cuela una etiqueta si se le da la ocasión. */
+   NO se guarda. Ni cookie, ni localStorage — el pie de esta página promete
+   que no se guarda nada en el navegador del visitante, y un programa de
+   referidos no es motivo para romper la única promesa que la página hace
+   sobre él. El dato viaja mientras el parámetro esté en la dirección.
+
+   Y no se enciende hasta que los botones pasen por nuestro cobro: mientras
+   sigan apuntando al botón viejo de Plisio, enseñar un descuento sería
+   prometer algo que ese botón no puede cumplir —cobra 499 pase lo que pase—.
+   La comprobación de abajo hace que esto se active solo el día que cambien,
+   sin que haya que acordarse. */
 (function () {
-  const quien = new URLSearchParams(location.search).get("ref");
+  const ref = (new URLSearchParams(location.search).get("ref") || "").trim().toUpperCase();
   const caja = document.getElementById("recomendado");
-  if (!quien || !caja) return;
+  const botones = [...document.querySelectorAll("a.btn.solid[id^=comprar-]")];
+  if (!ref || !caja || !botones.length) return;
+  if (!/^BFX-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref)) return;
+  if (!botones.every((b) => b.href.includes("/comprar"))) return;   // todavía no
 
-  caja.textContent = "Te lo ha recomendado ";
-  const nombre = document.createElement("b");
-  nombre.textContent = quien.slice(0, 120);
-  caja.append(nombre, ". Menciónalo al escribirnos y se lleva el 10 %.");
-  caja.hidden = false;
+  /* La dirección del cobro sale del propio botón y no de un marcador que
+     rellene la construcción: así no puede quedarse desincronizada, y esta
+     página no necesita saber nada que no esté ya escrito en ella. */
+  const cobro = new URL(botones[0].href).origin;
+
+  fetch(cobro + "/recomendacion?ref=" + encodeURIComponent(ref))
+    .then((r) => r.json())
+    .then((v) => {
+      if (!v || !v.vale) return;
+      const precio = String(v.precio).replace(".", ",");
+      caja.textContent = `Vienes recomendado: pagas ${precio} USD en vez de 499. `
+        + "El descuento se aplica en la factura, sin pedirlo.";
+      caja.hidden = false;
+      for (const b of botones) {
+        b.textContent = `Comprar licencia · ${precio} USD`;
+      }
+    })
+    .catch(() => {});   // sin descuento visible, que es el lado prudente
 })();
 
 /* El tráiler: se pide cuando se acerca, y se suelta cuando se va lejos.
@@ -2024,5 +2186,238 @@
     ([entrada]) => { boton.hidden = entrada.isIntersecting; },
     { rootMargin: "-60px 0px 0px 0px" },
   ).observe(portada);
+})();
+
+/* ── La criba de la portada ──────────────────────────────────────────────────
+
+   Las mismas reglas que la animación cuatro, en cinco segundos y media altura.
+   Cada candidata es un paseo aleatorio con su propia deriva, y la deriva CAMBIA
+   al cruzar el corte: ahí se separa la que tenía una ventaja real de la que
+   sólo había memorizado el tramo de diseño. Sin ese cambio de deriva el dibujo
+   sería bonito y mentiría, porque enseñaría una criba que no criba nada.
+
+   Un solo pase, y al acabar se queda quieta. En bucle competiría con el titular
+   que tiene al lado, y el titular es lo que vende. */
+(function () {
+  "use strict";
+  const cv = document.getElementById("criba");
+  const elVivas = document.getElementById("criba-vivas");
+  const elPaso = document.getElementById("criba-paso");
+  const pie = cv && cv.closest("figure");
+  if (!cv || !cv.getContext || !elVivas || !pie) return;
+  const cx = cv.getContext("2d");
+
+  const N = 900, PTS = 48, CORTE = 0.63, FIN = 5.6, VIVEN = 6;
+
+  // Semilla fija: la portada tiene que salir igual en todas las visitas. Una
+  // criba distinta cada vez sería una demostración distinta cada vez.
+  let semilla = 20260828 >>> 0;
+  const rnd = () => (semilla = (semilla * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const suave = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+  const entre = (t, a, b) => suave((t - a) / (b - a));
+
+  const curvas = [];
+  for (let i = 0; i < N; i++) {
+    const dentro = (rnd() - 0.46) * 0.034;
+    const real = rnd() < 0.05;                       // pocas conservan la ventaja
+    const fuera = real ? dentro * (0.55 + rnd() * 0.5) : (rnd() - 0.62) * 0.016;
+    const vol = 0.012 + rnd() * 0.034;
+    const y = new Float32Array(PTS);
+    let v = 0;
+    for (let p = 0; p < PTS; p++) {
+      v += (p / (PTS - 1) > CORTE ? fuera : dentro) + (rnd() - 0.5) * vol;
+      y[p] = v;
+    }
+    const iC = Math.round(CORTE * (PTS - 1));
+    curvas.push({ y, dentro: y[iC], fuera: y[PTS - 1] - y[iC], orden: rnd() });
+  }
+
+  const porDentro = curvas.slice().sort((a, b) => b.dentro - a.dentro);
+  porDentro.forEach((c, i) => { c.rankDentro = i / N; });
+  const finalistas = porDentro.slice(0, Math.round(N * 0.16));
+  finalistas.sort((a, b) => b.fuera - a.fuera);
+  finalistas.forEach((c, i) => { c.rankFuera = i; });
+
+  /* Tres suertes, y se decide por pertenencia al conjunto de finalistas y no
+     comparando el rango con 0,16: la curva que cae justo en el canto empata
+     con el umbral, se escapa por el «else» y aparece de superviviente. El
+     síntoma era un contador que ponía siete debajo de seis curvas verdes. */
+  const suerteDe = (c) =>
+    c.rankFuera === undefined ? "dentro" : c.rankFuera >= VIVEN ? "fuera" : "vive";
+
+  const nacida = (c, t) => entre(t, 0.15 + c.orden * 0.7, 0.75 + c.orden * 0.7);
+
+  /** ¿Sigue en pie? Es lo que cuenta el contador, y no tiene que ver con lo
+      que se ve: las cribadas dejan rastro justamente para poder verse. */
+  function enPie(c, t) {
+    if (nacida(c, t) < 0.5) return false;
+    const s = suerteDe(c);
+    if (s === "dentro") return entre(t, 2.0, 3.0) < 0.5;
+    if (s === "fuera") return entre(t, 3.6, 4.6) < 0.5;
+    return true;
+  }
+
+  /* Las cribadas se apagan hasta un rastro, no hasta cero. Si desaparecieran,
+     el fotograma en el que se queda la portada serían seis rayas verdes sobre
+     blanco: la mitad de la frase —«genera miles»— se habría borrado justo
+     antes de que nadie la leyera. */
+  function alfa(c, t) {
+    let a = nacida(c, t) * 0.085;
+    const s = suerteDe(c);
+    if (s === "dentro") a *= 1 - entre(t, 2.0, 3.0) * 0.91;
+    else if (s === "fuera") a *= 1 - entre(t, 3.6, 4.6) * 0.62;
+    else a *= 1 + entre(t, 3.6, 4.6) * 3.4;
+    return a;
+  }
+
+  let caja = { w: 0, h: 0 };
+  function medir() {
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    caja = { w: r.width, h: r.height };
+  }
+
+  function dibujar(t) {
+    const { w, h } = caja;
+    if (!w || !h) return;
+    cx.clearRect(0, 0, w, h);
+
+    const rect = { x: 1, y: h * 0.06, w: w - 2, h: h * 0.88 };
+    const xCorte = rect.x + rect.w * CORTE;
+    /* Escala fija, y ajustada a lo que estas novecientas curvas recorren de
+       verdad —medido: de -0,663 a 0,845—. Heredada de la animación grande iba
+       de -0,62 a 1,28, y su cuarta parte de arriba no la pisaba nadie: la
+       banda se veía medio vacía y, apenas asomada por el borde de la pantalla,
+       parecía un rectángulo en blanco.
+       Fija y no automática: si el eje se reajustara solo, la nube
+       «respiraría» y el movimiento parecería un fallo del dibujo en vez de
+       una búsqueda. */
+    const esc = (v) => rect.y + rect.h * (1 - (v + 0.72) / 1.64);
+
+    const avDentro = entre(t, 0.2, 1.9);
+    const avFuera = entre(t, 3.0, 4.2);
+    const hasta = CORTE * avDentro + (1 - CORTE) * avFuera;
+    const fin = Math.round((PTS - 1) * hasta);
+
+    /* Agrupadas por opacidad y cada grupo de un trazo: con novecientas
+       llamadas a stroke por fotograma no se llega a sesenta imágenes. */
+    const cubos = new Map();
+    for (const c of curvas) {
+      const a = alfa(c, t);
+      if (a < 0.004) continue;
+      const k = Math.min(52, Math.round(a * 170));
+      if (!cubos.has(k)) cubos.set(k, []);
+      cubos.get(k).push(c);
+    }
+    for (const par of cubos) {
+      const k = par[0], grupo = par[1];
+      const superviviente = k > 34;
+      cx.beginPath();
+      cx.strokeStyle = superviviente
+        ? "rgba(11,125,85," + Math.min(1, k / 60).toFixed(3) + ")"
+        : "rgba(184,115,15," + (k / 170).toFixed(3) + ")";
+      cx.lineWidth = superviviente ? 1.8 : 1;
+      for (const c of grupo) {
+        for (let p = 0; p <= fin; p++) {
+          const x = rect.x + (rect.w * p) / (PTS - 1);
+          const y = esc(c.y[p]);
+          p === 0 ? cx.moveTo(x, y) : cx.lineTo(x, y);
+        }
+      }
+      cx.stroke();
+    }
+
+    const aCorte = entre(t, 2.4, 3.0);
+    if (aCorte > 0) {
+      cx.save();
+      cx.setLineDash([3, 5]);
+      cx.strokeStyle = "rgba(91,97,105," + (aCorte * 0.85).toFixed(3) + ")";
+      cx.lineWidth = 1;
+      cx.beginPath();
+      cx.moveTo(xCorte, rect.y);
+      cx.lineTo(xCorte, rect.y + rect.h);
+      cx.stroke();
+      cx.restore();
+      cx.fillStyle = "rgba(91,97,105," + aCorte.toFixed(3) + ")";
+      cx.font = '10px "IBM Plex Mono", ui-monospace, monospace';
+      cx.fillText("fuera de muestra", xCorte + 6, rect.y + 10);
+    }
+
+    let vivas = 0;
+    for (const c of curvas) if (enPie(c, t)) vivas++;
+    elVivas.textContent = vivas.toLocaleString("es-ES");
+    if (elPaso) {
+      elPaso.textContent = t < 2.0 ? "generando"
+        : t < 3.4 ? "cribando sobre el histórico de diseño"
+        : t < 4.8 ? "probando fuera de muestra"
+        : "las que aguantan";
+    }
+  }
+
+  /* Al terminar, el pie se convierte en la frase. Es el mismo remate de la
+     animación cuatro, y aquí llega donde se ha ganado: después de ver morir
+     ochocientas noventa y cuatro. */
+  const rematar = () => { pie.classList.add("criba-fin"); };
+
+  const quieto = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let arrancada = false;
+  function correr() {
+    if (arrancada) return;
+    arrancada = true;
+    medir();
+
+    /* Quien pidió que no le muevan la pantalla se lleva el último fotograma y
+       ya. Por el mismo camino que el resto —y no midiendo nada más cargar—
+       porque el lienzo aún no tiene ancho mientras se colocan las tipografías,
+       y medirlo entonces lo dejaba en blanco para siempre. */
+    if (quieto) { dibujar(FIN); rematar(); return; }
+
+    const t0 = performance.now();
+    (function paso(ahora) {
+      const t = Math.min(FIN, (ahora - t0) / 1000);
+      dibujar(t);
+      if (t < FIN) requestAnimationFrame(paso);
+      else rematar();
+    })(t0);
+  }
+
+  // Sólo cuando se ve. En una pestaña de fondo el navegador congela los
+  // fotogramas, y sin esto la criba «pasaría» sin que nadie la viera y la
+  // portada se encontraría ya rematada al volver.
+  if ("IntersectionObserver" in window) {
+    const obs = new IntersectionObserver(function (entradas) {
+      if (entradas[0].isIntersecting) { obs.disconnect(); correr(); }
+    }, { threshold: 0.25 });
+    obs.observe(cv);
+  } else {
+    correr();
+  }
+
+  // A mitad de pase basta con volver a medir: el fotograma siguiente redibuja
+  // solo. Terminada, hay que repintarla a mano o se queda estirada.
+  window.addEventListener("resize", function () {
+    if (!arrancada) return;
+    medir();
+    if (pie.classList.contains("criba-fin")) dibujar(FIN);
+  });
+})();
+
+/* El nombre de la barra se apaga mientras el pórtico se ve.
+   Leer «BotFactoryFX» dos veces en cuarenta píxeles —uno grande emergiendo y
+   otro pequeño quieto— es la clase de detalle que no se sabe nombrar pero se
+   nota. El icono se queda, que es lo que sostiene la fila.
+   Con el mismo observador que usa la barra de comprar, y por lo mismo: avisa
+   dos veces en toda la visita en vez de cientos por segundo. */
+(function () {
+  const portico = document.querySelector(".portico");
+  if (!portico || !("IntersectionObserver" in window)) return;
+  new IntersectionObserver(
+    ([e]) => { document.documentElement.classList.toggle("portico-arriba", e.isIntersecting); },
+    { threshold: 0.35 },
+  ).observe(portico);
 })();
 </script>

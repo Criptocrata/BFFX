@@ -2,8 +2,8 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Recomendar BotFactoryFX — 10 % por cada licencia</title>
-<meta name="description" content="Si alguien compra BotFactoryFX porque tú se lo recomendaste, te llevas el 10 %: 49,90 USD por licencia. Sin panel, sin cookies y sin seguirte por la web.">
+<title>Recomendar BotFactoryFX — 10 % para los dos</title>
+<meta name="description" content="Si alguien compra BotFactoryFX porque tú se lo recomendaste, gana el 10 % de descuento y tú cobras el 10 %: 49,90 USD cada uno. Tu número de pedido es tu código. Sin correos, sin panel y sin cookies.">
 <link rel="stylesheet" href="/tipografias/tipografias.css">
 
 <style>
@@ -45,6 +45,29 @@
   }
   .cifra span { font-size: .9rem; font-weight: 400; color: var(--muted); letter-spacing: .06em; }
 
+  /* Dos cifras, no una: el reparto es el argumento. Enseñar sólo lo que cobra
+     quien recomienda contaría la mitad. */
+  .cifras { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line);
+            border: 1px solid var(--line); border-radius: 3px; overflow: hidden; margin: var(--s4) 0; }
+  .cifras > div { background: var(--surface); padding: var(--s3); }
+  .cifras b { display: block; font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums;
+              font-size: clamp(1.7rem, 5vw, 2.4rem); letter-spacing: -.04em; line-height: 1.05; }
+  .cifras span { display: block; font-family: var(--mono); font-size: .74rem; color: var(--muted);
+                 letter-spacing: .04em; margin-top: .45em; }
+  .cifras .quien { color: var(--phos-deep); }
+  @media (max-width: 46rem) { .cifras { grid-template-columns: 1fr; } }
+
+  .caja { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: var(--s3); margin-top: var(--s4); }
+  .caja label { display: block; font-family: var(--mono); font-size: .78rem; color: var(--muted); margin-bottom: var(--s2); }
+  .caja input { width: 100%; font-family: var(--mono); font-size: .95rem; padding: .6rem .7rem;
+                border: 1px solid var(--line); border-radius: 2px; background: var(--ink); color: var(--text); }
+  .caja input:focus-visible { outline: 2px solid var(--phosphor); outline-offset: 1px; }
+  .salida { margin-top: var(--s3); font-family: var(--mono); font-size: .84rem; word-break: break-all; }
+  .salida.mal { color: #b53434; }
+  .salida.bien { color: var(--profit); }
+  .salida code { display: block; margin-top: var(--s2); padding: var(--s2); background: var(--phos-wash);
+                 border: 1px solid var(--line); border-radius: 2px; color: var(--text); }
+
   .pasos { counter-reset: p; display: flex; flex-direction: column; gap: var(--s3); margin-top: var(--s4); }
   .paso { display: grid; grid-template-columns: 2.2rem 1fr; gap: var(--s3); align-items: start; }
   .paso::before { counter-increment: p; content: counter(p, decimal-leading-zero); font-family: var(--mono); font-size: .8rem; color: var(--phosphor); padding-top: .2rem; }
@@ -82,12 +105,21 @@
 <section>
   <div class="wrap">
     <p class="eyebrow">Recomendar</p>
-    <h1>Si compran porque tú lo dijiste,<br>te llevas el 10 %.</h1>
-    <div class="cifra">49,90 <span>USD POR LICENCIA · 10 % DE 499</span></div>
+    <h1>Si compran porque tú lo dijiste,<br>ganáis los dos.</h1>
+    <div class="cifras">
+      <div>
+        <b>49,90 <span class="quien">USD</span></b>
+        <span>PARA TI · 10 % DE 499, EN TU CARTERA</span>
+      </div>
+      <div>
+        <b>449,10 <span class="quien">USD</span></b>
+        <span>PARA QUIEN COMPRA · 10 % MENOS, EN LA FACTURA</span>
+      </div>
+    </div>
     <p class="lead">
       No hay niveles, ni objetivos, ni un panel que mirar. Una licencia vendida por tu
-      recomendación son cuarenta y nueve dólares con noventa para ti, tantas veces como
-      pase.
+      recomendación son cuarenta y nueve dólares con noventa para ti y otros tantos que
+      se ahorra quien compra, tantas veces como pase.
     </p>
   </div>
 </section>
@@ -97,18 +129,17 @@
     <h2>Cómo funciona</h2>
     <div class="pasos">
       <div class="paso">
-        <p><strong>Dile a quien quieras que mencione tu correo.</strong> Eso es todo el
-          mecanismo. Si prefieres algo que se pueda pegar en un mensaje, usa tu enlace:
-          <code id="enlace-ejemplo">https://botfactoryfx.com/3f35ba99a7/?ref=tu@correo</code> — quien lo abra verá tu
-          nombre encima del botón de comprar y se lo encontrará recordado al escribir.</p>
+        <p><strong>Tu número de pedido es tu código.</strong> El que te salió al comprar,
+          ese mismo: <code>BFX-XXXXXXXX-XXXXXXXX</code>. No hay que registrarse, ni dar un
+          correo, ni pedir permiso. Pásalo, o pasa el enlace que te arma la caja de aquí
+          abajo.</p>
       </div>
       <div class="paso">
-        <p><strong>Compran.</strong> Pagan los 499 USD como cualquiera; a ellos no les
-          cuesta ni más ni menos por venir de tu parte. El precio es el mismo para todo el
-          mundo y no se juega con él.</p>
+        <p><strong>Compran, y les cuesta 449,10.</strong> El descuento se aplica solo, en
+          la factura, antes de pagar. No hay que pedirlo ni reclamarlo después.</p>
       </div>
       <div class="paso">
-        <p><strong>Cobras, pasados los catorce días.</strong> No antes, y la razón es
+        <p><strong>Cobras tus 49,90, pasados los catorce días.</strong> No antes, y la razón es
           honesta: hay derecho de devolución durante catorce días, y pagar una comisión
           por una venta que luego se devuelve obligaría a pedirte el dinero de vuelta.
           Prefiero esperar dos semanas que hacer eso.</p>
@@ -118,6 +149,13 @@
           moneda en que se cobró salvo que pidas otra cosa.</p>
       </div>
     </div>
+
+    <div class="caja">
+      <label for="pedido">Pega tu número de pedido y te armo el enlace</label>
+      <input id="pedido" type="text" inputmode="latin" autocomplete="off" spellcheck="false"
+             placeholder="BFX-XXXXXXXX-XXXXXXXX" aria-describedby="salida">
+      <p class="salida" id="salida" role="status"></p>
+    </div>
   </div>
 </section>
 
@@ -126,14 +164,16 @@
     <h2>Las reglas, que son cuatro</h2>
     <div class="reglas">
       <div class="regla">
-        <h3>Vale cualquiera</h3>
-        <p>No hace falta ser cliente, ni pedir permiso, ni firmar nada. Si se lo
-          recomiendas a alguien y compra, te toca.</p>
+        <h3>Hay que haber comprado</h3>
+        <p>El código es tu número de pedido, así que sólo recomienda quien ya tiene el
+          programa. No es un club: es lo que impide que cualquiera se invente un código y
+          se haga a sí mismo el 20 % de descuento.</p>
       </div>
       <div class="regla">
         <h3>No vale recomendarte a ti mismo</h3>
-        <p>Comprar con tu propio enlace es un descuento del 10 % disfrazado, y el precio
-          es el mismo para todos. Eso sí que no cuenta.</p>
+        <p>Usar tu propio código para comprarte otra licencia no cuenta, y como los pagos
+          se hacen a mano, se ve. Prefiero decírtelo a fingir que hay un sistema que lo
+          impide.</p>
       </div>
       <div class="regla">
         <h3>Sin spam</h3>
@@ -148,47 +188,98 @@
     </div>
 
     <div class="aviso">
-      <p><strong>No hay panel, ni cookies, ni seguimiento.</strong> Este sitio no guarda
-        nada en tu navegador y no va a empezar a hacerlo por esto: el enlace sólo lleva tu
-        correo escrito en la dirección, y quien compra lo menciona al escribir. Funciona
-        porque hay dos personas y un correo, no porque haya un sistema vigilando quién
-        hizo clic en qué. Si algún día hay tantas ventas que esto no se sostiene a mano,
-        se dirá y se cambiará — para las siguientes, no para las tuyas.</p>
+      <p><strong>No hay panel, ni cookies, ni seguimiento — y ahora tampoco correo.</strong>
+        Antes esto iba con tu dirección de correo; ya no. El código es tu número de
+        pedido, que no dice quién eres ni sirve para escribirte: es un dato del programa,
+        no tuyo. Este sitio sigue sin guardar nada en tu navegador, y no va a empezar a
+        hacerlo por esto.</p>
+      <p>Lo único que queda apuntado es que la compra de alguien vino de tu número. Ni
+        quién hizo clic, ni desde dónde, ni cuándo miró la página. Si algún día hay tantas
+        ventas que esto no se sostiene a mano, se dirá y se cambiará — para las
+        siguientes, no para las tuyas.</p>
     </div>
 
+    <h2 style="margin-top:var(--s5)">Cobrar</h2>
+    <p>Cuando alguien haya comprado con tu código, escríbeme con <strong>tu número de
+      pedido</strong> y <strong>la dirección donde quieres el dinero</strong>. Lo compruebo
+      y te lo mando pasados los catorce días de la compra.</p>
     <p style="margin-top:var(--s4)">
-      <a class="btn" id="escribir" href="mailto:hola@botfactoryfx.com?subject=Quiero%20recomendar%20BotFactoryFX">Escribir y empezar</a>
+      <a class="btn" id="escribir" href="mailto:hola@botfactoryfx.com?subject=Cobrar%20una%20recomendaci%C3%B3n">Escribir para cobrar</a>
     </p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <span>BotFactoryFX v1.10.0 · 10 % por licencia recomendada</span>
+    <span>BotFactoryFX v1.10.0 · 10 % para quien recomienda y 10 % para quien compra</span>
     <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
   </div>
 </footer>
 
 <script>
-  /* Si alguien llega con ?ref=…, se le enseña de quién viene y se le deja
-     recordado en el correo. Nada se guarda: ni cookie, ni localStorage, ni una
-     petición a ninguna parte. El pie de este sitio promete que no se guarda
-     nada en tu navegador, y un programa de referidos no es motivo suficiente
-     para romper la única promesa que la página hace sobre ti.
+  /* Arma el enlace de recomendación a partir de un número de pedido, y de paso
+     comprueba que vale. Comprobarlo importa: quien recomienda quiere saber que
+     su enlace funciona ANTES de mandárselo a alguien, y descubrirlo porque un
+     conocido pagó 499 en vez de 449,10 es descubrirlo tarde.
 
-     El precio de no guardar nada es que el dato viaja sólo mientras el
-     parámetro esté en la dirección. Es aceptable, porque el sistema de verdad
-     no es esto: es el correo que manda quien compra. Esto sólo se lo recuerda. */
+     No se guarda nada: ni cookie, ni localStorage, ni una petición que no sea
+     ésta. El pie de este sitio promete que no se guarda nada en tu navegador, y
+     un programa de referidos no es motivo para romper la única promesa que la
+     página hace sobre ti. */
   (function () {
-    const quien = new URLSearchParams(location.search).get("ref");
-    if (!quien) return;
-    const limpio = quien.slice(0, 120);
-    const boton = document.getElementById("escribir");
-    if (boton) {
-      boton.href = "mailto:hola@botfactoryfx.com"
-        + "?subject=" + encodeURIComponent("Compra recomendada por " + limpio)
-        + "&body=" + encodeURIComponent("Me lo recomendó: " + limpio + "\n\n");
-      boton.textContent = "Escribir mencionando a " + limpio;
+    "use strict";
+    const API = "https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev";
+    const BASE = "https://botfactoryfx.com/3f35ba99a7/";
+    const campo = document.getElementById("pedido");
+    const salida = document.getElementById("salida");
+    if (!campo || !salida) return;
+
+    const FORMA = /^BFX-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/;
+    let ultima = 0;
+
+    function di(texto, clase, enlace) {
+      salida.className = "salida" + (clase ? " " + clase : "");
+      salida.textContent = texto;
+      if (enlace) {
+        const c = document.createElement("code");
+        c.textContent = enlace;
+        salida.appendChild(c);
+      }
     }
+
+    async function mirar() {
+      const ref = campo.value.trim().toUpperCase();
+      if (!ref) { di("", ""); return; }
+      if (!FORMA.test(ref)) {
+        di("Un número de pedido tiene esta forma: BFX-XXXXXXXX-XXXXXXXX", "mal");
+        return;
+      }
+      const mio = ++ultima;
+      di("Comprobando…", "");
+      let v;
+      try {
+        const r = await fetch(API + "/recomendacion?ref=" + encodeURIComponent(ref));
+        v = await r.json();
+      } catch {
+        di("No he podido comprobarlo ahora mismo. Vuelve a intentarlo.", "mal");
+        return;
+      }
+      // Una respuesta que llega tarde no puede pisar a una pregunta posterior.
+      if (mio !== ultima) return;
+      if (!v || !v.vale) {
+        di("Ese número no me consta como una compra pagada. Mira que sea el que te salió al comprar.", "mal");
+        return;
+      }
+      // El servidor manda «449.10», que es como se escribe un número para una
+      // máquina. Aquí se lee, y aquí se escriben con coma.
+      di("Vale. Quien abra este enlace pagará " + String(v.precio).replace(".", ",")
+         + " USD en vez de 499:", "bien", BASE + "?ref=" + ref);
+    }
+
+    let espera;
+    campo.addEventListener("input", function () {
+      clearTimeout(espera);
+      espera = setTimeout(mirar, 400);   // sin una petición por tecla
+    });
   })();
 </script>

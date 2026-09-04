@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>BotFactoryFX — tu compra</title>
+<link rel="stylesheet" href="/tipografias/tipografias.css">
+
+<style>
+  /* Los tokens de la página de venta. Quien llega aquí acaba de pagar 499 USD
+     y necesita reconocer la misma tienda: una página que parece de otro sitio,
+     justo después de mandar dinero irreversible, es donde alguien decide que
+     le han estafado. */
+  :root {
+    --ink: #eeedea; --surface: #ffffff; --surface-2: #e7e5e0; --line: #d6d3cc;
+    --text: #14171c; --text-soft: #454b54; --muted: #5b6169;
+    --phosphor: #b8730f; --phos-deep: #8a5207; --phos-wash: #f7ecdc;
+    --profit: #0b7d55; --loss: #b53434;
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --s1: .35rem; --s2: .7rem; --s3: 1.15rem; --s4: 1.9rem; --s5: 3rem;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ink); color: var(--text); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 44rem; margin: 0 auto; padding: 0 var(--s3); }
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+  .topbar .wrap { display: flex; align-items: center; min-height: 3.7rem; }
+  .brand { font-family: var(--mono); font-weight: 600; letter-spacing: -.03em; text-decoration: none; color: var(--text); }
+  .brand i { font-style: normal; color: var(--phosphor); }
+
+  main { padding: var(--s5) 0 var(--s5); }
+  .eyebrow { font-family: var(--mono); font-size: .72rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--phosphor); margin: 0 0 var(--s2); }
+  h1 { font-family: var(--mono); font-weight: 600; font-size: clamp(1.6rem, 4.2vw, 2.3rem); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 var(--s3); text-wrap: balance; }
+  h2 { font-family: var(--mono); font-weight: 600; font-size: 1.05rem; margin: 0 0 var(--s2); letter-spacing: -.01em; }
+  p { margin: 0 0 var(--s3); color: var(--text-soft); }
+  p:last-child { margin-bottom: 0; }
+  a { color: var(--phos-deep); text-underline-offset: 3px; }
+
+  .caja { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: var(--s4) var(--s3); margin-bottom: var(--s3); }
+  .caja.act { background: var(--phos-wash); }
+  .pedido { font-family: var(--mono); font-size: .78rem; color: var(--muted); letter-spacing: .04em; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem; font-family: var(--mono);
+    font-size: .85rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase;
+    padding: .85rem 1.35rem; border-radius: 2px; text-decoration: none; border: 1px solid var(--phosphor);
+    background: var(--phosphor); color: #fff; cursor: pointer;
+  }
+  .btn:hover { background: var(--phos-deep); border-color: var(--phos-deep); }
+  .btn[disabled] { opacity: .45; cursor: default; }
+
+  input, textarea {
+    width: 100%; font-family: var(--mono); font-size: .9rem;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 3px;
+    padding: .7rem .85rem; color: var(--text);
+  }
+  textarea { min-height: 4.5rem; resize: vertical; line-height: 1.5; font-size: .8rem; }
+  label { display: block; font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 var(--s1); }
+
+  .esperando { display: flex; align-items: center; gap: .7rem; font-family: var(--mono); font-size: .85rem; color: var(--muted); }
+  .punto { width: .55rem; height: .55rem; border-radius: 50%; background: var(--phosphor); }
+  @media (prefers-reduced-motion: no-preference) {
+    .punto { animation: latir 1.4s ease-in-out infinite; }
+    @keyframes latir { 0%,100% { opacity: .25 } 50% { opacity: 1 } }
+  }
+
+  .licencia { font-family: var(--mono); font-size: .8rem; word-break: break-all; background: var(--surface-2); border: 1px solid var(--line); border-radius: 3px; padding: var(--s2) var(--s3); user-select: all; line-height: 1.6; }
+  .aviso { font-size: .85rem; color: var(--muted); }
+  .malo { color: var(--loss); }
+  [hidden] { display: none !important; }
+</style>
+
+<div class="topbar"><div class="wrap"><a class="brand" href="/3f35ba99a7/">BotFactory<i>FX</i></a></div></div>
+
+<main><div class="wrap">
+  <p class="eyebrow">Tu compra</p>
+
+  <!-- Sin número de pedido en la dirección no hay nada que enseñar. Pasa si
+       alguien llega aquí a pelo, o si guardó el enlace sin la parte de
+       después del interrogante. -->
+  <div id="sin-pedido" hidden>
+    <h1>Esta página necesita tu número de pedido.</h1>
+    <p>Llega en la dirección que te dio Plisio al pagar, y también en el correo
+       que te mandaron. Tiene esta forma: <span class="pedido">BFX-XXXXXXXX-XXXXXXXX</span></p>
+    <p>Si lo has perdido, escribe a
+       <a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a> con la dirección
+       desde la que pagaste y te lo devolvemos.</p>
+  </div>
+
+  <div id="cargando">
+    <h1>Un momento.</h1>
+    <div class="esperando"><span class="punto"></span> Consultando tu pedido…</div>
+  </div>
+
+  <!-- Esperando a la cadena de bloques. Es el estado más importante de esta
+       página: quien acaba de pagar en cripto y no ve nada se cree estafado a
+       los dos minutos. Aquí se le dice qué pasa y cuánto puede tardar. -->
+  <div id="esperando" hidden>
+    <h1>Tu pago está en camino.</h1>
+    <div class="caja">
+      <div class="esperando"><span class="punto"></span> Esperando a que la red confirme la transacción…</div>
+      <p style="margin-top:var(--s3)">Esto no depende de nosotros: lo que tarda es la red de la
+         moneda que elegiste. Suelen ser minutos, y con la red congestionada puede irse a un par
+         de horas. <strong>No hace falta que te quedes aquí</strong> — esta página se actualiza
+         sola, y puedes volver a ella cuando quieras.</p>
+      <p><b>Guarda esta dirección.</b> Es la única forma de volver a tu descarga.</p>
+    </div>
+  </div>
+
+  <div id="listo" hidden>
+    <h1>Ya es tuyo.</h1>
+
+    <div class="caja act">
+      <h2>1 · El programa</h2>
+      <p>AppImage para Linux. No se instala: se descarga, se le da permiso de ejecución y
+         arranca.</p>
+      <a class="btn" id="bajar" href="#">Descargar BotFactoryFX</a>
+      <p class="aviso" style="margin-top:var(--s3)">Te quedan <b id="quedan-descargas">—</b>
+         descargas de este enlace. Si se acaban, escríbenos.</p>
+    </div>
+
+    <div class="caja">
+      <h2>2 · Tu licencia</h2>
+      <p>Abre el programa. Te enseñará <strong>la huella de tu ordenador</strong>: pégala aquí y
+         te devolvemos tu licencia al momento.</p>
+      <label for="huella">La huella que te enseña el programa</label>
+      <input id="huella" placeholder="XXXX-XXXX-XXXX-XXXX" spellcheck="false"
+             autocapitalize="off" autocorrect="off">
+      <p style="margin-top:var(--s3)"><button class="btn" id="pedir">Dame mi licencia</button></p>
+      <p id="error-licencia" class="aviso malo" hidden></p>
+
+      <div id="salida" hidden style="margin-top:var(--s3)">
+        <label for="clave">Tu licencia — cópiala en el programa</label>
+        <div class="licencia" id="clave"></div>
+        <p class="aviso" style="margin-top:var(--s2)">Guárdala. Vale para siempre y no caduca,
+           pero es de <b>este</b> ordenador: si cambias de máquina, vuelve aquí y pide otra.
+           Te quedan <b id="quedan-huellas">—</b> cambios.</p>
+      </div>
+    </div>
+
+    <!-- La recomendación va aquí y no en la portada, y es a propósito: quien
+         acaba de comprar es quien más ganas tiene de contarlo, y la portada se
+         vende como el antídoto del bombo — un «¡10 % de descuento!» arriba se
+         llevaría por delante lo único que la distingue.
+         Su número de pedido ya está en pantalla; sólo hay que decirle que
+         además es su código. -->
+    <div class="caja">
+      <h2>3 · Recomendarlo, si te sirve</h2>
+      <p>Tu número de pedido <strong>es también tu código</strong>. Quien compre con él
+         paga <strong>449,10</strong> en vez de 499, y tú cobras <strong>49,90</strong> en
+         tu cartera pasados los catorce días de devolución. Sin registrarte y sin dar un
+         correo.</p>
+      <label for="enlace-ref">Tu enlace, para pegarlo donde quieras</label>
+      <div class="licencia" id="enlace-ref"></div>
+      <p class="aviso" id="ya-recomendadas" hidden style="margin-top:var(--s3)"></p>
+      <p style="margin-top:var(--s3)"><a href="/3f35ba99a7/referidos/">Cómo funciona y cómo se cobra</a></p>
+    </div>
+
+    <p class="pedido">Pedido <span id="num"></span></p>
+  </div>
+
+  <div id="revisar" hidden>
+    <h1>Hay algo que mirar a mano.</h1>
+    <div class="caja">
+      <p>La cantidad que llegó no cuadra con la facturada. No es necesariamente un problema
+         —pasa con las comisiones de algunas redes— pero no lo resuelve un ordenador.</p>
+      <p>Escribe a <a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a> con tu número
+         de pedido y se soluciona el mismo día. <strong>Tu dinero está registrado</strong>; esto
+         no se ha perdido.</p>
+    </div>
+    <p class="pedido">Pedido <span id="num2"></span></p>
+  </div>
+
+  <div id="cerrado" hidden>
+    <h1>Este pedido no llegó a completarse.</h1>
+    <div class="caja">
+      <p>La factura caducó o se canceló antes de recibir el pago. Si crees que pagaste,
+         escribe a <a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a> con tu
+         número de pedido y la referencia de la transacción.</p>
+      <p><a href="/3f35ba99a7/#precio">Volver a empezar</a></p>
+    </div>
+  </div>
+</div></main>
+
+<script>
+(function () {
+  "use strict";
+  const API = "https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev";
+  const SITIO = "https://botfactoryfx.com/3f35ba99a7/";
+  /* Recortado y en mayúsculas: el número se copia a mano y se dicta, y en
+     minúsculas sigue siendo la misma compra. El servidor hace lo mismo. */
+  const pedido = (new URLSearchParams(location.search).get("p") || "").trim().toUpperCase();
+  const ver = (id) => {
+    for (const s of ["sin-pedido", "cargando", "esperando", "listo", "revisar", "cerrado"]) {
+      document.getElementById(s).hidden = s !== id;
+    }
+  };
+
+  if (!/^BFX-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(pedido)) { ver("sin-pedido"); return; }
+  for (const id of ["num", "num2"]) document.getElementById(id).textContent = pedido;
+
+  document.getElementById("bajar").href = `${API}/descarga?p=${encodeURIComponent(pedido)}`;
+
+  /* Se pregunta cada pocos segundos hasta que deja de tener sentido.
+     Empieza rápido y se va espaciando: los primeros minutos es cuando alguien
+     está mirando la pantalla, y a la media hora ya se ha ido a otra cosa. Sin
+     ese frenado, una pestaña olvidada toda la noche son diez mil peticiones. */
+  let espera = 3000;
+  async function mirar() {
+    let v;
+    try {
+      const r = await fetch(`${API}/estado?p=${encodeURIComponent(pedido)}`);
+      v = await r.json();
+    } catch {
+      setTimeout(mirar, espera);
+      return;
+    }
+    if (v.estado === "listo") {
+      document.getElementById("quedan-descargas").textContent = v.descargasRestantes ?? "—";
+      document.getElementById("quedan-huellas").textContent = v.huellasRestantes ?? "—";
+
+      // Su propio número, convertido en su enlace de recomendación.
+      document.getElementById("enlace-ref").textContent = `${SITIO}?ref=${pedido}`;
+      if (v.recomendaciones > 0) {
+        const n = v.recomendaciones;
+        const aviso = document.getElementById("ya-recomendadas");
+        aviso.textContent = n === 1
+          ? "Ya ha comprado una persona con tu código: son 49,90 USD para ti. Escríbenos con tu número de pedido y tu dirección para cobrarlos."
+          : `Ya han comprado ${n} personas con tu código: son ${String(n * 49.9).replace(".", ",")} USD para ti. Escríbenos con tu número de pedido y tu dirección para cobrarlos.`;
+        aviso.hidden = false;
+      }
+
+      ver("listo");
+      return;                       // se deja de preguntar
+    }
+    if (v.estado === "revisar") { ver("revisar"); return; }
+    if (v.estado === "cerrado") { ver("cerrado"); return; }
+    if (v.estado === "desconocido") { ver("sin-pedido"); return; }
+
+    ver("esperando");
+    espera = Math.min(espera * 1.4, 60_000);
+    setTimeout(mirar, espera);
+  }
+  mirar();
+
+  document.getElementById("pedir").addEventListener("click", async () => {
+    const boton = document.getElementById("pedir");
+    const error = document.getElementById("error-licencia");
+    const huella = document.getElementById("huella").value.trim();
+    error.hidden = true;
+    if (!huella) { error.textContent = "Pega primero la huella que te enseña el programa."; error.hidden = false; return; }
+
+    boton.disabled = true;
+    boton.textContent = "Firmando…";
+    try {
+      const r = await fetch(`${API}/licencia`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ pedido, huella }),
+      });
+      const v = await r.json();
+      if (v.licencia) {
+        document.getElementById("clave").textContent = v.licencia;
+        document.getElementById("salida").hidden = false;
+        if (typeof v.huellasRestantes === "number") {
+          document.getElementById("quedan-huellas").textContent = v.huellasRestantes;
+        }
+      } else if (v.huellasRestantes === 0) {
+        error.textContent = "Has usado los tres cambios de máquina. Escríbenos y te damos otro.";
+        error.hidden = false;
+      } else {
+        error.textContent = v.error || "No ha podido emitirse. Escríbenos con tu número de pedido.";
+        error.hidden = false;
+      }
+    } catch {
+      error.textContent = "No se ha podido conectar. Inténtalo otra vez en un minuto.";
+      error.hidden = false;
+    }
+    boton.disabled = false;
+    boton.textContent = "Dame mi licencia";
+  });
+})();
+</script>
