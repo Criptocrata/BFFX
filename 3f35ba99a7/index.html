@@ -6,9 +6,7 @@
      aleja la página. Los diez @media de esta hoja no se disparan nunca. -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BotFactoryFX</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450;600&display=swap">
+<link rel="stylesheet" href="/tipografias/tipografias.css">
 
 <style>
   /* ---------------------------------------------------------------
@@ -349,6 +347,16 @@
   }
   .price-cta .runs-on { flex-basis: 100%; }
 
+  /* La glosa de un tecnicismo, la primera vez que aparece. Va en el tamaño de
+     la letra pequeña y no en el del cuerpo: quien ya sabe lo que es un Sharpe
+     tiene que poder saltársela de un vistazo. */
+  .glosa {
+    font-size: .82rem; line-height: 1.5; color: var(--muted);
+    margin: var(--s2) 0 0; padding: var(--s2) var(--s3);
+    border-left: 2px solid var(--line); background: var(--surface-2);
+  }
+  .glosa b { font-family: var(--mono); font-weight: 500; color: var(--text-soft); }
+
   /* ---------- el cierre ---------- */
   .cierre { background: var(--phos-wash); border-bottom: 0; }
   .cierre h2 { max-width: 34rem; }
@@ -385,8 +393,25 @@
   .note-strip b { color: var(--phos-deep); font-family: var(--mono); }
 
   footer { padding: var(--s5) 0 var(--s4); font-size: .84rem; color: var(--muted); background: var(--surface); }
-  .pie-cols {
+  .pie-enlaces {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s4) var(--s3);
+    padding-bottom: var(--s4); border-bottom: 1px solid var(--line);
+  }
+  .pie-enlaces h3 {
+    font-family: var(--mono); font-size: .74rem; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--phosphor);
+    margin: 0 0 var(--s2) 0;
+  }
+  .pie-enlaces ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
+  .pie-enlaces a { color: var(--text-soft); text-decoration: none; font-size: .85rem; }
+  .pie-enlaces a:hover { color: var(--phos-deep); text-decoration: underline; text-underline-offset: 3px; }
+  .pie-enlaces p { font-size: .78rem; line-height: 1.5; color: var(--muted); margin: var(--s2) 0 0; }
+  @media (max-width: 60rem) { .pie-enlaces { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 34rem) { .pie-enlaces { grid-template-columns: 1fr; } }
+
+  .pie-cols {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4) var(--s3);
+    padding-top: var(--s4);
     padding-bottom: var(--s4); border-bottom: 1px solid var(--line);
   }
   .pie-cols h3 {
@@ -781,6 +806,16 @@
         <div class="metric"><span class="k">Retorno</span><span class="v up">+18,3 %</span></div>
         <div class="metric"><span class="k">Operaciones</span><span class="v">412</span></div>
       </div>
+      <!-- La glosa de los dos nombres raros, aquí y no en un glosario aparte:
+           el sitio donde alguien se pregunta qué es un Sharpe es el sitio donde
+           lo acaba de ver, no tres pantallas después. Se dice una vez; a partir
+           de aquí la página los usa sin explicar. -->
+      <p class="glosa">
+        <b>Sharpe</b>, cuánto beneficio saca por cada unidad de vaivén que hace falta
+        aguantar: más alto es mejor, y sobre pocas operaciones no significa nada.
+        <b>Profit factor</b>, cuánto gana por cada euro que pierde — por debajo de 1
+        está perdiendo dinero.
+      </p>
       <svg class="curve" viewBox="0 0 800 190" preserveAspectRatio="none" role="img"
            aria-label="Curva de capital que sube con fuerza dentro de la muestra y se aplana fuera de ella">
         <defs>
@@ -938,7 +973,13 @@
           en otros instrumentos, consistencia por periodos, desplazamiento de la vela de
           inicio, resolución de vela, tamaño de la muestra, y cuánto coste de bróker aguanta
           la ventaja antes de desaparecer. Cada una pesa distinto, y el informe dice cuál
-          falló.</figcaption>
+          falló.
+          <br><br>
+          Dos que suenan peor de lo que son: <b>walk-forward</b> es reajustar la estrategia
+          cada cierto tiempo y seguir midiéndola, como haría alguien de verdad en vez de
+          dejarla quieta ocho años; y <b>Monte Carlo</b> es barajar el orden de sus
+          operaciones miles de veces, para ver si el resultado dependía de que llegaran
+          justo en ese orden.</figcaption>
       </figure>
     </div>
   </div>
@@ -1583,6 +1624,53 @@
          Los datos del vendedor son hoy sólo el correo. Cuando haya nombre y
          domicilio van en la columna de Contacto, que está escrita para que sea
          añadir dos líneas y no rehacer nada. -->
+    <!-- Fila de enlaces, al estilo de las tiendas de software que llevan años
+         en esto. Todo lo que hay aquí existe: no hay una sola columna puesta
+         para rellenar, ni un enlace a algo que se escribirá algún día. Cuando
+         haya blog y programa de referidos, entran como una cuarta y una quinta
+         columna y no hay que rehacer nada.
+
+         «Aprender» no es un eufemismo: son 21 capítulos de manual y 8
+         animaciones que ya están publicadas y que hasta hoy sólo se
+         encontraban si bajabas hasta ellas. -->
+    <div class="pie-enlaces">
+      <div>
+        <h3>Producto</h3>
+        <ul>
+          <li><a href="demo/" id="pie-demo">Probar gratis en el navegador</a></li>
+          <li><a href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="pie-comprar">Comprar licencia</a></li>
+          <li><a href="#plataformas">Descargas</a></li>
+          <li><a href="/bench/" id="pie-banco">BotFactoryBench, gratis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Aprender</h3>
+        <ul>
+          <li><a href="manual/" id="pie-manual">El manual · 21 capítulos</a></li>
+          <li><a href="piezas/" id="pie-piezas">Las ocho animaciones</a></li>
+          <li><a href="#reality">Qué es el Reality Check</a></li>
+          <li><a href="#cuarentena">Qué es la cuarentena</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Antes de comprar</h3>
+        <ul>
+          <li><a href="#precio">Qué cuesta y qué incluye</a></li>
+          <li><a href="#perfiles">Para quién es — y para quién no</a></li>
+          <li><a href="#recorrido">Cómo se trabaja con esto</a></li>
+          <li><a href="#trailer">Verlo en veintiséis segundos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a></li>
+        </ul>
+        <p>Contesta una persona, no un formulario. Si escribes por un fallo, di qué
+          sistema y qué versión: sale en el pie de la aplicación.</p>
+      </div>
+    </div>
+
     <div class="pie-cols">
       <div>
         <h3>Devoluciones</h3>
@@ -1602,20 +1690,20 @@
       </div>
       <div>
         <h3>Privacidad</h3>
-        <p>Esta página <b>no usa cookies, ni analítica</b>, y no deja nada guardado en tu
-          navegador. Lo único que pide fuera son las tipografías a Google Fonts, y eso
-          hace que tu IP llegue a Google.</p>
+        <p>Esta página <b>no usa cookies, ni analítica, y no pide nada a terceros</b>.
+          Ni una sola petición sale de este dominio: hasta las tipografías se sirven
+          desde aquí, para que tu IP no llegue a Google por leernos.</p>
         <p>Las aplicaciones no mandan tus ficheros a ninguna parte. El pago lo procesa
           <a href="https://plisio.net" rel="noopener">Plisio</a>, con sus propias
           condiciones.</p>
       </div>
       <div>
-        <h3>La licencia y el contacto</h3>
+        <h3>La licencia</h3>
         <p>Una licencia por sistema, sin caducidad y sin suscripción, con las
           actualizaciones de la rama 1.x incluidas. Si cambias de máquina, escribe y se te
           da una clave nueva sin coste.</p>
-        <p><a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a> — contesta una
-          persona, no un formulario.</p>
+        <p>No hay activación por internet ni comprobación periódica: el programa funciona
+          sin conexión, para siempre, con o sin este sitio en pie.</p>
       </div>
     </div>
 
