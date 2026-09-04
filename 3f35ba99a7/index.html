@@ -446,6 +446,20 @@
   @media (max-width: 40rem) { .price-grid { grid-template-columns: 1fr; } }
 
   /* ---------- plataformas ---------- */
+  /* La captura del banco. Ancha, con su marco y su pie: es una imagen de un
+     programa, no una ilustración, y un pie que diga de qué informe salió es la
+     diferencia entre enseñar y presumir. */
+  .captura {
+    margin: var(--s4) 0 0; border: 1px solid var(--line); border-radius: 3px;
+    background: #0b0d10; overflow: hidden;
+  }
+  .captura img { display: block; width: 100%; height: auto; }
+  .captura figcaption {
+    font-family: var(--mono); font-size: .74rem; color: var(--muted);
+    letter-spacing: .02em; padding: var(--s2) var(--s3);
+    border-top: 1px solid var(--line); background: var(--surface);
+  }
+
   .plats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
   .plat { background: var(--surface); padding: var(--s4) var(--s3); }
   .plat .os { font-family: var(--mono); font-weight: 600; font-size: 1rem; margin-bottom: var(--s1); }
@@ -1726,6 +1740,23 @@
           habrías tenido tú.</p>
       </div>
     </div>
+
+    <!-- La captura es del programa de verdad auditando un informe de ejemplo, no
+         una maqueta: se generó una lista de operaciones corriente —212, 49 % de
+         acierto, ninguna trampa metida a propósito— y se le dio a BotFactoryBench
+         a ver qué decía. Dijo «nada falso». Se enseña eso y no un escándalo
+         fabricado, porque una captura amañada en una página que se vende como el
+         antídoto del bombo sería exactamente lo que denuncia.
+         Y se enseñan las tres filas que dicen «sin datos»: un programa que se
+         niega a afirmar lo que no puede comprobar es el argumento, no un defecto
+         que esconder. -->
+    <figure class="captura">
+      <img src="/capturas/banco-veredicto.webp" loading="lazy" width="1400" height="1255"
+           alt="El veredicto de BotFactoryBench sobre un informe de ejemplo: «Nada falso, pero 1 cosa merece una mirada». Tres comprobaciones hechas y tres que dicen «sin datos» porque necesitan el histórico.">
+      <figcaption>BotFactoryBench sobre un informe de ejemplo. Tres comprobaciones salen
+        con su fichero; las otras tres necesitan tu histórico, y lo dice en vez de
+        inventárselas.</figcaption>
+    </figure>
 
     <p class="lead" style="margin-top:var(--s4)">
       <strong>BotFactoryBench</strong> te dice <strong>qué pasó</strong>. El Reality Check de BotFactoryFX te
