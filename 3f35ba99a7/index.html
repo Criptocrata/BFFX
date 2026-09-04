@@ -389,6 +389,17 @@
   .price-fig .unit { font-size: .85rem; font-weight: 400; color: var(--muted); letter-spacing: .06em; }
   .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
   .price-grid > div { background: var(--surface); padding: var(--s3); }
+  .porque {
+    border-top: 1px solid var(--line); padding: var(--s3);
+    background: var(--surface);
+  }
+  .porque h3 {
+    font-family: var(--mono); font-size: .92rem; font-weight: 600;
+    margin: 0 0 var(--s2) 0; letter-spacing: -.01em;
+  }
+  .porque p { font-size: .92rem; margin: 0 0 var(--s2) 0; }
+  .porque p:last-child { margin-bottom: 0; }
+
   .price-cta {
     padding: var(--s3) var(--s4) var(--s4); border-top: 1px solid var(--line);
     background: var(--phos-wash);
@@ -1555,7 +1566,7 @@
     <div class="price-box">
       <div class="price-top">
         <div class="price-fig">499 <span class="unit">USD · PAGO ÚNICO</span></div>
-        <p style="margin:var(--s2) 0 0 0">Pago con criptomoneda vía Plisio (USDT o BTC).
+        <p style="margin:var(--s2) 0 0 0">Pago con criptomoneda (USDT o BTC).
           Actualizaciones de la rama 1.x incluidas.</p>
       </div>
       <div class="price-grid">
@@ -1583,6 +1594,30 @@
           <p style="margin-top:var(--s3);font-size:.9rem">La versión web existe para que
             juzgues el producto antes de pagar, no como cebo recortado.</p>
         </div>
+      </div>
+
+      <!-- La objeción que se hace todo el mundo y que la página no contestaba.
+           Cobrar sólo en cripto levanta la ceja a cualquiera que vaya a soltar
+           499, y callarse no la baja: la deja ahí, sin respuesta, justo en el
+           párrafo donde alguien decide.
+
+           NO se defiende diciendo que las criptomonedas son legales o están
+           reguladas. Lo primero se da por hecho y lo segundo no es cierto en
+           todas partes — y una página que se vende como el antídoto del bombo
+           no se puede permitir su único exceso justo aquí. Se contesta con lo
+           que es verdad y además importa: de dónde sale el precio, qué pierde
+           el comprador y qué lo sustituye. -->
+      <div class="porque">
+        <h3>¿Por qué sólo criptomonedas?</h3>
+        <p>Porque cobrar con tarjeta es pagarle una comisión a la pasarela y otra al
+          banco, y ese porcentaje no sale de la nada: sale del precio. <strong>Menos
+          intermediarios, menos precio</strong> — la misma razón por la que esto es un
+          pago único y no una suscripción.</p>
+        <p>Lo que pierdes es el «que me lo devuelva el banco»: una transferencia en
+          cripto no se deshace. Lo que lo sustituye es más corto de leer que la letra
+          pequeña de un banco — <strong>catorce días para devolverlo, sin preguntas y
+          por el importe íntegro</strong>, y el programa entero funcionando gratis en
+          el navegador para que nadie compre a ciegas.</p>
       </div>
 
       <!-- El botón que faltaba.
@@ -1810,7 +1845,7 @@
       <div>
         <h3>Contacto</h3>
         <ul>
-          <li><a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a></li>
+          <li><a href="mailto:support@botfactoryfx.com">support@botfactoryfx.com</a></li>
           <li><a href="referidos/">Recomendar y llevarte el 10 %</a></li>
         </ul>
         <p>Contesta una persona, no un formulario. Si escribes por un fallo, di qué
