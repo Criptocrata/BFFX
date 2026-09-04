@@ -346,6 +346,11 @@
     display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); align-items: center;
   }
   .price-cta .runs-on { flex-basis: 100%; }
+  .recomendado {
+    flex-basis: 100%; margin: 0 0 var(--s1); font-size: .86rem; color: var(--text-soft);
+  }
+  .recomendado[hidden] { display: none; }
+  .recomendado b { font-family: var(--mono); font-weight: 500; }
 
   /* La glosa de un tecnicismo, la primera vez que aparece. Va en el tamaño de
      la letra pequeña y no en el del cuerpo: quien ya sabe lo que es un Sharpe
@@ -1451,6 +1456,7 @@
            reembolso posible, así que se lo decimos antes de que pague y no
            después. -->
       <div class="price-cta">
+        <p class="recomendado" id="recomendado" hidden></p>
         <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="comprar-precio">Comprar licencia · 499 USD</a>
         <a class="btn ghost" href="demo/" id="probar-precio">Probar gratis, sin registro</a>
         <p class="runs-on" style="width:100%;margin:0">
@@ -1665,6 +1671,7 @@
         <h3>Contacto</h3>
         <ul>
           <li><a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a></li>
+          <li><a href="referidos/">Recomendar y llevarte el 10 %</a></li>
         </ul>
         <p>Contesta una persona, no un formulario. Si escribes por un fallo, di qué
           sistema y qué versión: sale en el pie de la aplicación.</p>
@@ -1791,6 +1798,33 @@
     marco.removeAttribute("src");
     marco.src = src;
   });
+})();
+
+/* Quien llega recomendado, con ?ref=… en la dirección.
+   ═══════════════════════════════════════════════════════════════════════════
+   Se le enseña de parte de quién viene, justo encima del botón de pagar, que
+   es el único sitio donde ese dato sirve de algo: el que recomendó cobra su
+   10 % porque el comprador lo menciona, y nadie menciona lo que no recuerda.
+
+   NO se guarda. Ni cookie, ni localStorage, ni una petición a ninguna parte —
+   el pie de esta página promete que no se guarda nada en el navegador del
+   visitante, y un programa de referidos no es motivo para romper la única
+   promesa que la página hace sobre él. El dato viaja mientras el parámetro
+   esté en la dirección y desaparece con él.
+
+   El texto se compone con textContent y no con innerHTML: eso que se pinta
+   viene de la barra de direcciones, o sea de cualquiera, y ahí es donde se
+   cuela una etiqueta si se le da la ocasión. */
+(function () {
+  const quien = new URLSearchParams(location.search).get("ref");
+  const caja = document.getElementById("recomendado");
+  if (!quien || !caja) return;
+
+  caja.textContent = "Te lo ha recomendado ";
+  const nombre = document.createElement("b");
+  nombre.textContent = quien.slice(0, 120);
+  caja.append(nombre, ". Menciónalo al escribirnos y se lleva el 10 %.");
+  caja.hidden = false;
 })();
 
 /* El tráiler: se pide cuando se acerca, y se suelta cuando se va lejos.
