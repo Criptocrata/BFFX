@@ -125,7 +125,23 @@
   .sha { font-family: var(--mono); font-size: .72rem; color: var(--muted); overflow-wrap: anywhere; }
 
   footer { padding: var(--s4) 0 var(--s5); }
-  footer .wrap { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); justify-content: space-between; }
+  .pie-cols {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4) var(--s3);
+    padding-bottom: var(--s3); border-bottom: 1px solid var(--line);
+  }
+  .pie-cols h3 {
+    font-family: var(--mono); font-size: .74rem; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--phosphor);
+    margin: 0 0 var(--s2) 0;
+  }
+  .pie-cols p { font-size: .8rem; line-height: 1.55; margin: 0 0 var(--s2) 0; color: var(--muted); }
+  .pie-cols p:last-child { margin-bottom: 0; }
+  .pie-cols b { color: var(--text-soft); font-weight: 500; }
+  @media (max-width: 46rem) { .pie-cols { grid-template-columns: 1fr; } }
+  .pie-linea {
+    display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); justify-content: space-between;
+    padding-top: var(--s3);
+  }
   footer span { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
 </style>
 
@@ -309,7 +325,7 @@
 <section>
   <div class="wrap">
     <p class="eyebrow">Y si quieres la otra mitad</p>
-    <h2>El banco te dice qué pasó.<br>El Reality Check te dice si es verdad.</h2>
+    <h2>BotFactoryBench te dice qué pasó.<br>El Reality Check te dice si es verdad.</h2>
     <p class="lead">
       Esto audita el robot de otro y comprueba su backtest. Someter una estrategia propia
       a doce pruebas —fuera de muestra, walk-forward, otros instrumentos, sensibilidad a
@@ -324,7 +340,38 @@
 
 <footer>
   <div class="wrap">
-    <span>BotFactoryBench v1.3.0 · gratis, y sin nada que registrar</span>
-    <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
+    <!-- Tres columnas y no cuatro: aquí no hay devoluciones que explicar porque
+         no hay nada que pagar. Lo demás sí aplica igual, y esta página es la
+         que más se va a compartir de todo el sitio. -->
+    <div class="pie-cols">
+      <div>
+        <h3>Riesgo</h3>
+        <p><b>Operar puede costarte todo tu capital.</b> Que un backtest pase estas
+          comprobaciones no lo convierte en una promesa: significa que no se le ha
+          pillado ninguna de las trampas que este programa sabe buscar.</p>
+        <p>Esto es una herramienta de medida, no un asesor. No recomienda operaciones ni
+          da consejo financiero.</p>
+      </div>
+      <div>
+        <h3>Privacidad</h3>
+        <p>Esta página <b>no usa cookies, ni analítica</b>, y no deja nada guardado en tu
+          navegador. Lo único que pide fuera son las tipografías a Google Fonts, y eso
+          hace que tu IP llegue a Google.</p>
+        <p>El programa no manda tus ficheros a ninguna parte: no hay servidor que los
+          reciba, y se puede comprobar desconectando la red.</p>
+      </div>
+      <div>
+        <h3>Qué es y quién lo hace</h3>
+        <p>BotFactoryBench es gratuito y de descarga libre. No lleva firma de código, y su
+          sha256 está publicado más arriba para que puedas comprobar el fichero.</p>
+        <p>Sale de <a href="/3f35ba99a7/">BotFactoryFX</a>, que sí es de pago.
+          <a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a></p>
+      </div>
+    </div>
+
+    <div class="pie-linea">
+      <span>BotFactoryBench v1.3.0 · gratis, y sin nada que registrar</span>
+      <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
+    </div>
   </div>
 </footer>

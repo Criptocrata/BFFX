@@ -384,8 +384,27 @@
   .note-strip { background: var(--phos-wash); border: 1px solid var(--phosphor); border-radius: 3px; padding: var(--s3); font-size: .9rem; color: var(--text-soft); }
   .note-strip b { color: var(--phos-deep); font-family: var(--mono); }
 
-  footer { padding: var(--s5) 0; font-size: .84rem; color: var(--muted); background: var(--surface); }
-  footer .wrap { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+  footer { padding: var(--s5) 0 var(--s4); font-size: .84rem; color: var(--muted); background: var(--surface); }
+  .pie-cols {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s4) var(--s3);
+    padding-bottom: var(--s4); border-bottom: 1px solid var(--line);
+  }
+  .pie-cols h3 {
+    font-family: var(--mono); font-size: .74rem; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--phosphor);
+    margin: 0 0 var(--s2) 0;
+  }
+  .pie-cols p { font-size: .8rem; line-height: 1.55; margin: 0 0 var(--s2) 0; color: var(--muted); }
+  .pie-cols p:last-child { margin-bottom: 0; }
+  .pie-cols b { color: var(--text-soft); font-weight: 500; }
+  .pie-cols a { color: var(--phos-deep); }
+  @media (max-width: 60rem) { .pie-cols { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 34rem) { .pie-cols { grid-template-columns: 1fr; } }
+
+  .pie-linea {
+    display: flex; justify-content: space-between; gap: var(--s2) var(--s3);
+    flex-wrap: wrap; padding-top: var(--s3); font-family: var(--mono); font-size: .74rem;
+  }
 
   /* ---------- cada paso abre su animación ----------
      El recuadro es un <a> al fichero de la pieza y el guion le intercepta el
@@ -602,7 +621,7 @@
       <a href="#salida">Exportación</a>
       <a href="#perfiles">Para quién es</a>
       <a href="#plataformas">Descargas</a>
-      <a href="#banco">El banco</a>
+      <a href="#banco">BotFactoryBench</a>
       <a href="manual/">Documentación</a>
     </nav>
 
@@ -1487,11 +1506,11 @@
     </div>
 
     <p class="lead" style="margin-top:var(--s4)">
-      El banco te dice <strong>qué pasó</strong>. El Reality Check de BotFactoryFX te
+      <strong>BotFactoryBench</strong> te dice <strong>qué pasó</strong>. El Reality Check de BotFactoryFX te
       dice <strong>si es verdad</strong> — doce pruebas sobre una estrategia, y un
       algoritmo genético que cría las siguientes.</p>
     <div class="hero-cta" style="margin-top:var(--s3)">
-      <a class="btn solid" href="/bench/" id="ir-al-banco">Descargar el banco</a>
+      <a class="btn solid" href="/bench/" id="ir-al-banco">Descargar BotFactoryBench</a>
     </div>
   </div>
 </section>
@@ -1548,8 +1567,62 @@
 
 <footer>
   <div class="wrap">
-    <span>BotFactoryFX v1.10.0 · Propuesta de diseño III</span>
-    <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
+    <!-- El pie de verdad.
+         Hasta hoy eran dos líneas, y una de ellas decía «Propuesta de diseño
+         III» — el rótulo de cuando esto era una maqueta y no una tienda. Lo que
+         va aquí no es relleno legal: son las cuatro preguntas que se hace
+         cualquiera antes de mandar 499 USD en cripto a un desconocido, y todas
+         tienen respuesta corta.
+
+         Nada de esto promete lo que la página no cumple. La política de
+         devolución es una decisión del dueño, tomada el 4 de septiembre de
+         2026; lo de privacidad está comprobado en el navegador, no supuesto —
+         cero cookies, cero almacenamiento, cero analítica, y la única llamada
+         a un tercero son las cinco de las tipografías.
+
+         Los datos del vendedor son hoy sólo el correo. Cuando haya nombre y
+         domicilio van en la columna de Contacto, que está escrita para que sea
+         añadir dos líneas y no rehacer nada. -->
+    <div class="pie-cols">
+      <div>
+        <h3>Devoluciones</h3>
+        <p><b>Catorce días, sin preguntas.</b> Escribe dentro de los catorce días
+          siguientes al pago y se te devuelve el importe íntegro, en la misma moneda y a
+          la dirección que digas. No hace falta motivo ni explicación.</p>
+        <p>Y antes de pagar no hace falta arriesgar nada: la versión del navegador es el
+          programa entero, sin recortes.</p>
+      </div>
+      <div>
+        <h3>Riesgo</h3>
+        <p><b>Operar puede costarte todo tu capital.</b> Ningún resultado pasado —ni en un
+          backtest, ni en cuarentena, ni en una cuenta real— garantiza el futuro.</p>
+        <p>Esto es una herramienta de medida, no un asesor: no recomienda operaciones, no
+          gestiona dinero y no da consejo financiero. Las decisiones y las pérdidas son
+          tuyas.</p>
+      </div>
+      <div>
+        <h3>Privacidad</h3>
+        <p>Esta página <b>no usa cookies, ni analítica</b>, y no deja nada guardado en tu
+          navegador. Lo único que pide fuera son las tipografías a Google Fonts, y eso
+          hace que tu IP llegue a Google.</p>
+        <p>Las aplicaciones no mandan tus ficheros a ninguna parte. El pago lo procesa
+          <a href="https://plisio.net" rel="noopener">Plisio</a>, con sus propias
+          condiciones.</p>
+      </div>
+      <div>
+        <h3>La licencia y el contacto</h3>
+        <p>Una licencia por sistema, sin caducidad y sin suscripción, con las
+          actualizaciones de la rama 1.x incluidas. Si cambias de máquina, escribe y se te
+          da una clave nueva sin coste.</p>
+        <p><a href="mailto:hola@botfactoryfx.com">hola@botfactoryfx.com</a> — contesta una
+          persona, no un formulario.</p>
+      </div>
+    </div>
+
+    <div class="pie-linea">
+      <span>BotFactoryFX v1.10.0</span>
+      <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
+    </div>
   </div>
 </footer>
 
