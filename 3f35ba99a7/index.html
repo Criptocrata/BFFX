@@ -761,7 +761,7 @@
          acompaña las tres mil palabras que antes no tenían ni una salida.
          Empieza oculto en el marcado (hidden) para que quien llegue con el
          JavaScript apagado no vea un botón que no se va nunca. -->
-    <a class="btn solid sm barra-comprar" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="comprar-barra" hidden>
+    <a class="btn solid sm barra-comprar" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="comprar-barra" hidden>
       <span class="cifra">499&nbsp;USD</span> Comprar
     </a>
   </div>
@@ -1597,7 +1597,7 @@
            después. -->
       <div class="price-cta">
         <p class="recomendado" id="recomendado" hidden></p>
-        <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="comprar-precio">Comprar licencia · 499 USD</a>
+        <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="comprar-precio">Comprar licencia · 499 USD</a>
         <a class="btn ghost" href="demo/" id="probar-precio">Probar gratis, sin registro</a>
         <p class="runs-on" style="width:100%;margin:0">
           Hoy sólo <b>Linux</b> (AppImage). Windows y macOS en preparación — si ese es tu
@@ -1620,7 +1620,7 @@
         <span class="state">Disponible</span>
         <p>AppImage, sin instalación. Probado en Linux Mint 22.3, con conector de
           MetaTrader 5 funcionando bajo Wine 11.</p>
-        <a class="btn solid sm" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener">Comprar</a>
+        <a class="btn solid sm" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev">Comprar</a>
       </div>
       <div class="plat">
         <div class="os">Windows</div>
@@ -1738,7 +1738,7 @@
         <p>Un pago de <strong>499 USD</strong> y ya está. Sin suscripción, sin
           renovación y sin límite de estrategias. Actualizaciones de la rama 1.x
           incluidas.</p>
-        <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="comprar-cierre">Comprar licencia · 499 USD</a>
+        <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="comprar-cierre">Comprar licencia · 499 USD</a>
       </div>
     </div>
 
@@ -1784,7 +1784,7 @@
         <h3>Producto</h3>
         <ul>
           <li><a href="demo/" id="pie-demo">Probar gratis en el navegador</a></li>
-          <li><a href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" id="pie-comprar">Comprar licencia</a></li>
+          <li><a href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="pie-comprar">Comprar licencia</a></li>
           <li><a href="#plataformas">Descargas</a></li>
           <li><a href="/bench/" id="pie-banco">BotFactoryBench, gratis</a></li>
         </ul>
@@ -1967,12 +1967,14 @@
   const botones = [...document.querySelectorAll("a.btn.solid[id^=comprar-]")];
   if (!ref || !caja || !botones.length) return;
   if (!/^BFX-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref)) return;
-  if (!botones.every((b) => b.href.includes("/comprar"))) return;   // todavía no
 
   /* La dirección del cobro sale del propio botón y no de un marcador que
      rellene la construcción: así no puede quedarse desincronizada, y esta
-     página no necesita saber nada que no esté ya escrito en ella. */
-  const cobro = new URL(botones[0].href).origin;
+     página no necesita saber nada que no esté ya escrito en ella. Si los
+     botones no la llevan, el descuento no se puede aplicar y no se enseña:
+     prometer un precio que el botón no va a cobrar es peor que no decir nada. */
+  const cobro = botones[0].dataset.cobro;
+  if (!cobro) return;
 
   fetch(cobro + "/recomendacion?ref=" + encodeURIComponent(ref))
     .then((r) => r.json())
@@ -2419,5 +2421,59 @@
     ([e]) => { document.documentElement.classList.toggle("portico-arriba", e.isIntersecting); },
     { threshold: 0.35 },
   ).observe(portico);
+})();
+
+/* Comprar: la factura se pide aquí y se manda al comprador a pagarla.
+   ═══════════════════════════════════════════════════════════════════════════
+   Los botones siguen teniendo como href el botón de pago viejo de Plisio, y
+   no es un resto: es la red debajo. Sin JavaScript no habría manera de
+   comprar, y si el cobro se cae, esto manda ahí en vez de enseñar un error.
+   Por ese camino se pagan los 499 y se atiende a mano — que es exactamente
+   lo que pasaba antes de que existiera el cobro automático. Una venta
+   atendida a mano es infinitamente mejor que una venta perdida.
+
+   Se pide con POST porque crear una factura no es leer nada: si fuera un
+   enlace normal, cada rastreador que pasara por la página abriría una factura.
+
+   El pedido va en la respuesta y el comprador acaba en Plisio; a la vuelta,
+   /descarga/?p=… ya sabe quién es. */
+(function () {
+  "use strict";
+  const botones = [...document.querySelectorAll("a[data-cobro]")];
+  if (!botones.length) return;
+
+  const ref = (new URLSearchParams(location.search).get("ref") || "").trim().toUpperCase();
+  let pidiendo = false;
+
+  for (const boton of botones) {
+    boton.addEventListener("click", async function (e) {
+      // Cmd/Ctrl+clic, o el botón central: quien abre en otra pestaña espera
+      // el href, y robárselo para hacer otra cosa es de mala educación.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      if (pidiendo) return;
+      pidiendo = true;
+
+      const dice = boton.textContent;
+      boton.textContent = "Creando tu factura…";
+
+      try {
+        const r = await fetch(boton.dataset.cobro + "/comprar", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(ref ? { ref } : {}),
+        });
+        const v = await r.json();
+        if (!v || !v.pagar) throw new Error(v && v.error ? v.error : "sin factura");
+        location.href = v.pagar;
+        return;                       // sin restaurar el botón: nos vamos
+      } catch (err) {
+        // A Plisio por el camino viejo. El comprador no se entera de nada más
+        // que de haber tardado un segundo, y la venta no se pierde.
+        console.warn("el cobro no ha contestado, se usa el botón de siempre:", err);
+        location.href = boton.href;
+      }
+    });
+  }
 })();
 </script>
