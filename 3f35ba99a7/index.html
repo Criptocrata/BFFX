@@ -255,7 +255,48 @@
   .panel-foot b { color: var(--text); }
 
   /* ---------- pasos ---------- */
+  /* ---------- el tráiler ---------- */
+  .trailer { background: #05070a; border-bottom: 1px solid #1b2128; padding: var(--s4) 0; }
+  .trailer-marco { aspect-ratio: 16 / 9; background: #0b0d10; overflow: hidden; border-radius: 3px; }
+  .trailer-marco iframe { display: block; width: 100%; height: 100%; border: 0; }
+  .trailer-pie {
+    display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); justify-content: space-between;
+    align-items: baseline; margin: var(--s2) 0 0;
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; color: #6f7883;
+  }
+  .trailer-pie a { color: var(--phosphor); text-decoration: none; }
+  .trailer-pie a:hover { text-decoration: underline; }
+
+  /* ---------- la pantalla del recorrido ---------- */
+  .pantalla { margin-bottom: var(--s3); }
+  .pantalla[hidden] { display: none; }
+  .pantalla-marco {
+    border: 1px solid var(--line); border-radius: 3px; overflow: hidden;
+    background: #0e1013; aspect-ratio: 16 / 9;
+  }
+  .pantalla-marco iframe { display: block; width: 100%; height: 100%; border: 0; }
+  .pantalla-pie {
+    display: flex; align-items: baseline; gap: var(--s2) var(--s3);
+    flex-wrap: wrap; margin-top: var(--s2);
+  }
+  .pantalla-paso {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--phosphor); flex: none;
+  }
+  .pantalla-txt { font-size: .88rem; color: var(--muted); flex: 1 1 14rem; }
+  .pantalla-btn {
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-soft); background: transparent;
+    border: 1px solid var(--line); border-radius: 2px; padding: .3rem .7rem;
+    cursor: pointer; flex: none;
+  }
+  .pantalla-btn:hover { border-color: var(--muted); color: var(--text); }
+
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+  /* El paso que se está viendo. El borde superior ámbar es el mismo recurso que
+     marca la columna de pago en el cierre: en esta página el ámbar señala
+     siempre «esto es lo que importa ahora». */
+  a.step.viendo { background: var(--phos-wash); box-shadow: inset 0 3px 0 var(--phosphor); }
   .step { background: var(--surface); padding: var(--s4) var(--s3); }
   .step .n { font-family: var(--mono); font-size: .72rem; color: var(--phosphor); letter-spacing: .12em; display: block; margin-bottom: var(--s2); }
   .step p { font-size: .92rem; margin: 0; }
@@ -657,6 +698,35 @@
      grabaron. Se quitó el 29 de agosto de 2026, cuando las animaciones pasaron
      a colgar de los pasos del recorrido y de la sección de descargas: eso sí
      existe y sí se puede ver. -->
+
+<!-- ══ El tráiler ════════════════════════════════════════════════════════════
+     Veintiséis segundos en bucle con el argumento entero, para quien no va a
+     leer tres mil palabras. Va aquí, nada más pasar la portada, porque su
+     trabajo es que alguien que acaba de llegar entienda de qué va esto sin
+     hacer ningún esfuerzo.
+
+     Es una pieza nueva, la octava, y no las seis del recorrido encadenadas.
+     Aquéllas son relatos de treinta segundos con principio: pasarlas en un
+     bucle enseñaría a cada visitante una historia empezada por la mitad, y
+     como la visita media son veinte o treinta segundos, cada persona vería una
+     de siete y mal. Ésta se diseñó ya para repetirse y se apaga antes de
+     volver a empezar, así que no hay costura que disimular.
+
+     Fondo oscuro y a sangre: la pieza es oscura, y darle un marco claro
+     alrededor sería ponerle un passepartout a una pantalla. De paso rompe la
+     cadena de diez secciones iguales. -->
+<section class="trailer" id="trailer">
+  <div class="wrap">
+    <div class="trailer-marco">
+      <iframe id="trailer-marco" title="BotFactoryFX en veintiséis segundos"
+              loading="lazy" scrolling="no"></iframe>
+    </div>
+    <p class="trailer-pie">
+      <span>Veintiséis segundos · en bucle · sin sonido</span>
+      <a href="piezas/pieza-trailer.html">Verla suelta</a>
+    </p>
+  </div>
+</section>
 <section id="reality">
   <div class="wrap">
     <p class="eyebrow">01 · El método</p>
@@ -727,6 +797,38 @@
     <h2>Seis pasos, y en ese orden.</h2>
     <p class="lead" style="margin-bottom:var(--s4)">El menú de la aplicación es el
       recorrido del trabajo. No hay saltos hacia atrás.</p>
+    <!-- La pantalla del recorrido.
+         ══════════════════════════════════════════════════════════════════════
+         Las seis animaciones estaban detrás de un clic, y quien no lo daba
+         —casi todo el mundo— no las veía nunca. Ahora se reproducen solas
+         cuando el lector llega a esta sección, en el orden de los pasos y cada
+         una desde su primer fotograma.
+
+         A lo ancho del contenido y de una en una, no dentro de las tarjetas.
+         No es una preferencia: medido el 4 de septiembre de 2026, las piezas
+         dejan de escalar por debajo de unos 640 px y su letra pequeña se queda
+         clavada en 7,2 px. En una celda de la rejilla de tres columnas —338 px—
+         se verían, pero no se leerían, que es la peor de las dos cosas: ocupan
+         sitio y no comunican.
+
+         Un solo marco para las seis, y vacío en el marcado. Cargar seis
+         documentos que quizá nadie mire son 253 KB regalados; éste se pide
+         cuando la sección está a punto de entrar en pantalla.
+
+         La rejilla de abajo se queda como índice: dice qué se está viendo y
+         deja elegir otra. -->
+    <div class="pantalla" id="pantalla" hidden>
+      <div class="pantalla-marco">
+        <iframe id="pantalla-marco" title="Animación del paso que se está viendo"
+                loading="lazy" scrolling="no"></iframe>
+      </div>
+      <div class="pantalla-pie">
+        <span class="pantalla-paso" id="pantalla-paso"></span>
+        <span class="pantalla-txt" id="pantalla-txt"></span>
+        <button type="button" class="pantalla-btn" id="pantalla-btn" aria-live="off">Pausa</button>
+      </div>
+    </div>
+
     <!-- Cada paso lleva detrás la pieza animada que cuenta ese momento. El
          orden de las piezas es el suyo, de la serie, y no coincide con el de
          los pasos: por eso el pie de cada recuadro dice qué animación abre. -->
@@ -1481,7 +1583,12 @@
 (() => {
   "use strict";
   const cine = document.getElementById("cine");
-  const pasos = document.querySelectorAll("a[data-titulo][href]");   // los seis del recorrido y la de Linux
+  // Sólo la pieza ancha de Descargas. Los seis pasos del recorrido dejaron de
+  // pasar por aquí el 4 de septiembre de 2026: los reproduce la pantalla de su
+  // propia sección, que además es más grande que este diálogo. Dos manejadores
+  // sobre el mismo enlace se pisan —el primero registrado gana— y el resultado
+  // era un modal abriéndose encima de la pantalla que acababa de arrancar.
+  const pasos = document.querySelectorAll("a[data-titulo][href]:not(.step)");
   if (!cine || typeof cine.showModal !== "function") return;   // sin <dialog>, el enlace hace su trabajo
 
   const marco  = document.getElementById("cine-marco");
@@ -1523,6 +1630,144 @@
     marco.removeAttribute("src");
     marco.src = src;
   });
+})();
+
+/* El tráiler: se pide cuando se acerca, y se suelta cuando se va lejos.
+   ═══════════════════════════════════════════════════════════════════════════
+   Está casi en lo alto de la página, así que lo normal es que se cargue casi
+   siempre; el observador está por el caso contrario, el visitante que rebota
+   en la portada sin llegar a bajar.
+
+   Y se descarga al alejarse de verdad —no al primer píxel, sino pasada una
+   pantalla entera— porque es lo único de esta página que sigue trabajando
+   cuando nadie lo mira: un bucle de veintiséis segundos repintando un lienzo
+   para siempre calienta un portátil y se nota en la batería de un móvil.
+   Vaciar el src detiene su reloj sin que esta página tenga que hablar con él.
+
+   Si vuelve a entrar se vuelve a poner, y arranca desde el principio: es un
+   bucle, no un vídeo con minuto guardado, así que no hay nada que retomar. */
+(function () {
+  const marco = document.getElementById("trailer-marco");
+  const caja = document.getElementById("trailer");
+  const suelta = document.querySelector(".trailer-pie a");
+  if (!marco || !caja || !suelta) return;
+
+  /* La dirección se lee del enlace «Verla suelta», no se escribe aquí.
+     Al publicar, las piezas se copian planas y publicar.py reescribe los href
+     de `piezas/listas/…` a `piezas/…` — pero sólo los href, no las cadenas de
+     JavaScript. Escrita a mano aquí, la ruta funcionaba en la propuesta y daba
+     404 en el sitio publicado, que es donde nadie la estaba mirando. Es el
+     mismo truco que ya usa el proyector de las piezas, y por lo mismo. */
+  const ruta = suelta.getAttribute("href") + "#marco";
+
+  if (!("IntersectionObserver" in window)) { marco.src = ruta; return; }
+
+  new IntersectionObserver((entradas) => {
+    const dentro = entradas[0].isIntersecting;
+    if (dentro && !marco.getAttribute("src")) marco.src = ruta;
+    else if (!dentro && marco.getAttribute("src")) marco.removeAttribute("src");
+  }, { rootMargin: "600px 0px" }).observe(caja);
+})();
+
+/* La pantalla del recorrido: las seis piezas, solas y en orden.
+   ═══════════════════════════════════════════════════════════════════════════
+   Tres decisiones que no se ven leyendo el código:
+
+   No se carga hasta que hace falta. El marco nace sin dirección y sólo la
+   recibe cuando la sección se acerca a la pantalla — 253 KB que no se piden
+   si el visitante nunca baja hasta aquí.
+
+   Para saber cuándo termina una pieza se usa su duración declarada, la misma
+   que enseña cada tarjeta. No hay forma de que un iframe avise de que sus
+   animaciones CSS han acabado sin meterle un guion dentro a las siete, y la
+   duración ya estaba escrita en el marcado desde el principio.
+
+   Y se para al salir de pantalla. Una animación corriendo donde nadie la ve
+   gasta batería y calienta un portátil sin dar nada a cambio.
+
+   Con «reducir movimiento» activado no arranca sola. Las piezas ya respetan
+   esa preferencia por dentro —colapsan a 0,01 ms y se quedan en su fotograma
+   final—, así que autoarrancarlas daría un pase de diapositivas mudo y sin
+   sentido. En ese caso la pantalla espera a que se pulse el botón. */
+(function () {
+  const caja = document.getElementById("pantalla");
+  const marco = document.getElementById("pantalla-marco");
+  const pasos = [...document.querySelectorAll(".steps a.step[href]")];
+  if (!caja || !marco || !pasos.length) return;
+
+  // En pantalla estrecha, nada. Las piezas dejan de escalar por debajo de unos
+  // 640 px y su letra pequeña se queda clavada en 7,2 px: en un móvil se verían
+  // y no se leerían. Ni siquiera abriéndolas a pantalla completa se arregla —
+  // el problema es el ancho del teléfono, no el del marco— así que aquí los
+  // seis enlaces se quedan como enlaces y llevan a la pieza, que al menos se
+  // queda con toda la pantalla y se puede girar el aparato.
+  //
+  // El umbral es exactamente donde se midió el suelo, no un número redondo.
+  if (!matchMedia("(min-width: 40rem)").matches) return;
+
+  const etiqueta = document.getElementById("pantalla-paso");
+  const pie = document.getElementById("pantalla-txt");
+  const boton = document.getElementById("pantalla-btn");
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)");
+
+  let actual = -1, reloj = null, enPantalla = false, pausado = quieto.matches;
+
+  // El margen es porque la duración declarada es la de la pieza, y el marco
+  // tarda un poco en pedirla y pintarla. Sin él, el salto llega justo antes
+  // del último fotograma y el final se pierde siempre.
+  //
+  // `Number.isFinite` y no `|| 30`: con `||`, un data-dur de cero segundos
+  // —falso en JavaScript— caería al valor por defecto. No pasa hoy porque las
+  // siete declaran su duración, pero es la clase de red que sólo se nota el
+  // día que alguien añade la octava y se deja el atributo a medias.
+  const segundos = (a) => {
+    const d = parseInt(a.dataset.dur, 10);
+    return (Number.isFinite(d) ? d : 30) + 1.5;
+  };
+
+  function poner(i, contando) {
+    actual = ((i % pasos.length) + pasos.length) % pasos.length;
+    const a = pasos[actual];
+    marco.src = a.getAttribute("href") + "#marco";
+    etiqueta.textContent = a.dataset.paso;
+    pie.textContent = a.dataset.pie;
+    pasos.forEach((p, n) => p.classList.toggle("viendo", n === actual));
+    clearTimeout(reloj);
+    if (contando) reloj = setTimeout(() => poner(actual + 1, true), segundos(a) * 1000);
+  }
+
+  function arrancar() {
+    if (pausado) { if (actual < 0) poner(0, false); return; }
+    poner(actual < 0 ? 0 : actual, true);
+  }
+
+  function parar() { clearTimeout(reloj); reloj = null; }
+
+  boton.addEventListener("click", () => {
+    pausado = !pausado;
+    boton.textContent = pausado ? "Reanudar" : "Pausa";
+    if (pausado) parar(); else if (enPantalla) poner(actual < 0 ? 0 : actual, true);
+  });
+
+  // Elegir un paso lo pone en la pantalla en vez de abrir el proyector: el
+  // marco de aquí ya es más grande que el del diálogo, así que abrir un modal
+  // encima sería enseñar lo mismo más pequeño.
+  pasos.forEach((a, i) => a.addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;   // otra pestaña sigue abriendo la pieza suelta
+    e.preventDefault();
+    pausado = false;
+    boton.textContent = "Pausa";
+    poner(i, true);
+    caja.scrollIntoView({ behavior: quieto.matches ? "instant" : "smooth", block: "center" });
+  }));
+
+  caja.hidden = false;
+  boton.textContent = pausado ? "Reanudar" : "Pausa";
+
+  new IntersectionObserver((entradas) => {
+    enPantalla = entradas[0].isIntersecting;
+    if (enPantalla) arrancar(); else parar();
+  }, { rootMargin: "200px 0px" }).observe(caja);
 })();
 
 /* Llegar de fuera con un ancla y quedarse arriba del todo.

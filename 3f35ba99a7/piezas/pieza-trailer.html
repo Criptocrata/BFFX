@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Miles, y las pocas que aguantan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450&display=swap">
+
+<style>
+/* Motor visual común de las piezas de BotFactoryFX.
+   Se incrusta en cada pieza al ensamblar, porque un artefacto publicado tiene
+   que ser autónomo y no puede pedir ficheros a otro sitio. */
+:root {
+  --ink:      #0b0d10;
+  --surface:  #14181d;
+  --line:     #262d35;
+  --text:     #e9ecef;
+  --soft:     #aab3bc;
+  --muted:    #6f7883;
+  --phosphor: #e08a1e;
+  --trace:    #6e8ba3;
+  --profit:   #24b37e;
+  --loss:     #d14343;
+  --warn:     #d9a441;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #05070a; color: var(--text); font-family: var(--sans); }
+
+.stage {
+  position: relative; width: 100%; max-width: 62rem; margin: 0 auto;
+  aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden;
+  border: 1px solid var(--line);
+}
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.pad { position: absolute; left: 6.5%; right: 6.5%; }
+.lyr { position: absolute; left: 0; right: 0; top: 0; opacity: 0; }
+
+h1, h2 {
+  font-family: var(--mono); font-weight: 600; margin: 0;
+  letter-spacing: -.03em; line-height: 1.14; text-wrap: balance;
+  font-size: clamp(1rem, 2.9vw, 1.95rem);
+}
+.kicker {
+  font-family: var(--mono); font-size: clamp(.58rem, 1.3vw, .8rem);
+  letter-spacing: .2em; text-transform: uppercase; color: var(--phosphor);
+  margin: 0 0 .8em 0;
+}
+.sub { font-size: clamp(.7rem, 1.6vw, .98rem); color: var(--soft); margin: .8em 0 0; max-width: 32em; line-height: 1.55; }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.metrics > div { background: var(--surface); padding: 2.6% 3.4%; }
+.metrics .k { font-family: var(--mono); font-size: clamp(.48rem, 1vw, .64rem); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; }
+.metrics .v { font-family: var(--mono); font-size: clamp(.9rem, 2.4vw, 1.55rem); font-weight: 600; font-variant-numeric: tabular-nums; display: block; margin-top: .2em; }
+.metrics .v.up { color: var(--profit); }
+
+.badge {
+  display: inline-block; font-family: var(--mono); font-weight: 600;
+  font-size: clamp(.62rem, 1.6vw, .95rem); letter-spacing: .12em; text-transform: uppercase;
+  border-radius: 2px; padding: .3em .85em; border: 1px solid currentColor;
+}
+.badge.ok { color: var(--profit); }
+.badge.no { color: var(--loss); }
+
+.shot { border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--surface); }
+.shot img { display: block; width: 100%; height: auto; }
+
+.brandrow { display: flex; align-items: center; gap: 3%; }
+.brandrow svg { width: clamp(2.4rem, 7.5vw, 4.8rem); height: auto; flex: none; }
+.wordmark { font-family: var(--mono); font-weight: 600; font-size: clamp(1rem, 3.4vw, 2.15rem); letter-spacing: -.035em; }
+.wordmark i { font-style: normal; color: var(--phosphor); }
+.facts { font-family: var(--mono); font-size: clamp(.56rem, 1.4vw, .84rem); color: var(--muted); letter-spacing: .06em; margin-top: 1.1em; }
+
+/* Entradas y salidas. La salida SIEMPRE con `forwards`: con `both`, el relleno
+   hacia atrás aplica el primer fotograma desde el segundo cero y el elemento
+   se ve desde el principio de la pieza. */
+@keyframes sube { from { opacity: 0; transform: translateY(1em) } to { opacity: 1; transform: none } }
+@keyframes ver  { from { opacity: 0 } to { opacity: 1 } }
+
+/* Incrustada en otra página —la web la abre dentro de un diálogo—, la pieza se
+   queda solo con el escenario: los mandos y el pie los pone el contenedor, y
+   el marco de un iframe ya recorta a 16:9. Se activa con #marco en la
+   dirección; abierta sola, la pieza no cambia. */
+body.marco { background: var(--ink); }
+body.marco .stage { max-width: none; border: 0; }
+body.marco .bar { display: none; }
+
+.bar { max-width: 62rem; margin: .9rem auto 2rem; display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; }
+.bar button {
+  font-family: var(--mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase;
+  background: transparent; color: var(--phosphor); border: 1px solid var(--phosphor);
+  padding: .55rem 1rem; border-radius: 2px; cursor: pointer;
+}
+.bar button:hover { background: #241a0d; }
+.bar span { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .play * { animation-duration: .01ms !important; animation-delay: 0s !important; }
+}
+
+
+  /* ---- propio: el tráiler ----
+     La única pieza de la serie que se repite sola y que no explica un paso:
+     cuenta el argumento entero en veintiséis segundos para quien no va a leer
+     la página. Por eso no lleva capturas de la aplicación ni cifras que haya
+     que descifrar — sólo la forma del problema y la de la solución. */
+
+  /* Las doce pruebas, como doce barras que se van resolviendo. Nueve aguantan
+     y tres no, que es exactamente el veredicto que enseña pieza-reality-check:
+     un tráiler que promete doce de doce estaría vendiendo otra cosa. */
+  .pruebas { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.4%; }
+  .prueba {
+    height: .5em; border-radius: 1px; background: var(--line);
+    transform: scaleX(0); transform-origin: left center;
+  }
+  .play .prueba { animation: crece .38s cubic-bezier(.2,.8,.3,1) both; }
+  .prueba.ok { background: var(--profit); }
+  .prueba.no { background: var(--warn); }
+  @keyframes crece { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+  .cuenta {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: clamp(.66rem, 1.3vw, .8rem); color: var(--muted);
+    letter-spacing: .1em; text-transform: uppercase; margin-top: .9em;
+  }
+
+  /* Los destinos del código. Nombres, no logotipos: es lo mismo que hace la
+     tira de compatibilidad de la portada, y por la misma razón. */
+  .destinos { display: flex; gap: 2.4%; flex-wrap: wrap; }
+  .destino {
+    opacity: 0; border: 1px solid var(--line); border-radius: 3px;
+    padding: .45em .8em; background: var(--surface);
+    font-family: var(--mono); font-size: clamp(.62rem, 1.12vw, .74rem); color: var(--soft);
+  }
+  .destino b { color: var(--phosphor); font-weight: 500; }
+
+  .cierre { font-family: var(--mono); font-size: clamp(.56rem, 1.35vw, .82rem); color: var(--muted); letter-spacing: .08em; margin-top: 1.2em; }
+  .cierre b { color: var(--phosphor); font-weight: 500; }
+
+  /* Cada compás entra y sale; la salida siempre `forwards`, como en el resto
+     de la serie, para que el relleno hacia atrás no la haga visible desde el
+     segundo cero. */
+  .play .c1 { animation: sube .7s ease  0.5s both, ver .5s ease  5.0s reverse forwards; }
+  .play .c2 { animation: sube .7s ease  5.6s both, ver .5s ease 10.4s reverse forwards; }
+  .play .c3 { animation: sube .7s ease 11.0s both, ver .5s ease 16.4s reverse forwards; }
+  .play .c4 { animation: sube .7s ease 17.0s both, ver .5s ease 21.6s reverse forwards; }
+  .play .c5 { animation: sube .8s ease 22.2s both; }
+
+  /* Las doce barras, una cada 0,26 s a partir del segundo 11,6. */
+  .play .prueba:nth-child(1)  { animation-delay: 11.60s }
+  .play .prueba:nth-child(2)  { animation-delay: 11.86s }
+  .play .prueba:nth-child(3)  { animation-delay: 12.12s }
+  .play .prueba:nth-child(4)  { animation-delay: 12.38s }
+  .play .prueba:nth-child(5)  { animation-delay: 12.64s }
+  .play .prueba:nth-child(6)  { animation-delay: 12.90s }
+  .play .prueba:nth-child(7)  { animation-delay: 13.16s }
+  .play .prueba:nth-child(8)  { animation-delay: 13.42s }
+  .play .prueba:nth-child(9)  { animation-delay: 13.68s }
+  .play .prueba:nth-child(10) { animation-delay: 13.94s }
+  .play .prueba:nth-child(11) { animation-delay: 14.20s }
+  .play .prueba:nth-child(12) { animation-delay: 14.46s }
+  .play .cuenta { animation: ver .5s ease 14.9s both; }
+
+  .play .destino:nth-child(1) { animation: sube .5s ease 17.9s both }
+  .play .destino:nth-child(2) { animation: sube .5s ease 18.2s both }
+  .play .destino:nth-child(3) { animation: sube .5s ease 18.5s both }
+  .play .destino:nth-child(4) { animation: sube .5s ease 18.8s both }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="lienzo"></canvas>
+
+  <div class="layer">
+    <div class="pad" style="top:8%">
+      <div class="lyr c1">
+        <p class="kicker">El método</p>
+        <h1>Genera miles de estrategias.</h1>
+        <p class="sub">Un algoritmo genético combina entradas, salidas y filtros a una
+          velocidad que nadie alcanza a mano.</p>
+      </div>
+
+      <div class="lyr c2">
+        <p class="kicker">Fuera de muestra</p>
+        <h1>Casi todas se caen<br>en cuanto ven datos nuevos.</h1>
+        <p class="sub">A la izquierda de la línea, el histórico con el que se ajustaron.
+          A la derecha, el que nunca vieron.</p>
+      </div>
+
+      <div class="lyr c3">
+        <p class="kicker">Reality Check</p>
+        <h1>Doce pruebas para tumbar<br>las que quedan.</h1>
+        <div class="pruebas" style="margin-top:1.4em">
+          <i class="prueba ok"></i><i class="prueba ok"></i><i class="prueba no"></i>
+          <i class="prueba ok"></i><i class="prueba ok"></i><i class="prueba ok"></i>
+          <i class="prueba no"></i><i class="prueba ok"></i><i class="prueba ok"></i>
+          <i class="prueba ok"></i><i class="prueba no"></i><i class="prueba ok"></i>
+        </div>
+        <p class="cuenta">Aguanta nueve de doce · y dice cuáles no</p>
+      </div>
+
+      <div class="lyr c4">
+        <p class="kicker">La salida</p>
+        <h1>Quédate con las que aguantan.</h1>
+        <p class="sub">Pocas, y en código que se abre en tu plataforma y compila.</p>
+        <div class="destinos" style="margin-top:1.2em">
+          <span class="destino"><b>MQL4</b> · <b>MQL5</b></span>
+          <span class="destino"><b>Pine</b> Script v6</span>
+          <span class="destino"><b>Java</b> JForex</span>
+          <span class="destino"><b>Python</b></span>
+        </div>
+      </div>
+
+      <div class="lyr c5">
+        <div class="brandrow">
+          <svg viewBox="0 0 64 64" role="img" aria-label="BotFactoryFX">
+            <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#e9ecef" stroke-width="2.5" opacity="0.28"/>
+            <line x1="32" y1="11" x2="32" y2="53" stroke="#e9ecef" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+            <rect x="23" y="17" width="18" height="15" rx="2" fill="#e08a1e"/>
+            <rect x="23" y="37" width="18" height="11" rx="2" fill="#e08a1e" opacity="0.38"/>
+            <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="#e9ecef" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+          </svg>
+          <span class="wordmark">BotFactory<i>FX</i></span>
+        </div>
+        <p class="cierre">Genera miles. Quédate con las que aguantan. · <b>botfactoryfx.com</b></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button id="replay" type="button">Reproducir</button>
+  <span>26 s · 16:9 · El recorrido entero, en bucle</span>
+</div>
+
+<script>
+/* Motor común de las piezas animadas. Cada pieza aporta su función de dibujo
+   y sus compases; todo lo demás —reloj, lienzo, curvas, suavizados— vive aquí. */
+const BFX = (() => {
+  "use strict";
+
+  /** Generador con semilla: la misma imagen en cada reproducción, que es lo
+   *  que permite volver a grabar una pieza y obtener el mismo plano. */
+  function azar(semilla = 20260828) {
+    let s = semilla >>> 0;
+    return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  }
+
+  const suave = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+  /** Progreso de 0 a 1 entre dos instantes de la línea de tiempo, suavizado. */
+  const entre = (t, a, b) => suave((t - a) / (b - a));
+  /** Un pulso: sube entre a y b, se mantiene, y baja entre c y d. */
+  const pulso = (t, a, b, c, d) => entre(t, a, b) * (1 - entre(t, c, d));
+
+  /** Ajusta el lienzo a su tamaño real teniendo en cuenta la densidad de la
+   *  pantalla; sin esto los trazos salen borrosos en pantallas retina. */
+  function medir(cv, cx) {
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return r;
+  }
+
+  /** Un paseo aleatorio con deriva: la forma de una curva de capital. */
+  function paseo(rnd, puntos, deriva, vol, desde = 0) {
+    const y = new Float32Array(puntos);
+    let v = desde;
+    for (let p = 0; p < puntos; p++) {
+      v += deriva + (rnd() - 0.5) * vol;
+      y[p] = v;
+    }
+    return y;
+  }
+
+  /** Traza una curva ya calculada dentro de un rectángulo. */
+  function trazar(cx, y, caja, escala, hasta = 1) {
+    const n = y.length;
+    const fin = Math.max(1, Math.round((n - 1) * hasta));
+    cx.beginPath();
+    for (let p = 0; p <= fin; p++) {
+      const x = caja.x + (caja.w * p) / (n - 1);
+      const py = escala(y[p]);
+      p === 0 ? cx.moveTo(x, py) : cx.lineTo(x, py);
+    }
+    cx.stroke();
+  }
+
+  /** Rejilla de instrumento. */
+  function rejilla(cx, caja, filas = 4, color = "#1b2128") {
+    cx.save();
+    cx.lineWidth = 1;
+    cx.strokeStyle = color;
+    for (let i = 0; i <= filas; i++) {
+      const y = caja.y + (caja.h * i) / filas;
+      cx.beginPath(); cx.moveTo(caja.x, y); cx.lineTo(caja.x + caja.w, y); cx.stroke();
+    }
+    cx.restore();
+  }
+
+  /** Arranca la pieza: reinicia las animaciones CSS y el reloj del lienzo. */
+  function reproductor({ stage, canvas, dibujar, duracion = 32 }) {
+    const cx = canvas.getContext("2d");
+    let caja = medir(canvas, cx);
+    let id = 0, t0 = 0, parado = false;
+    addEventListener("resize", () => { caja = medir(canvas, cx); });
+
+    function marco(ahora) {
+      if (parado) return;
+      const t = (ahora - t0) / 1000;
+      dibujar(cx, caja, t);
+      if (t < duracion + 1) id = requestAnimationFrame(marco);
+    }
+    function reproducir() {
+      parado = false;
+      cancelAnimationFrame(id);
+      stage.classList.remove("play");
+      void stage.offsetWidth;          // fuerza el reinicio de las animaciones
+      stage.classList.add("play");
+      caja = medir(canvas, cx);
+      t0 = performance.now();
+      id = requestAnimationFrame(marco);
+    }
+
+    /* Salta a un instante y lo pinta, sin reloj. Sirve para revisar un compás
+       concreto sin esperar a que llegue, que con la latencia de una captura de
+       pantalla es la diferencia entre ver el plano y ver el siguiente. */
+    reproducir.saltar = (t) => {
+      parado = true;                 // un fotograma ya encolado repintaría encima
+      cancelAnimationFrame(id);
+      caja = medir(canvas, cx);
+      dibujar(cx, caja, t);
+      stage.classList.add("play");
+      stage.querySelectorAll("*").forEach((el) => {
+        el.getAnimations().forEach((a) => { a.currentTime = t * 1000; a.pause(); });
+      });
+    };
+    return reproducir;
+  }
+
+  /* La web incrusta las piezas en un diálogo y aporta su propia barra de
+     mandos. Con #marco en la dirección, la pieza se queda solo con el
+     escenario; el motor va inyectado al final del documento, así que a estas
+     alturas <body> ya existe. */
+  if (location.hash === "#marco") document.body.classList.add("marco");
+
+  return { azar, suave, entre, pulso, medir, paseo, trazar, rejilla, reproductor };
+})();
+
+
+(() => {
+  "use strict";
+  const stage = document.getElementById("stage");
+  const cv = document.getElementById("lienzo");
+
+  const DURACION = 26;
+  const CORTE = 0.63;        // dónde parte el histórico: ajuste | fuera de muestra
+  const CUANTAS = 34;
+
+  /* Las candidatas.
+     Todas suben a la izquierda del corte, porque ahí es donde se ajustaron: una
+     búsqueda que devuelve mil las devuelve todas bonitas, y ése es justo el
+     problema. Lo que las separa está a la derecha.
+
+     Cinco aguantan de treinta y cuatro. No es un número decorativo: es del
+     orden de lo que la propia página promete —«pocas, pero defendibles»— y
+     poner veinte supervivientes sería el tráiler prometiendo lo que el
+     producto no promete. */
+  const rnd = BFX.azar(20260904);
+  const PUNTOS = 150;
+  const corte = Math.round(PUNTOS * CORTE);
+
+  const curvas = [];
+  for (let i = 0; i < CUANTAS; i++) {
+    const aguanta = i < 5;
+    const y = new Float32Array(PUNTOS);
+    let v = 0;
+    // Tramo de ajuste: todas suben, con distinto brío.
+    const derivaIn = 0.10 + rnd() * 0.16;
+    const vol = 0.16 + rnd() * 0.30;
+    for (let p = 0; p < corte; p++) { v += derivaIn + (rnd() - 0.5) * vol; y[p] = v; }
+    // Fuera de muestra: las que aguantan siguen; el resto se desinfla o cae.
+    const derivaOut = aguanta ? derivaIn * (0.55 + rnd() * 0.35)
+                              : -derivaIn * (0.25 + rnd() * 1.15);
+    for (let p = corte; p < PUNTOS; p++) { v += derivaOut + (rnd() - 0.5) * vol; y[p] = v; }
+    curvas.push({ y, aguanta });
+  }
+
+  let lo = Infinity, hi = -Infinity;
+  for (const c of curvas) for (const v of c.y) { if (v < lo) lo = v; if (v > hi) hi = v; }
+
+  function dibujar(cx, caja, t) {
+    cx.clearRect(0, 0, caja.width, caja.height);
+
+    // El gráfico ocupa la mitad de abajo; el texto vive arriba.
+    const rect = {
+      x: caja.width * 0.065, w: caja.width * 0.87,
+      y: caja.height * 0.50, h: caja.height * 0.38,
+    };
+    const margen = (hi - lo) * 0.06;
+    const esc = (v) => rect.y + rect.h - ((v - lo + margen) / (hi - lo + margen * 2)) * rect.h;
+
+    // El gráfico se va justo cuando entra la marca, no dos segundos después:
+    // con el trazo todavía encendido debajo, el cierre se lee como un rótulo
+    // encima de otra cosa en vez de como el final.
+    const vivo = BFX.pulso(t, 0.4, 1.2, 22.4, 23.8);
+    if (vivo < 0.01) return;
+    cx.save();
+    cx.globalAlpha = vivo;
+
+    BFX.rejilla(cx, rect, 4);
+
+    // Compás 1 y 2: se van dibujando las candidatas. Cada una entra escalonada
+    // y se traza entera entre su entrada y el segundo 9,4 — así el haz cruza el
+    // corte a la vez y la divergencia se lee de golpe, que es el plano.
+    const xCorte = rect.x + rect.w * CORTE;
+    for (let i = 0; i < curvas.length; i++) {
+      const nace = 1.0 + i * 0.055;
+      if (t < nace) continue;
+      const avance = BFX.entre(t, nace, 9.4);
+      const c = curvas[i];
+
+      // Al llegar el veredicto (12 s en adelante) sólo quedan las que aguantan.
+      const apaga = c.aguanta ? 0 : BFX.entre(t, 10.6, 12.2);
+      const a = (c.aguanta ? 0.85 : 0.42) * (1 - apaga * 0.93);
+      if (a < 0.02) continue;
+
+      const color = c.aguanta ? "36,179,126" : (avance > CORTE + 0.02 ? "209,67,67" : "224,138,30");
+      cx.strokeStyle = `rgba(${color},${a.toFixed(3)})`;
+      cx.lineWidth = c.aguanta ? 2.2 : 1.1;
+      BFX.trazar(cx, c.y, rect, esc, avance);
+    }
+
+    // La línea del corte. Aparece justo antes de que el haz llegue a ella, que
+    // es lo que convierte la divergencia en una explicación en vez de un
+    // adorno: primero se nombra la frontera, después se cruza.
+    const aCorte = BFX.pulso(t, 4.6, 5.4, 21.6, 22.4);
+    if (aCorte > 0.01) {
+      cx.save();
+      cx.globalAlpha = vivo * aCorte;
+      cx.strokeStyle = "#6e8ba3";
+      cx.setLineDash([4, 4]);
+      cx.lineWidth = 1.2;
+      cx.beginPath();
+      cx.moveTo(xCorte, rect.y - rect.h * 0.10);
+      cx.lineTo(xCorte, rect.y + rect.h);
+      cx.stroke();
+      cx.setLineDash([]);
+      cx.font = "500 11px ui-monospace, Menlo, monospace";
+      cx.fillStyle = "#6e8ba3";
+      cx.fillText("fuera de muestra →", xCorte + 7, rect.y - rect.h * 0.10 + 11);
+      cx.restore();
+    }
+
+    cx.restore();
+  }
+
+  const reproducir = BFX.reproductor({ stage, canvas: cv, dibujar, duracion: DURACION });
+  window.saltar = reproducir.saltar;
+  document.getElementById("replay").addEventListener("click", () => { parar(); reproducir(); bucle(); });
+
+  /* El bucle, que es lo que distingue a esta pieza de sus seis hermanas.
+     No hay costura que disimular: la pieza se apaga entre los segundos 24,4 y
+     25,6 —el lienzo y el último compás se van a la vez— así que cuando vuelve
+     a empezar la pantalla ya estaba en negro.
+
+     `setTimeout` encadenado y no `setInterval`: si la pestaña se va al fondo el
+     navegador estrangula los temporizadores, y con `setInterval` las llamadas
+     atrasadas se acumulan y al volver se disparan todas juntas. */
+  let reloj = null;
+  const parar = () => { clearTimeout(reloj); reloj = null; };
+  function bucle() { reloj = setTimeout(() => { reproducir(); bucle(); }, (DURACION + 0.6) * 1000); }
+
+  // Con «reducir movimiento» no se repite sola: se pinta un fotograma con la
+  // historia ya contada —las que aguantan, separadas de las que no— y ahí se
+  // queda. Repetir un bucle a quien ha pedido que nada se mueva es ignorarle.
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    reproducir.saltar(9.4);
+  } else {
+    reproducir();
+    bucle();
+  }
+})();
+</script>
