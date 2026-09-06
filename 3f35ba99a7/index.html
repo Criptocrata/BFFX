@@ -2141,7 +2141,7 @@
   const caja = document.getElementById("recomendado");
   const botones = [...document.querySelectorAll("a.btn.solid[id^=comprar-]")];
   if (!ref || !caja || !botones.length) return;
-  if (!/^BFX-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref)) return;
+  if (!/^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref)) return;
 
   /* La dirección del cobro sale del propio botón y no de un marcador que
      rellene la construcción: así no puede quedarse desincronizada, y esta

@@ -130,7 +130,7 @@
     <div class="pasos">
       <div class="paso">
         <p><strong>Tu número de pedido es tu código.</strong> El que te salió al comprar,
-          ese mismo: <code>BFX-XXXXXXXX-XXXXXXXX</code>. No hay que registrarse, ni dar un
+          ese mismo, empiece por <code>BFX</code> o por <code>BFQ</code>. No hay que registrarse, ni dar un
           correo, ni pedir permiso. Pásalo, o pasa el enlace que te arma la caja de aquí
           abajo.</p>
       </div>
@@ -153,7 +153,7 @@
     <div class="caja">
       <label for="pedido">Pega tu número de pedido y te armo el enlace</label>
       <input id="pedido" type="text" inputmode="latin" autocomplete="off" spellcheck="false"
-             placeholder="BFX-XXXXXXXX-XXXXXXXX" aria-describedby="salida">
+             placeholder="BFX-XXXXXXXX-XXXXXXXX o BFQ-…" aria-describedby="salida">
       <p class="salida" id="salida" role="status"></p>
     </div>
   </div>
@@ -234,7 +234,8 @@
     const salida = document.getElementById("salida");
     if (!campo || !salida) return;
 
-    const FORMA = /^BFX-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/;
+    // BFX o BFQ: tu código es tu número de pedido, y hay dos productos.
+    const FORMA = /^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/;
     let ultima = 0;
 
     function di(texto, clase, enlace) {
@@ -251,7 +252,7 @@
       const ref = campo.value.trim().toUpperCase();
       if (!ref) { di("", ""); return; }
       if (!FORMA.test(ref)) {
-        di("Un número de pedido tiene esta forma: BFX-XXXXXXXX-XXXXXXXX", "mal");
+        di("Un número de pedido empieza por BFX o BFQ: BFX-XXXXXXXX-XXXXXXXX", "mal");
         return;
       }
       const mio = ++ultima;

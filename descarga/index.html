@@ -80,7 +80,7 @@
   <div id="sin-pedido" hidden>
     <h1>Esta página necesita tu número de pedido.</h1>
     <p>Llega en la dirección que te dio Plisio al pagar, y también en el correo
-       que te mandaron. Tiene esta forma: <span class="pedido">BFX-XXXXXXXX-XXXXXXXX</span></p>
+       que te mandaron. Empieza por <span class="pedido">BFX</span> o por <span class="pedido">BFQ</span>, según lo que compraras: <span class="pedido">BFQ-XXXXXXXX-XXXXXXXX</span></p>
     <p>Si lo has perdido, escribe a
        <a href="mailto:support@botfactoryfx.com">support@botfactoryfx.com</a> con la dirección
        desde la que pagaste y te lo devolvemos.</p>
@@ -113,7 +113,7 @@
       <h2>1 · El programa</h2>
       <p>AppImage para Linux. No se instala: se descarga, se le da permiso de ejecución y
          arranca.</p>
-      <a class="btn" id="bajar" href="#">Descargar BotFactoryFX</a>
+      <a class="btn" id="bajar" href="#">Descargar <span id="nombre-producto">BotFactoryFX</span></a>
       <p class="aviso" style="margin-top:var(--s3)">Te quedan <b id="quedan-descargas">—</b>
          descargas de este enlace. Si se acaban, escríbenos.</p>
     </div>
@@ -195,7 +195,10 @@
     }
   };
 
-  if (!/^BFX-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(pedido)) { ver("sin-pedido"); return; }
+  /* BFX y BFQ: cada producto tiene su prefijo, y esta página sirve a los dos.
+     Con sólo BFX, un comprador de BotFactoryQuarantine llegaba a su propia
+     página de descarga y le decía que su número no existía. */
+  if (!/^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(pedido)) { ver("sin-pedido"); return; }
   for (const id of ["num", "num2"]) document.getElementById(id).textContent = pedido;
 
   document.getElementById("bajar").href = `${API}/descarga?p=${encodeURIComponent(pedido)}`;
@@ -217,6 +220,13 @@
     if (v.estado === "listo") {
       document.getElementById("quedan-descargas").textContent = v.descargasRestantes ?? "—";
       document.getElementById("quedan-huellas").textContent = v.huellasRestantes ?? "—";
+
+      /* El nombre de lo que compró. Decirle «BotFactoryFX» a quien acaba de
+         pagar por Quarantine es enseñarle el nombre del otro producto en el
+         segundo más delicado de toda la compra. */
+      const NOMBRES = { fx: "BotFactoryFX", quarantine: "BotFactoryQuarantine" };
+      document.getElementById("nombre-producto").textContent =
+        NOMBRES[v.producto] ?? NOMBRES.fx;
 
       // Su propio número, convertido en su enlace de recomendación.
       document.getElementById("enlace-ref").textContent = `${SITIO}?ref=${pedido}`;
