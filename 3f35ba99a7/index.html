@@ -400,6 +400,41 @@
   .porque p { font-size: .92rem; margin: 0 0 var(--s2) 0; }
   .porque p:last-child { margin-bottom: 0; }
 
+  /* ── Los tres escalones ───────────────────────────────────────────────
+     Uno gratis, uno de 99,99 y uno de 499. Se enseñan juntos y no en tres
+     secciones porque la pregunta de quien mira es comparativa —«¿cuál me
+     hace falta?»— y contestarla obliga a tener los tres delante.
+
+     El de en medio NO se destaca como «el recomendado». Ese truco empuja a
+     la fila que más conviene al vendedor, y aquí la que conviene depende de
+     si vas a traer una idea o a buscarlas. Se destaca el grande, que es el
+     producto, y el orden va de menos a más como se lee. */
+  .escalones {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: 3px;
+    overflow: hidden; margin-bottom: var(--s4);
+  }
+  .escalon { background: var(--surface); padding: var(--s3); display: flex; flex-direction: column; }
+  .escalon.destacado { background: var(--phos-wash); }
+  .escalon h3 {
+    font-family: var(--mono); font-size: .95rem; font-weight: 600;
+    margin: 0 0 var(--s1) 0; letter-spacing: -.01em;
+  }
+  .escalon .cuanto {
+    font-family: var(--mono); font-weight: 600; font-size: 1.9rem;
+    letter-spacing: -.04em; line-height: 1.1; font-variant-numeric: tabular-nums;
+    margin: var(--s2) 0 var(--s1);
+  }
+  .escalon .cuanto small { font-size: .62rem; font-weight: 400; color: var(--muted); letter-spacing: .08em; display: block; }
+  .escalon .para { font-size: .86rem; color: var(--text-soft); margin: 0 0 var(--s3); }
+  .escalon ul { list-style: none; margin: 0 0 var(--s3); padding: 0; display: flex; flex-direction: column; gap: .3rem; }
+  .escalon li { font-size: .82rem; color: var(--text-soft); padding-left: 1.1rem; position: relative; }
+  .escalon li::before { content: "·"; position: absolute; left: .35rem; color: var(--phosphor); font-weight: 700; }
+  .escalon li.no { color: var(--muted); }
+  .escalon li.no::before { content: "—"; color: var(--line); font-weight: 400; }
+  .escalon .abajo { margin-top: auto; }
+  @media (max-width: 52rem) { .escalones { grid-template-columns: 1fr; } }
+
   .price-cta {
     padding: var(--s3) var(--s4) var(--s4); border-top: 1px solid var(--line);
     background: var(--phos-wash);
@@ -1576,7 +1611,64 @@
 <section id="precio">
   <div class="wrap">
     <p class="eyebrow">08 · Precio</p>
-    <h2>Una licencia. Sin suscripción.</h2>
+    <h2>Tres escalones. Ninguna suscripción.</h2>
+    <!-- Tres escalones, y la línea entre ellos no es artificial: una idea hacia
+         delante contra miles de ideas hacia atrás y hacia delante. Quien trae una
+         estrategia y quiere saber si aguanta en SU bróker no necesita el buscador
+         genético; quien no tiene ninguna, sí. -->
+    <div class="escalones">
+      <div class="escalon">
+        <h3>BotFactoryBench</h3>
+        <div class="cuanto">Gratis<small>SIN CUENTA · SIN CADUCIDAD</small></div>
+        <p class="para">Te vendieron un robot y quieres saber si su backtest es verdad.</p>
+        <ul>
+          <li>Audita el informe que te enseñaron</li>
+          <li>Compara tu cuenta en vivo contra lo prometido</li>
+          <li>Los mismos costes en varios brókers</li>
+          <li>La calculadora de rachas</li>
+          <li class="no">No construye estrategias</li>
+        </ul>
+        <div class="abajo">
+          <a class="btn ghost" href="/bench/">Descargar</a>
+        </div>
+      </div>
+
+      <div class="escalon">
+        <h3>BotFactoryQuarantine</h3>
+        <div class="cuanto">99,99<small>USD · PAGO ÚNICO</small></div>
+        <p class="para">Tienes una idea y quieres saber si funciona <strong>en tu bróker</strong>,
+          antes de arriesgar dinero.</p>
+        <ul>
+          <li>Escribes la estrategia a mano</li>
+          <li>Corre sobre las velas que llegan ahora</li>
+          <li>Cuarentena sin límite de tiempo</li>
+          <li>Exporta el robot a las cinco plataformas</li>
+          <li class="no">Sin buscador genético</li>
+          <li class="no">Sin Reality Check</li>
+        </ul>
+        <div class="abajo">
+          <a class="btn" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-producto="quarantine" id="comprar-quarantine">Comprar · 99,99 USD</a>
+        </div>
+      </div>
+
+      <div class="escalon destacado">
+        <h3>BotFactoryFX</h3>
+        <div class="cuanto">499<small>USD · PAGO ÚNICO</small></div>
+        <p class="para">No tienes la idea todavía. Quieres que la máquina encuentre las que
+          aguantan.</p>
+        <ul>
+          <li>Todo lo de Quarantine</li>
+          <li><strong>El buscador genético</strong> — miles de estrategias</li>
+          <li><strong>Reality Check</strong> — las doce pruebas</li>
+          <li>Carteras y matriz de correlación</li>
+          <li>Dr. Quant, con modelos locales</li>
+        </ul>
+        <div class="abajo">
+          <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="comprar-escalon">Comprar · 499 USD</a>
+        </div>
+      </div>
+    </div>
+
     <div class="price-box">
       <div class="price-top">
         <div class="price-fig">499 <span class="unit">USD · PAGO ÚNICO</span></div>
@@ -2068,7 +2160,9 @@
         + "El descuento se aplica en la factura, sin pedirlo.";
       caja.hidden = false;
       for (const b of botones) {
-        b.textContent = `Comprar licencia · ${precio} USD`;
+        // Sólo los del producto grande: el escalón de 99,99 tiene su propio
+        // precio y poner aquí el descuento del otro sería mentir en su botón.
+        if (!b.dataset.producto) b.textContent = `Comprar licencia · ${precio} USD`;
       }
     })
     .catch(() => {});   // sin descuento visible, que es el lado prudente
@@ -2541,10 +2635,17 @@
       boton.textContent = "Creando tu factura…";
 
       try {
+        /* El producto sale del propio botón. Sin `data-producto` se compra el
+           grande, que es lo que hacían todos los botones antes de que hubiera
+           dos: un botón que se olvide del atributo cobra de más, no de menos. */
+        const cuerpo = {};
+        if (ref) cuerpo.ref = ref;
+        if (boton.dataset.producto) cuerpo.producto = boton.dataset.producto;
+
         const r = await fetch(boton.dataset.cobro + "/comprar", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify(ref ? { ref } : {}),
+          body: JSON.stringify(cuerpo),
         });
         const v = await r.json();
         if (!v || !v.pagar) throw new Error(v && v.error ? v.error : "sin factura");
