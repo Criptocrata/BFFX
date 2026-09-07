@@ -399,7 +399,7 @@
   .porque p:last-child { margin-bottom: 0; }
 
   /* ── Los tres escalones ───────────────────────────────────────────────
-     Uno gratis, uno de 99,99 y uno de 499. Se enseñan juntos y no en tres
+     Uno gratis, uno de 99 y uno de 499. Se enseñan juntos y no en tres
      secciones porque la pregunta de quien mira es comparativa —«¿cuál me
      hace falta?»— y contestarla obliga a tener los tres delante.
 
@@ -833,7 +833,7 @@
 <section class="hero">
   <div class="wrap">
     
-    <p class="eyebrow">499 USD <span class="dim">· pago único · sin suscripción · v1.10.0</span></p>
+    <p class="eyebrow">499 USD <span class="dim">· pago único · sin suscripción · v1.11.0</span></p>
     
     <p class="lead">Un algoritmo genético explora combinaciones a una velocidad que
       ningún trader alcanza a mano. Un examen de robustez descarta las que solo
@@ -902,7 +902,7 @@
 
     <div class="shot">
       <figure>
-        <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX 1.10.0 — Datos</span></div>
+        <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX — Datos</span></div>
         
         <img src="/capturas/aplicacion-datos.webp" width="1200" height="928" alt="La pantalla de Datos de BotFactoryFX: el histórico cargado de GBPJPY H1 con 20.000 velas traídas de MetaTrader 5, la biblioteca con tres históricos y los costes de bróker declarados." loading="eager" fetchpriority="high">
         <figcaption><b>La aplicación real, sin retocar.</b> Tres históricos cargados —uno de
@@ -1090,7 +1090,7 @@
 
     <div class="shot">
       <figure>
-        <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX 1.10.0 — Reality Check</span></div>
+        <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX — Reality Check</span></div>
         <img src="/capturas/aplicacion-reality-check.webp" width="1200" height="928" alt="La pantalla Reality Check de BotFactoryFX, con la estrategia y el histórico seleccionados y la lista de las comprobaciones que ejecuta." loading="lazy">
         
         <figcaption><b>Doce comprobaciones, y están enumeradas.</b> Degradación fuera de
@@ -1249,7 +1249,7 @@
       — las de verdad, las que ejecutó el exchange.</p>
 
     <div class="tele">
-      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX 1.10.0 — Cartera · En vivo</span></div>
+      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX — Cartera · En vivo</span></div>
       <div class="tele-cuerpo">
         <div class="tele-graf">
           <svg viewBox="0 0 560 250" role="img"
@@ -1524,7 +1524,7 @@
 
       <div class="escalon">
         <h3>BotFactoryQuarantine</h3>
-        <div class="cuanto">99,99<small>USD · PAGO ÚNICO</small></div>
+        <div class="cuanto">99<small>USD · PAGO ÚNICO</small></div>
         <p class="para">Tienes una idea y quieres saber si funciona <strong>en tu bróker</strong>,
           antes de arriesgar dinero.</p>
         <ul>
@@ -1536,7 +1536,7 @@
           <li class="no">Sin Reality Check</li>
         </ul>
         <div class="abajo">
-          <a class="btn" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-producto="quarantine" id="comprar-quarantine">Comprar · 99,99 USD</a>
+          <a class="btn" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-producto="quarantine" id="comprar-quarantine">Comprar · 99 USD</a>
         </div>
       </div>
 
@@ -1846,7 +1846,7 @@
     </div>
 
     <div class="pie-linea">
-      <span>BotFactoryFX v1.10.0</span>
+      <span>BotFactoryFX v1.11.0</span>
       <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
     </div>
   </div>
@@ -1973,7 +1973,7 @@
         + "El descuento se aplica en la factura, sin pedirlo.";
       caja.hidden = false;
       for (const b of botones) {
-        // Sólo los del producto grande: el escalón de 99,99 tiene su propio
+        // Sólo los del producto grande: el escalón de 99 tiene su propio
         // precio y poner aquí el descuento del otro sería mentir en su botón.
         if (!b.dataset.producto) b.textContent = `Comprar licencia · ${precio} USD`;
       }
