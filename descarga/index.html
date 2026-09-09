@@ -184,7 +184,7 @@
   };
 
   /* BFX y BFQ: cada producto tiene su prefijo, y esta página sirve a los dos.
-     Con sólo BFX, un comprador de BotFactoryQuarantine llegaba a su propia
+     Con sólo BFX, un comprador de BotFactoryQE llegaba a su propia
      página de descarga y le decía que su número no existía. */
   if (!/^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(pedido)) { ver("sin-pedido"); return; }
   for (const id of ["num", "num2"]) document.getElementById(id).textContent = pedido;
@@ -212,7 +212,7 @@
       /* El nombre de lo que compró. Decirle «BotFactoryFX» a quien acaba de
          pagar por Quarantine es enseñarle el nombre del otro producto en el
          segundo más delicado de toda la compra. */
-      const NOMBRES = { fx: "BotFactoryFX", quarantine: "BotFactoryQuarantine" };
+      const NOMBRES = { fx: "BotFactoryFX", quarantine: "BotFactoryQE" };
       document.getElementById("nombre-producto").textContent =
         NOMBRES[v.producto] ?? NOMBRES.fx;
 

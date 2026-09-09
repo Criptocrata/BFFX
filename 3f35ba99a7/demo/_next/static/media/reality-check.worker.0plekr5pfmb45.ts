@@ -18,6 +18,8 @@ interface RealityCheckCommon {
   /** Qué instrumento es el sujeto. Ausente, se deduce del símbolo. */
   instrument?: InstrumentSpec | null;
   seed?: number;
+  /** Cuántas estrategias distintas probó la búsqueda. Ver RealityCheckOptions. */
+  candidatesTried?: number;
 }
 
 export interface RealityCheckWorkerRequest extends RealityCheckCommon {
@@ -56,7 +58,7 @@ export type RealityCheckWorkerMessage =
 const ctx = self as unknown as DedicatedWorkerGlobalScope;
 
 ctx.addEventListener("message", (event: MessageEvent<RealityCheckWorkerRequest>) => {
-  const { strategy, candlesBuffer, nativeBuffer, otherBuffers, costs, instrument, seed } = event.data;
+  const { strategy, candlesBuffer, nativeBuffer, otherBuffers, costs, instrument, seed, candidatesTried } = event.data;
   const candles = seriesFromBuffer(candlesBuffer);
   const nativeSeries = nativeBuffer ? seriesFromBuffer(nativeBuffer) : undefined;
   // Laying a Series over a transferred buffer allocates nothing, so this is
@@ -75,6 +77,7 @@ ctx.addEventListener("message", (event: MessageEvent<RealityCheckWorkerRequest>)
       costs,
       instrument,
       seed,
+      candidatesTried,
       onProgress: (done, total, justFinished) =>
         ctx.postMessage({ type: "progress", done, total, justFinished } satisfies RealityCheckWorkerMessage),
     });
