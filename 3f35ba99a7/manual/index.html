@@ -202,7 +202,7 @@
       </svg>
       <b>BotFactory<i>FX</i></b>
     </a>
-    <span class="tag">Manual · v1.12.1</span>
+    <span class="tag">Manual · v1.13.0</span>
     <a class="back" href="../">← Volver a la web</a>
   </div>
 </header>
@@ -289,8 +289,8 @@
           desde el terminal.</li>
         <li>Doble clic.</li>
       </ol>
-      <pre><code>chmod +x BotFactoryFX-1.12.1.AppImage
-./BotFactoryFX-1.12.1.AppImage</code></pre>
+      <pre><code>chmod +x BotFactoryFX-1.13.0.AppImage
+./BotFactoryFX-1.13.0.AppImage</code></pre>
 
       <p>Tus estrategias, tus históricos importados y tus ajustes se quedan en tu disco entre
         sesiones. Borrar el AppImage no los borra.</p>
@@ -777,7 +777,7 @@
 
       <p>El backtest dice si la estrategia ganó dinero sobre el histórico. El Reality Check
         contesta otra pregunta: si ese resultado se sostiene fuera de él. Para eso somete la
-        estrategia a doce comprobaciones independientes, cada una de las cuales intenta
+        estrategia a catorce comprobaciones independientes, cada una de las cuales intenta
         romperla por un sitio distinto.</p>
 
       <p>La pantalla tiene tres entradas, en las pestañas de arriba: <strong>una estrategia
@@ -794,25 +794,27 @@
           la duda de cuál de los dos números contaba.</p>
       </div>
 
-      <h3>Las doce comprobaciones</h3>
+      <h3>Las catorce comprobaciones</h3>
       <p>Cada una tiene un peso, porque no todas dicen lo mismo sobre si la ventaja es real.</p>
 
       <div class="tbl-wrap">
         <table>
           <thead><tr><th>Comprobación</th><th>La pregunta que hace</th><th>Peso</th></tr></thead>
           <tbody>
-            <tr><td><strong>Fuera de muestra</strong></td><td>¿Sigue funcionando sobre histórico que nunca vio?</td><td class="n">0,14</td></tr>
-            <tr><td><strong>Walk-forward</strong></td><td>¿Sobreviviría a ser reajustada sobre la marcha?</td><td class="n">0,14</td></tr>
-            <tr><td><strong>Sensibilidad a parámetros</strong></td><td>¿Sigue funcionando si los números fueran algo distintos?</td><td class="n">0,12</td></tr>
-            <tr><td><strong>Tolerancia al ruido</strong></td><td>¿Sigue funcionando si los precios hubieran temblado un poco?</td><td class="n">0,11</td></tr>
-            <tr><td><strong>Caída máxima</strong></td><td>¿Cuánto tiempo hubo que aguantar bajo el agua?</td><td class="n">0,10</td></tr>
-            <tr><td><strong>Monte Carlo</strong></td><td>¿Qué mal pinta si las operaciones hubieran caído en otro orden?</td><td class="n">0,10</td></tr>
-            <tr><td><strong>Otros instrumentos</strong></td><td>¿La ventaja existe en otro sitio, o solo aquí?</td><td class="n">0,08</td></tr>
-            <tr><td><strong>Consistencia por periodos</strong></td><td>¿Aguanta la ventaja a lo largo del tiempo, o fue una racha?</td><td class="n">0,06</td></tr>
-            <tr><td><strong>Vela de inicio</strong></td><td>¿Funcionaría igual si la prueba hubiera empezado unas velas después?</td><td class="n">0,05</td></tr>
-            <tr><td><strong>Resolución de vela</strong></td><td>¿Aguanta medida sobre velas más finas?</td><td class="n">0,05</td></tr>
-            <tr><td><strong>Tamaño de la muestra</strong></td><td>¿Hay evidencia suficiente, o depende de cuatro operaciones?</td><td class="n">0,03</td></tr>
+            <tr><td><strong>Fuera de muestra</strong></td><td>¿Sigue funcionando sobre histórico que nunca vio?</td><td class="n">0,15</td></tr>
+            <tr><td><strong>Mejor que el azar</strong></td><td>¿Rinde más que barajar la propia serie mil veces?</td><td class="n">0,14</td></tr>
+            <tr><td><strong>Sensibilidad a parámetros</strong></td><td>¿Sigue funcionando si los números fueran algo distintos?</td><td class="n">0,10</td></tr>
+            <tr><td><strong>Walk-forward</strong></td><td>¿Sobreviviría a ser reajustada sobre la marcha?</td><td class="n">0,09</td></tr>
+            <tr><td><strong>Otros instrumentos</strong></td><td>¿La ventaja existe en otro sitio, o sólo aquí?</td><td class="n">0,09</td></tr>
+            <tr><td><strong>Tolerancia al ruido</strong></td><td>¿Sigue funcionando si los precios hubieran temblado un poco?</td><td class="n">0,08</td></tr>
+            <tr><td><strong>Monte Carlo</strong></td><td>¿Qué mal pinta si las operaciones hubieran caído en otro orden?</td><td class="n">0,08</td></tr>
+            <tr><td><strong>Otra temporalidad</strong></td><td>¿Aguanta en otra rejilla de velas del mismo mercado?</td><td class="n">0,07</td></tr>
+            <tr><td><strong>Tamaño de la muestra</strong></td><td>¿Hay evidencia suficiente, o depende de cuatro operaciones?</td><td class="n">0,07</td></tr>
+            <tr><td><strong>Consistencia por periodos</strong></td><td>¿Aguanta la ventaja a lo largo del tiempo, o fue una racha?</td><td class="n">0,05</td></tr>
+            <tr><td><strong>Vela de inicio</strong></td><td>¿Funcionaría igual si la prueba hubiera empezado unas velas después?</td><td class="n">0,03</td></tr>
+            <tr><td><strong>Precisión</strong></td><td>¿Aguanta medida sobre velas más finas?</td><td class="n">0,02</td></tr>
             <tr><td><strong>Tolerancia al coste</strong></td><td>¿Cuánto coste de bróker aguanta antes de morir la ventaja?</td><td class="n">0,02</td></tr>
+            <tr><td><strong>Caída máxima</strong></td><td>¿Cuánto tiempo hubo que aguantar bajo el agua?</td><td class="n">0,01</td></tr>
           </tbody>
         </table>
       </div>
@@ -820,9 +822,14 @@
       <h4>Las dos que más pesan, y por qué</h4>
       <p><strong>Fuera de muestra</strong> parte el histórico y mide solo sobre el trozo que
         la estrategia no vio al construirse. Es la prueba clásica y la más directa.</p>
-      <p><strong>Walk-forward</strong> es más dura: reajusta la estrategia varias veces según
-        avanza el tiempo, como habría que hacer en la realidad, y mide qué pasa después de
-        cada reajuste. Una estrategia puede pasar la primera y fallar esta.</p>
+      <p><strong>Mejor que el azar</strong> es la de fondo. Todas las demás comparan contra
+        un umbral que eligió alguien; ésta le pregunta al propio histórico cuánto rinde el
+        azar sobre él: baraja la serie mil veces, destruyendo el orden y conservando la
+        volatilidad, y mira dónde cae el resultado real entre esas mil. Una estrategia puede
+        pasar la primera y fallar ésta.</p>
+      <p><strong>Walk-forward</strong>, la tercera en peso, es más dura de otra manera:
+        reajusta la estrategia varias veces según avanza el tiempo, como habría que hacer en
+        la realidad, y mide qué pasa después de cada reajuste.</p>
 
       <h4>La más severa contra el sobreajuste</h4>
       <p><strong>Tolerancia al ruido</strong> mueve ligeramente los precios y vuelve a medir.
@@ -864,8 +871,8 @@
           <thead><tr><th>Nota</th><th>Veredicto</th><th>Lo que dice el informe</th></tr></thead>
           <tbody>
             <tr><td class="n">75 – 100</td><td><span class="veredicto v-ok">Sólida</span></td><td>Aguanta todas las comprobaciones que pudieron correr.</td></tr>
-            <tr><td class="n">55 – 74</td><td><span class="veredicto v-med">Frágil</span></td><td>Rentable, pero con márgenes más finos de lo que parecen — o con una debilidad concreta, que nombra.</td></tr>
-            <tr><td class="n">35 – 54</td><td><span class="veredicto v-no">Débil</span></td><td>La ventaja no sobrevive al escrutinio.</td></tr>
+            <tr><td class="n">45 – 74</td><td><span class="veredicto v-med">Frágil</span></td><td>Rentable, pero con márgenes más finos de lo que parecen — o con una debilidad concreta, que nombra.</td></tr>
+            <tr><td class="n">35 – 44</td><td><span class="veredicto v-no">Débil</span></td><td>Demasiado pequeña para distinguirla del azar a este tamaño de búsqueda.</td></tr>
             <tr><td class="n">0 – 34</td><td><span class="veredicto v-no">No creíble</span></td><td>Esto es casi con seguridad sobreajuste.</td></tr>
           </tbody>
         </table>
@@ -899,7 +906,7 @@
       <p>Así que en la pestaña <strong>Población</strong> del buscador se marcan las que
         merezcan una segunda mirada y se pulsa <strong>Mandar al Reality Check</strong>.
         Llegan aquí como lista, se juzgan todas, y vuelven ordenadas <strong>de mejor a
-        peor por veredicto</strong>. Cada fila se abre y enseña sus doce comprobaciones.</p>
+        peor por veredicto</strong>. Cada fila se abre y enseña sus catorce comprobaciones.</p>
 
       <div class="note">
         <p><b>Tres escalones, no uno.</b> Primero las puntuadas, por su nota. Después las que
@@ -1883,7 +1890,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
     </section>
 
     <footer>
-      <span>BotFactoryFX v1.12.1 · Manual</span>
+      <span>BotFactoryFX v1.13.0 · Manual</span>
       <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
     </footer>
   </main>

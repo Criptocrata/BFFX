@@ -804,7 +804,7 @@
       <a href="#salida">Exportación</a>
       <a href="#perfiles">Para quién es</a>
       <a href="#plataformas">Descargas</a>
-      <a href="#banco">BotFactoryBench</a>
+      <a href="#banco">BotFactoryIR</a>
       <a href="manual/">Documentación</a>
     </nav>
 
@@ -833,7 +833,7 @@
 <section class="hero">
   <div class="wrap">
     
-    <p class="eyebrow">499 USD <span class="dim">· pago único · sin suscripción · v1.12.1</span></p>
+    <p class="eyebrow">499 USD <span class="dim">· pago único · sin suscripción · v1.13.0</span></p>
     
     <p class="lead">Un algoritmo genético explora combinaciones a una velocidad que
       ningún trader alcanza a mano. Un examen de robustez descarta las que solo
@@ -1040,7 +1040,7 @@
           Ver: construir <span class="dur">27 s</span></span>
       </a>
       <a class="step" href="piezas/pieza-reality-check.html"
-         data-paso="03 · REALITY CHECK" data-num="02" data-titulo="Las doce pruebas" data-dur="24 s"
+         data-paso="03 · REALITY CHECK" data-num="02" data-titulo="Las catorce pruebas" data-dur="24 s"
          data-pie="Las doce comprobaciones, una a una, y un veredicto que señala por dónde flojea en vez de dar un aprobado.">
         <span class="n">03 · REALITY CHECK</span>
         <h3>El examen</h3>
@@ -1507,18 +1507,18 @@
     
     <div class="escalones">
       <div class="escalon">
-        <h3>BotFactoryBench</h3>
+        <h3>BotFactoryIR</h3>
         <div class="cuanto">Gratis<small>SIN CUENTA · SIN CADUCIDAD</small></div>
-        <p class="para">Te vendieron un robot y quieres saber si su backtest es verdad.</p>
+        <p class="para">Te vendieron un robot y no sabes qué lleva dentro.</p>
         <ul>
+          <li>Lee el robot y te dice qué hace: cuándo compra, cuándo vende, con cuánto</li>
+          <li>Le busca siete trampas conocidas, martingala incluida</li>
           <li>Audita el informe que te enseñaron</li>
           <li>Compara tu cuenta en vivo contra lo prometido</li>
-          <li>Los mismos costes en varios brókers</li>
-          <li>La calculadora de rachas</li>
           <li class="no">No construye estrategias</li>
         </ul>
         <div class="abajo">
-          <a class="btn ghost" href="/bench/">Descargar</a>
+          <a class="btn ghost" href="/inspector/">Descargar</a>
         </div>
       </div>
 
@@ -1548,7 +1548,7 @@
         <ul>
           <li>Todo lo de Quarantine</li>
           <li><strong>El buscador genético</strong> — miles de estrategias</li>
-          <li><strong>Reality Check</strong> — las doce pruebas</li>
+          <li><strong>Reality Check</strong> — las catorce pruebas</li>
           <li>Carteras y matriz de correlación</li>
           <li>Dr. Quant, con modelos locales</li>
         </ul>
@@ -1664,15 +1664,27 @@
 <section id="banco">
   <div class="wrap">
     <p class="eyebrow">10 · Gratis</p>
-    <h2>Y si lo que quieres es<br>comprobar el backtest de otro.</h2>
+    <h2>Y si lo que quieres es<br>saber qué lleva dentro el de otro.</h2>
     <p class="lead" style="margin-bottom:var(--s4)">
-      <strong>BotFactoryBench</strong> es un programa aparte, gratuito y de descarga
+      <strong>BotFactoryIR</strong> es un programa aparte, gratuito y de descarga
       libre. Le das el robot que te vendieron y te dice qué lleva dentro; si además
       tienes su informe, te dice si se sostiene. No hace falta cuenta, no hace falta
       pagar, y el fichero no sale de tu ordenador — no hay servidor que lo reciba.
       AppImage para Linux, como éste; Windows y macOS cuando estén.</p>
 
     <div class="plats">
+      <div class="plat live">
+        <div class="os">Qué hace el robot, en cristiano</div>
+        <p>Lee el fichero y levanta acta: qué mira, cuándo compra, cuándo vende, cómo
+          cierra y con cuánto. <strong>Cada frase lleva el número de línea donde se
+          leyó</strong>, y lo que no se pudo leer lo dice en vez de rellenarlo.</p>
+      </div>
+      <div class="plat live">
+        <div class="os">Siete trampas conocidas</div>
+        <p>Si dobla el lote tras perder, si abre sin stop, si arriesga 400 para ganar
+          20 —y entonces acierta el 95 % por aritmética, no por bueno—, si sólo
+          funciona en ciertas cuentas, o si mira el futuro.</p>
+      </div>
       <div class="plat live">
         <div class="os">Sus cuentas contra sus operaciones</div>
         <p>Recalcula cada cifra desde su propia lista de operaciones, nunca desde su
@@ -1687,7 +1699,7 @@
       </div>
       <div class="plat live">
         <div class="os">Y antes de todo eso</div>
-        <p>Si todavía no tienes robot, la <a href="/bench/probar/rachas/">calculadora de
+        <p>Si todavía no tienes robot, la <a href="/inspector/probar/rachas/">calculadora de
           rachas</a> te dice cuántas pérdidas seguidas trae un sistema con el acierto que
           le pongas, cada cuánto, y cuánto se tarda en salir. <strong>Sin ficheros y sin
           registro</strong> — se abre y ya está.</p>
@@ -1711,18 +1723,18 @@
 
     <figure class="captura">
       <img src="/capturas/banco-veredicto.webp" loading="lazy" width="1400" height="1255"
-           alt="El veredicto de BotFactoryBench sobre un informe de ejemplo: «Nada falso, pero 1 cosa merece una mirada». Tres comprobaciones hechas y tres que dicen «sin datos» porque necesitan el histórico.">
-      <figcaption>BotFactoryBench sobre un informe de ejemplo. Tres comprobaciones salen
+           alt="El veredicto de BotFactoryIR sobre un informe de ejemplo: «Nada falso, pero 1 cosa merece una mirada». Tres comprobaciones hechas y tres que dicen «sin datos» porque necesitan el histórico.">
+      <figcaption>BotFactoryIR sobre un informe de ejemplo. Tres comprobaciones salen
         con su fichero; las otras tres necesitan tu histórico, y lo dice en vez de
         inventárselas.</figcaption>
     </figure>
 
     <p class="lead" style="margin-top:var(--s4)">
-      <strong>BotFactoryBench</strong> te dice <strong>qué pasó</strong>. El Reality Check de BotFactoryFX te
-      dice <strong>si es verdad</strong> — doce pruebas sobre una estrategia, y un
+      <strong>BotFactoryIR</strong> te dice <strong>qué pasó</strong>. El Reality Check de BotFactoryFX te
+      dice <strong>si es verdad</strong> — catorce pruebas sobre una estrategia, y un
       algoritmo genético que cría las siguientes.</p>
     <div class="hero-cta" style="margin-top:var(--s3)">
-      <a class="btn solid" href="/bench/" id="ir-al-banco">Descargar BotFactoryBench</a>
+      <a class="btn solid" href="/inspector/" id="ir-al-inspector">Descargar BotFactoryIR</a>
     </div>
   </div>
 </section>
@@ -1776,7 +1788,7 @@
           <li><a href="demo/" id="pie-demo">Probar gratis en el navegador</a></li>
           <li><a href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="pie-comprar">Comprar licencia</a></li>
           <li><a href="#plataformas">Descargas</a></li>
-          <li><a href="/bench/" id="pie-banco">BotFactoryBench, gratis</a></li>
+          <li><a href="/inspector/" id="pie-inspector">BotFactoryIR, gratis</a></li>
         </ul>
       </div>
       <div>
@@ -1795,7 +1807,7 @@
           <li><a href="#perfiles">Para quién es — y para quién no</a></li>
           <li><a href="#recorrido">Cómo se trabaja con esto</a></li>
           <li><a href="#trailer">Verlo en veintiséis segundos</a></li>
-          <li><a href="/bench/probar/rachas/">Cuántas pérdidas seguidas vas a tragar</a></li>
+          <li><a href="/inspector/probar/rachas/">Cuántas pérdidas seguidas vas a tragar</a></li>
         </ul>
       </div>
       <div>
@@ -1846,7 +1858,7 @@
     </div>
 
     <div class="pie-linea">
-      <span>BotFactoryFX v1.12.1</span>
+      <span>BotFactoryFX v1.13.0</span>
       <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
     </div>
   </div>
