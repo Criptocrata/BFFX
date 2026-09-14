@@ -133,11 +133,16 @@
   }
 
   /* ---------- bloques ---------- */
-  .note, .warn-box {
+  .note, .warn-box, .cita {
     border-left: 2px solid var(--phosphor); background: var(--surface-2);
     padding: var(--s2) var(--s3); margin: var(--s3) 0; max-width: 40em;
   }
   .warn-box { border-left-color: var(--warn); }
+  /* Lo que el programa dice, palabra por palabra. Filete apagado y texto suave
+     a propósito: una nota la escribe el manual, una cita la escribe la
+     aplicación, y el lector tiene que poder distinguirlo de un vistazo. */
+  .cita { border-left-color: var(--line-2); }
+  .cita p { color: var(--text-soft); margin-bottom: 0; }
   .note p:last-child, .warn-box p:last-child { margin-bottom: 0; }
   .note b, .warn-box b { font-family: var(--mono); font-size: .84rem; letter-spacing: .02em; }
 
@@ -202,7 +207,7 @@
       </svg>
       <b>BotFactory<i>FX</i></b>
     </a>
-    <span class="tag">Manual · v1.13.0</span>
+    <span class="tag">Manual · v1.16.0</span>
     <a class="back" href="../">← Volver a la web</a>
   </div>
 </header>
@@ -289,8 +294,8 @@
           desde el terminal.</li>
         <li>Doble clic.</li>
       </ol>
-      <pre><code>chmod +x BotFactoryFX-1.13.0.AppImage
-./BotFactoryFX-1.13.0.AppImage</code></pre>
+      <pre><code>chmod +x BotFactoryFX-1.16.0.AppImage
+./BotFactoryFX-1.16.0.AppImage</code></pre>
 
       <p>Tus estrategias, tus históricos importados y tus ajustes se quedan en tu disco entre
         sesiones. Borrar el AppImage no los borra.</p>
@@ -458,8 +463,35 @@
       </div>
       <p>Es lineal —unos 0,8 microsegundos por vela, sin escalón—. Un backtest suelto es
         rápido con cualquiera de estos tamaños. Lo que crece es la <em>búsqueda genética</em>,
-        porque encadena cientos: un millón de velas son minutos en vez de segundos. Y la
-        memoria es real: varios millones de velas la agotan.</p>
+        porque encadena cientos: un millón de velas son minutos en vez de segundos.</p>
+
+      <p>Y la memoria tiene un techo, que desde la 1.14.0 es un número concreto y no una
+        advertencia vaga: <strong>Evolve trabaja hasta 1.839.896 velas</strong>. Por encima de
+        eso el programa no te deja empezar y te dice por qué, en vez de intentarlo y cerrarse
+        a la mitad. Traducido a historial:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Temporalidad</th><th>Historial que admite</th></tr></thead>
+          <tbody>
+            <tr><td>H1 y más lentas</td><td>cualquiera; no te acercas al tope</td></tr>
+            <tr><td>M5</td><td class="n">unos 24 años</td></tr>
+            <tr><td>M1 de divisas</td><td class="n">unos 5 años</td></tr>
+            <tr><td>M1 de cripto (24/7)</td><td class="n">unos 3,5 años</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>El único sitio donde el techo muerde es el minuto. Si lo que tienes es un M1 de
+        veinte años, tienes tres salidas y las tres contestan la misma pregunta sobre el mismo
+        mercado: importarlo a una temporalidad más gruesa, acotar el rango de fechas, o bajar
+        el nivel de esfuerzo.</p>
+
+      <div class="note">
+        <p><b>Si vienes de una versión anterior a la 1.14.0</b>, ese techo estaba en 273.812
+          velas —unos nueve meses de minuto— y además la ventana se cerraba sola a los pocos
+          minutos de empezar una búsqueda grande. Las dos cosas eran el mismo defecto: el
+          programa calculaba mal cuánta memoria le costaba buscar, repartía el trabajo en más
+          copias de las que cabían, y ninguna de ellas sabía que las otras existían.</p>
+      </div>
 
       <h3>Moverse por el gráfico</h3>
       <p>El gráfico contiene la serie entera, que pueden ser decenas de miles de velas.</p>
@@ -729,6 +761,68 @@
             individuos, sus métricas y el botón <b>Import to Builder</b> visible.</p>
         </div>
       </figure>
+
+      <h3>La rueda: buscar, juzgar y volver a empezar</h3>
+      <p>Una búsqueda suelta contesta «¿hay algo aquí?» una vez. La pestaña <strong>Wheel</strong>
+        automatiza la insistencia: busca, manda el resultado al Reality Check, y si no aguanta
+        vuelve a empezar cambiando de instrumento y de familia de estrategia. Va sola hasta
+        que encuentra algo que se sostenga, se le acaban las vueltas o se le acaba el tiempo.</p>
+
+      <p>Rota sobre las seis familias —tendencia, ruptura, reversión, momento, volatilidad y
+        acción del precio— y sobre las series que le marques, por caminos de longitud distinta
+        para que las combinaciones no se repitan en ciclo. De fábrica: <strong>veinte vueltas
+        como mucho</strong>, <strong>una hora como mucho</strong>, y sólo se para por un
+        veredicto <strong>sólido</strong>.</p>
+
+      <div class="note">
+        <p><b>Y aquí está lo que hace que la rueda no sea una máquina de dar la razón.</b>
+          Cada juego de reglas que prueba se suma a una cuenta corriente, y esa cuenta es la
+          que se le pasa al Reality Check. O sea que <b>insistir cuesta evidencia</b>: cuanto
+          más ha buscado la rueda, más alto tiene que saltar lo que encuentre para que se le
+          llame sólido.</p>
+        <p>La razón está medida. Sobre ruido puro, el nivel «a fondo» aprueba el 6&nbsp;% de
+          las veces. Con veinte vueltas independientes, la probabilidad de que salga al menos
+          un falso positivo sería del 71&nbsp;% <em>si el listón no subiera</em> — que es
+          exactamente por lo que sube. A la vuelta veinte la cuenta ronda las treinta y tres
+          mil reglas y la exigencia de evidencia externa ya está en su tope del 85&nbsp;%.</p>
+      </div>
+
+      <p>Por el mismo motivo <strong>«frágil» no cuenta como encontrada</strong>, y esa casilla
+        viene marcada. En una pasada suelta, «frágil» es información honrada: encontraste algo
+        con margen fino y ahí está, etiquetado. En una rueda que insiste hasta que algo pase,
+        aceptar «frágil» es poner la meta justo donde llega el ruido — sobre paseos aleatorios
+        el máximo a nivel «a fondo» es 65, y «frágil» empieza en 55. La rueda pararía en el
+        primer ruido afortunado y te diría que ha encontrado algo. Se puede desmarcar, y
+        entonces el resumen final lo dice.</p>
+
+      <h3>Cuando la rueda no encuentra nada</h3>
+      <p>Es el desenlace más probable, y el programa lo trata como lo que es: un resultado.
+        No un fallo, no una invitación a darle otra vuelta. El texto que sale al final lo dice
+        con todas las letras — cuántas reglas se probaron, en cuántas vueltas, y en cuánto se
+        quedó la mejor:</p>
+
+      <div class="cita">
+        <p>Se acabó el tiempo en la vuelta 16. 36.995 reglas distintas probadas y ninguna ha
+          aguantado lo suficiente para llamarla sólida; la mejor se quedó en 33/100. Eso ES un
+          resultado: sobre estos datos, esta búsqueda no encuentra una ventaja que resista el
+          escrutinio. Insistir más no la haría aparecer — sólo haría más probable que algo
+          pasara por suerte, que es de lo que este programa te protege.</p>
+      </div>
+
+      <p>Y si encuentra algo, el resumen tampoco te felicita: te dice en qué vuelta salió de
+        cuántas permitidas, con qué nota, y cuántas reglas se probaron antes. Un veredicto
+        sólido de la vuelta uno y otro de la vuelta diecinueve no valen lo mismo, y ese número
+        es lo único que permite distinguirlos. Lo que se ha automatizado aquí es la
+        insistencia, no el criterio: el informe hay que leerlo entero igual.</p>
+
+      <figure class="shot">
+        <div class="slot">
+          <span class="id">Captura C-19</span>
+          <span class="qué">La rueda, al terminar</span>
+          <p class="cómo">Pestaña <b>Wheel</b> con la tabla de vueltas llena —instrumento,
+            familia, reglas, nota y veredicto por fila— y el texto del resumen debajo.</p>
+        </div>
+      </figure>
     </section>
 
     <section id="dinero">
@@ -773,7 +867,7 @@
     
     <section id="reality">
       <p class="num">09 · Reality Check</p>
-      <h2>Doce comprobaciones sobre el mismo resultado.</h2>
+      <h2>Catorce comprobaciones sobre el mismo resultado.</h2>
 
       <p>El backtest dice si la estrategia ganó dinero sobre el histórico. El Reality Check
         contesta otra pregunta: si ese resultado se sostiene fuera de él. Para eso somete la
@@ -1862,6 +1956,13 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
               <td class="ref"><a href="#exportar">Cap. 14</a></td>
             </tr>
             <tr>
+              <td><strong>La búsqueda tiene un techo de velas</strong></td>
+              <td>Evolve trabaja hasta 1.839.896 velas. Sólo muerde en el minuto: son unos cinco
+                años de divisas o tres y medio de cripto. Por encima, el programa no te deja
+                empezar y te dice por qué. Un backtest suelto no tiene ese techo.</td>
+              <td class="ref"><a href="#datos">Cap. 4</a></td>
+            </tr>
+            <tr>
               <td><strong>El backtest es sobre velas</strong></td>
               <td>No tick a tick. La comprobación de resolución de vela mide cuánto afecta eso a cada estrategia.</td>
               <td class="ref"><a href="#reality">Cap. 9</a></td>
@@ -1890,7 +1991,7 @@ pip install hyperliquid-python-sdk eth-account</code></pre>
     </section>
 
     <footer>
-      <span>BotFactoryFX v1.13.0 · Manual</span>
+      <span>BotFactoryFX v1.16.0 · Manual</span>
       <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
     </footer>
   </main>
