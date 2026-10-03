@@ -477,7 +477,20 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--mono); font-weight: 600; text-wra
 .portada-interior h1 { font-size: clamp(2.2rem, 4.6vw, 3.4rem); letter-spacing: -0.04em; line-height: 1.05; margin: 16px 0 18px; }
 .portada-interior .entradilla { font-size: 1.15rem; color: var(--texto-2); max-width: 62ch; }
 
-.tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; container: tarjetas / inline-size; }
+/* LA TARJETA HUÉRFANA (03-10-2026). Con un número impar de tarjetas y sitio
+   para dos columnas —una rejilla de 538 a 815 px: un portátil a media
+   pantalla, una tableta, el panel lateral—, la última quedaba sola debajo y la
+   columna de al lado, vacía: a 864 px de ventana, 251 px de hueco (el 58 %) en
+   Recomendaciones, y lo mismo en Descargas y Documentación, en los dos
+   idiomas. Ocupa entonces las dos columnas, y las dos terminan a la misma
+   altura. Con tres columnas o con una no hace falta.
+   Los cortes salen de la rejilla: 538 = 2·260 + 18, y 816 = 3·260 + 2·18. Si
+   cambian el mínimo o el hueco, cambian con ellos (lo vigila
+   ninguna-tarjeta-huerfana-en-la-web.test.ts). */
+@container tarjetas (min-width: 538px) and (max-width: 815.98px) {
+  .tarjetas > .tarjeta:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
 .tarjeta { background: var(--superficie); border: 1px solid var(--linea); border-radius: 12px; padding: 22px; display: grid; gap: 10px; align-content: start; }
 .tarjeta h3 { font-size: 1.1rem; }
 .tarjeta p { color: var(--texto-2); font-size: 0.97rem; }
