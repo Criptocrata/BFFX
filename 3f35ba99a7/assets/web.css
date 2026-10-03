@@ -507,6 +507,9 @@ th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--li
 th { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--apagado); font-weight: 500; }
 tr:last-child td { border-bottom: 0; }
 code, .codigo { font-family: var(--mono); font-size: 0.86em; background: var(--superficie-2); border: 1px solid var(--linea); border-radius: 5px; padding: 1px 6px; word-break: break-all; }
+/* Lo que no se parte dentro de un code: el ?ref= de un enlace, que se cortaba
+   y dejaba «-…» solo en la línea de abajo (03-10-2026). */
+.junto { white-space: nowrap; }
 pre { font-family: var(--mono); font-size: 0.84rem; background: var(--superficie-2); border: 1px solid var(--linea); border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
 
 .oculto { display: none !important; }
