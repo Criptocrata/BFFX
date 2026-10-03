@@ -39,12 +39,33 @@
 .programa-compra .nota { max-width: 46ch; }
 
 .nota { font-size: 0.88rem; color: var(--apagado); }
-.malo { color: var(--pierde); }
+/* Un error es rojo también dentro de una tarjeta: «.tarjeta p» (web.css) pesa
+   más que una clase sola, y los avisos de la licencia y del cobro salían en
+   gris como el resto del texto (visto el 03-10-2026). */
+.malo, .tarjeta .malo { color: var(--pierde); }
 .licencia {
   font-family: var(--mono); font-size: 0.82rem; word-break: break-all; line-height: 1.6;
   background: var(--superficie-2); border: 1px solid var(--linea); border-radius: 8px; padding: 10px 14px; user-select: all;
 }
 .pedido { font-family: var(--mono); font-size: 0.85rem; color: var(--apagado); }
+
+/* Dónde se le paga a quien recomienda (03-10-2026): lo deja una vez, aquí. */
+.cobro {
+  display: grid; gap: 8px; margin-top: 6px; padding: 16px 18px;
+  border: 1px solid var(--ambar-borde); border-radius: 10px; background: var(--ambar-suave);
+}
+.cobro h3 { font-size: 1rem; }
+.cobro p { margin: 0; }
+.cobro-hecho { display: grid; gap: 4px; padding: 12px 16px; border: 1px solid var(--linea); border-radius: 10px; background: var(--superficie-2); }
+.cobro-hecho p { margin: 0; color: var(--texto-2); }
+.cobro-hecho code { font-size: 0.85rem; word-break: break-all; }
+.boton-texto {
+  font: inherit; color: var(--ambar); background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.boton-texto:focus-visible { outline: 2px solid var(--ambar); outline-offset: 2px; border-radius: 2px; }
+.pagos { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-family: var(--mono); font-size: 0.85rem; color: var(--texto-2); }
+.pagos a { color: var(--ambar); }
 
 .latido { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.92rem; color: var(--texto-2); }
 .punto { width: 9px; height: 9px; border-radius: 50%; background: var(--ambar); }

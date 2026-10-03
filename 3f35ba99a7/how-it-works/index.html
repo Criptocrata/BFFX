@@ -248,10 +248,12 @@
     <div class="capitulo-cuerpo">
       <ol class="pasos">
         <li><span><strong>Choose the strategy, the venue and the candle:</strong> Hyperliquid, any MetaTrader terminal you have open, or JForex.</span></li>
-        <li><span><strong>Come back whenever you like.</strong> Each visit fetches the new candles and re-runs the strategy over everything gathered. It never expires, and the program asks you for no account.</span></li>
+        <li><span><strong>Or a robot you were sold.</strong> It goes in against the backtest it was sold with: its code is never run; what the account where it trades really did is read instead. It is what BFQuarantine does.</span></li>
+        <li><span><strong>Come back whenever you like.</strong> Each visit fetches the new candles, adds them to the ones it already had and re-runs the strategy over everything gathered. It never expires, and the program asks you for no account.</span></li>
         <li><span><strong>Read the band, not a percentage.</strong> With six trades, “62% wins” is a correct number that lies; the verdict is whether the backtest still falls inside the 95% band of what is happening.</span></li>
       </ol>
-      <p class="bueno-saber"><b>Good to know</b>It places no orders anywhere, so it measures no slippage and no rejections. What it measures is whether the strategy still resembles its own backtest on the real market.</p>
+      <p><strong>It doesn’t replace a demo account: it improves on it.</strong> A demo belongs to the broker, who closes it after a few weeks so you move to real money, and running the robot on it takes a server or an old computer left on day and night. The Quarantine uses the candles of your real account without sending a single order or risking a cent, and tells you what would have happened had that strategy been trading. You don’t have to leave anything on: when you open it, it catches up. You pay for the server once you know it deserves it.</p>
+      <p class="bueno-saber"><b>Good to know</b>It places no orders anywhere, so it measures no slippage and no rejections. What it measures is whether the strategy still resembles its own backtest on the real market. With candles of a few minutes, open it every few days: each visit reaches back a few thousand candles, and if a stretch is missing, it says so.</p>
     </div>
   </div>
 </section>

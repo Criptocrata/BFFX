@@ -121,15 +121,16 @@
     for (const s of document.querySelectorAll(".capitulo")) o.observe(s);
   }
 
-  /* ── La recomendación: ?ref=BFX-… ────────────────────────────────────────
-     Se pregunta al cobro si el número vale y a cuánto sale ANTES de enseñar
+  /* ── La recomendación: ?ref=BFR-… ────────────────────────────────────────
+     Se pregunta al cobro si el código vale y a cuánto sale ANTES de enseñar
      un precio: prometer uno que el botón no va a cobrar es peor que no decir
-     nada. Sólo BotFactoryFX entra en el programa. */
+     nada. Sólo BotFactoryFX entra en el programa. El código es BFR-, no un
+     número de pedido (03-10-2026): ése abre la compra y no se publica. */
   const ref = (new URLSearchParams(location.search).get("ref") || "").trim().toUpperCase();
   const botones = [...document.querySelectorAll("a[data-cobro]")];
   const grandes = botones.filter((b) => !b.dataset.producto);
   const caja = document.getElementById("recomendado");
-  if (ref && /^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref) && grandes.length && grandes[0].dataset.cobro) {
+  if (ref && /^BFR-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref) && grandes.length && grandes[0].dataset.cobro) {
     fetch(grandes[0].dataset.cobro + "/recomendacion?ref=" + encodeURIComponent(ref))
       .then((r) => r.json())
       .then((v) => {

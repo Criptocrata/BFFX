@@ -1,5 +1,7 @@
 /* La página de la recomendación (web-v5): la galería de banners y el código
-   para pegar, con el número de pedido de quien recomienda dentro.
+   para pegar, con el código de recomendación de quien recomienda dentro
+   (BFR-…). NO su número de pedido: desde el 03-10-2026 son dos cosas, porque
+   el número de pedido abre la compra y un banner lo publica.
 
    Nada sale de esta página: el número se escribe aquí y aquí se queda. */
 (function () {
@@ -11,13 +13,13 @@
   const BASE = galeria.dataset.base;
   const T = ES
     ? {
-        hueco: "TU-NÚMERO-DE-PEDIDO", copiar: "Copiar el código", copiado: "Copiado",
+        hueco: "TU-CÓDIGO", copiar: "Copiar el código", copiado: "Copiado",
         alt: { en: "BotFactoryFX: don’t go into battle without a bulletproof vest", es: "BotFactoryFX: no salgas a la batalla sin chaleco antibalas" },
         nombres: { "300x250": "Rectángulo mediano", "336x280": "Rectángulo grande", "250x250": "Cuadrado", "728x90": "Cabecera", "970x250": "Valla", "160x600": "Rascacielos ancho", "300x600": "Media página", "320x50": "Móvil", "320x100": "Móvil grande", "1200x628": "Redes: enlace", "1080x1080": "Redes: cuadrado" },
         redes: "Para redes: súbela con tu enlace en el texto.",
       }
     : {
-        hueco: "YOUR-ORDER-NUMBER", copiar: "Copy the code", copiado: "Copied",
+        hueco: "YOUR-CODE", copiar: "Copy the code", copiado: "Copied",
         alt: { en: "BotFactoryFX: don’t go into battle without a bulletproof vest", es: "BotFactoryFX: no salgas a la batalla sin chaleco antibalas" },
         nombres: { "300x250": "Medium rectangle", "336x280": "Large rectangle", "250x250": "Square", "728x90": "Leaderboard", "970x250": "Billboard", "160x600": "Wide skyscraper", "300x600": "Half page", "320x50": "Mobile", "320x100": "Large mobile", "1200x628": "Social: link", "1080x1080": "Social: square" },
         redes: "For social media: post it with your link in the text.",
@@ -29,7 +31,7 @@
 
   const codigo = () => {
     const c = (entrada.value || "").trim().toUpperCase();
-    return /^BFX-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(c) ? c : T.hueco;
+    return /^BFR-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(c) ? c : T.hueco;
   };
   const escapa = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
