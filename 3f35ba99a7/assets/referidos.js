@@ -14,13 +14,13 @@
   const T = ES
     ? {
         hueco: "TU-CÓDIGO", copiar: "Copiar el código", copiado: "Copiado",
-        alt: { en: "BotFactoryFX: don’t go into battle without a bulletproof vest", es: "BotFactoryFX: no salgas a la batalla sin chaleco antibalas" },
+        alt: { en: "BotFactoryFX. Your Swiss Army knife for trading.", es: "BotFactoryFX. Tu navaja suiza de trader." },
         nombres: { "300x250": "Rectángulo mediano", "336x280": "Rectángulo grande", "250x250": "Cuadrado", "728x90": "Cabecera", "970x250": "Valla", "160x600": "Rascacielos ancho", "300x600": "Media página", "320x50": "Móvil", "320x100": "Móvil grande", "1200x628": "Redes: enlace", "1080x1080": "Redes: cuadrado" },
         redes: "Para redes: súbela con tu enlace en el texto.",
       }
     : {
         hueco: "YOUR-CODE", copiar: "Copy the code", copiado: "Copied",
-        alt: { en: "BotFactoryFX: don’t go into battle without a bulletproof vest", es: "BotFactoryFX: no salgas a la batalla sin chaleco antibalas" },
+        alt: { en: "BotFactoryFX. Your Swiss Army knife for trading.", es: "BotFactoryFX. Tu navaja suiza de trader." },
         nombres: { "300x250": "Medium rectangle", "336x280": "Large rectangle", "250x250": "Square", "728x90": "Leaderboard", "970x250": "Billboard", "160x600": "Wide skyscraper", "300x600": "Half page", "320x50": "Mobile", "320x100": "Large mobile", "1200x628": "Social: link", "1080x1080": "Social: square" },
         redes: "For social media: post it with your link in the text.",
       };
