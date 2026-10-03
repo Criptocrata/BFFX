@@ -176,6 +176,10 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--mono); font-weight: 600; text-wra
 .boton-linea { border-color: var(--linea-fuerte); color: var(--texto); background: transparent; }
 .boton-linea:hover { border-color: var(--ambar-borde); background: var(--ambar-suave); }
 .boton-chico { min-height: 36px; padding: 0 14px; font-size: 0.84rem; }
+/* El carrito de la cabecera (03-10-2026): cuadrado y del alto de los demás
+   botones de la barra; lleva a los programas, que empiezan por el gratuito. */
+.boton-carrito { width: 36px; padding: 0; }
+.boton-carrito svg { width: 18px; height: 18px; }
 .boton .flecha { transition: transform 0.15s; }
 .boton:hover .flecha { transform: translateX(3px); }
 
