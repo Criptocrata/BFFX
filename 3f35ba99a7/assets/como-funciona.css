@@ -1,0 +1,104 @@
+/* BotFactoryFX · la web: «How it works» / «Cómo funciona» (03-10-2026)
+   ═══════════════════════════════════════════════════════════════════════════
+   El manual de uso en imágenes que pidió el dueño: cada pantalla del programa,
+   en el orden del trabajo —el mismo que el menú—, con lo que se hace en ella y
+   un vídeo o una captura del propio programa.
+
+   Los números de los capítulos son información y no adorno: el orden del
+   trabajo es una secuencia de verdad (sin históricos no hay búsqueda, sin juez
+   no hay cartera). La Ayuda va sin número porque acompaña a todos.
+
+   Los vídeos no se descargan hasta que se acercan a la pantalla (preload=none)
+   y se paran al salir de ella: son cuatro por página. Ver web.js. */
+
+/* ── El índice: el menú del programa, en horizontal ─────────────────────── */
+
+.indice {
+  position: sticky; top: 64px; z-index: 30;
+  background: var(--vidrio);
+  backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-block: 1px solid var(--linea);
+}
+.indice ol {
+  list-style: none; margin: 0 auto; padding: 0;
+  display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none;
+  width: min(100% - 2 * var(--margen), var(--ancho));
+}
+.indice ol::-webkit-scrollbar { display: none; }
+.indice a {
+  display: inline-flex; align-items: baseline; gap: 7px; white-space: nowrap;
+  padding: 11px 11px; text-decoration: none; font-size: 0.86rem; color: var(--texto-2);
+  border-bottom: 2px solid transparent;
+}
+.indice a span { font-family: var(--mono); font-size: 0.72rem; color: var(--apagado); font-variant-numeric: tabular-nums; }
+.indice a:hover { color: var(--texto); }
+.indice a[aria-current="location"] { color: var(--texto); border-bottom-color: var(--ambar); }
+.indice a[aria-current="location"] span { color: var(--ambar); }
+
+/* ── Un capítulo ─────────────────────────────────────────────────────────
+   Una sola columna: la cabeza, el programa a todo el ancho y debajo lo que se
+   hace. En dos columnas el vídeo medía unos 650 px y lo que se lee dentro
+   salía a la mitad de su tamaño; a todo el ancho sale casi como en la
+   pantalla de verdad, que es lo que esta página tiene que enseñar. */
+
+.capitulo { padding: clamp(56px, 8vw, 104px) 0; border-top: 1px solid var(--linea); scroll-margin-top: 112px; }
+.capitulo:nth-of-type(even) { background: var(--fondo-2); }
+.capitulo-rejilla { display: grid; gap: clamp(22px, 3vw, 34px); }
+.capitulo-cabeza { display: grid; gap: 16px; }
+.capitulo h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.1; letter-spacing: -0.035em; max-width: 24ch; }
+.capitulo .entradilla { font-size: 1.1rem; color: var(--texto-2); max-width: 62ch; }
+.capitulo .entradilla q { color: var(--texto); font-style: italic; }
+.paso-num { font-variant-numeric: tabular-nums; color: var(--apagado); }
+.capitulo-cuerpo { display: grid; gap: 22px; }
+
+/* Los pasos: lo que se hace en la pantalla, en su orden. */
+.pasos {
+  list-style: none; margin: 0; padding: 0; counter-reset: paso;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 44px;
+}
+.pasos li {
+  counter-increment: paso; display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: baseline;
+  color: var(--texto-2); font-size: 0.98rem;
+}
+.pasos li::before {
+  content: counter(paso); font-family: var(--mono); font-size: 0.78rem; font-weight: 600; color: var(--ambar);
+  width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--ambar-borde);
+  display: grid; place-items: center; transform: translateY(-1px);
+}
+.pasos strong { color: var(--texto); font-weight: 600; }
+
+.bueno-saber {
+  border-left: 3px solid var(--ambar); padding: 6px 0 6px 16px;
+  color: var(--texto-2); font-size: 0.95rem; max-width: 76ch;
+}
+.bueno-saber b { color: var(--texto); font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 6px; }
+
+/* Tres maneras de construir: Manual, Evolve, Explore. */
+.tres-maneras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.manera { border: 1px solid var(--linea); border-radius: 10px; background: var(--superficie); padding: 16px 18px; display: grid; gap: 6px; align-content: start; }
+.manera h3 { font-size: 1rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.manera h3 small { font-family: var(--sans); font-weight: 400; font-size: 0.82rem; color: var(--apagado); }
+.manera p { color: var(--texto-2); font-size: 0.95rem; }
+
+/* El medio: vídeo o captura, en la ventana de la portada, a todo el ancho. */
+.capitulo-medio { margin: 0; display: grid; gap: 12px; }
+.capitulo-medio .ventana video, .capitulo-medio .ventana img { aspect-ratio: auto; object-fit: contain; }
+.capitulo-medio .pie-de-foto { margin-top: 0; max-width: 90ch; }
+.medio-segundo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 6px; }
+.medio-segundo figure { margin: 0; }
+.medio-segundo .pie-de-foto { font-size: 0.84rem; margin-top: 8px; }
+
+@media (max-width: 860px) {
+  .pasos, .tres-maneras { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .medio-segundo { grid-template-columns: 1fr; }
+  .indice { top: 60px; }
+}
+
+/* ── El cierre ───────────────────────────────────────────────────────────── */
+
+.como-cierre { padding: clamp(64px, 9vw, 112px) 0; border-top: 1px solid var(--linea); text-align: center; }
+.como-cierre h2 { font-size: clamp(1.9rem, 3.8vw, 2.9rem); letter-spacing: -0.04em; line-height: 1.06; max-width: 22ch; margin: 14px auto 18px; }
+.como-cierre .entradilla { color: var(--texto-2); max-width: 58ch; margin: 0 auto; font-size: 1.08rem; }
+.como-cierre .acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }

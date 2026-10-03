@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BotFactoryFX</title>
+<meta name="description" content="BotFactoryFX genera estrategias de trading por miles y juzga cada una con 13 comprobaciones, nueve de ellas sobre el histórico que la búsqueda no vio. Código nativo para MetaTrader 4 y 5, JForex, TradingView y Python. Linux, Windows y macOS. Pago único.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../assets/logo-split.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="../">
+<link rel="alternate" hreflang="es" href="./">
+<link rel="stylesheet" href="../assets/fuentes.css">
+<link rel="stylesheet" href="../assets/web.css">
+<script>
+  /* El tema elegido, antes de pintar: sin esto la página parpadea en el otro. */
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="../assets/web.js" defer></script>
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="./"><img src="../assets/logo-split.svg" alt="" width="30" height="30">BotFactory<b>FX</b></a>
+    <nav class="barra-enlaces" aria-label="Principal">
+      <a href="#factura">La factura</a>
+      <a href="como-funciona/">Cómo funciona</a>
+      <a href="#programas">Programas</a>
+      <a href="descargas/">Descargas</a>
+      <a href="documentacion/">Documentación</a>
+      <a href="referidos/">Referidos</a>
+    </nav>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Tema">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" href="../" hreflang="en" lang="en" title="Read in English">EN</a>
+      <a class="boton boton-ambar boton-chico" href="#precio">Comprar · 999 USD</a>
+      <details class="menu-movil">
+        <summary>Menú</summary>
+        <nav aria-label="Principal (móvil)">
+          <a href="#factura">La factura</a>
+          <a href="como-funciona/">Cómo funciona</a>
+          <a href="#programas">Programas</a>
+          <a href="descargas/">Descargas</a>
+          <a href="documentacion/">Documentación</a>
+          <a href="referidos/">Referidos</a>
+          <a href="../demo/?lang=es">Probar gratis</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+
+<section class="heroe">
+  <div class="envoltura heroe-rejilla">
+    <div>
+      <p class="ceja">v1.31.2 · Linux · Windows 11 · macOS · pago único</p>
+      <h1>Genera miles. <span>Quédate con las que aguantan.</span></h1>
+      <p class="entradilla">Un backtest casi siempre sale bonito. BotFactoryFX construye estrategias de trading por miles y después dedica casi todo su esfuerzo a demostrar que cada una no vale nada: 13 comprobaciones, nueve de ellas sobre el histórico que la búsqueda no vio. Lo que aguanta sale en código nativo, compilado de verdad, para MetaTrader&nbsp;4 y&nbsp;5, JForex, TradingView y Python.</p>
+      <div class="acciones">
+        <a class="boton boton-ambar" href="../demo/?lang=es">Pruébalo gratis en el navegador <span class="flecha" aria-hidden="true">→</span></a>
+        <a class="boton boton-linea" href="#precio">Comprar licencia · 999 USD</a>
+      </div>
+      <p class="letra-chica"><span>Pruébalo entero antes de pagar</span><span>Sin suscripción</span><span>Actualizaciones vitalicias</span><span>Hasta 3 máquinas</span></p>
+    </div>
+    <figure style="margin:0">
+      <div class="ventana">
+        <div class="ventana-barra"><i></i><i></i><i></i><span>BotFactoryFX — Piloto automático</span></div>
+        <video id="video-piloto" data-bucle autoplay muted loop playsinline preload="metadata" poster="../capturas/es/piloto.webp" width="1440" height="900">
+          <source src="../video/piloto-es.webm" type="video/webm">
+          <source src="../video/piloto-es.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption class="pie-de-foto"><button class="video-mando" type="button" data-mando="video-piloto">Pausa</button><b>No es una maqueta: es el programa.</b> Una frase al piloto automático —<i>«Constrúyeme un sistema de ruptura para EURUSD en H1»</i>— y busca, mide, juzga y guarda. EURUSD de Dukascopy, 2019–2026, acelerado.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="seccion" id="factura">
+  <div class="envoltura">
+    <div class="cabecera-centrada">
+      <p class="ceja">Lo que cuesta de verdad</p>
+      <h2>La factura de empezar en el trading</h2>
+      <p class="entradilla">Antes de ganar un euro, quien empieza paga esto. Cifras orientativas, las que se repiten una y otra vez. Pulsa cualquier línea para ver qué hace BotFactoryFX con ella.</p>
+    </div>
+
+    <div class="factura-rejilla">
+      <div class="tique" aria-label="La factura">
+        <div class="tique-cabeza"><strong>EMPEZAR EN EL TRADING</strong><small>tique · los primeros años de un trader</small></div>
+        <ol>
+          <li><a href="#linea-formacion"><span class="concepto">Formación</span><span class="relleno"></span><span class="importe">1.000–2.000 $</span></a></li>
+          <li><a href="#linea-cuentas"><span class="concepto">Cuentas fondeadas que se queman</span><span class="relleno"></span><span class="importe">2.000–3.000 $</span></a></li>
+          <li><a href="#linea-programa"><span class="concepto">Programa para generar estrategias</span><span class="relleno"></span><span class="importe">1.500–3.000 €</span><span class="nota">o una cuota al mes</span></a></li>
+          <li><a href="#linea-curso"><span class="concepto">Curso para aprender ese programa</span><span class="relleno"></span><span class="importe">1.000 € o más</span></a></li>
+          <li><a href="#linea-servidor"><span class="concepto">Servidor para el robot</span><span class="relleno"></span><span class="importe">cada mes</span></a></li>
+          <li><a href="#linea-impuestos"><span class="concepto">Impuestos</span><span class="relleno"></span><span class="importe">si sale bien</span></a></li>
+        </ol>
+        <div class="tique-total"><span>TOTAL</span><span>antes de la primera operación</span><small>Súmalo tú. Nunca es la cifra pequeña.</small></div>
+      </div>
+
+      <div class="tique-bfx" id="precio">
+        <header><img src="../assets/logo-split.svg" alt="" width="28" height="28"><span>BotFactory<b>FX</b> — licencia de escritorio</span></header>
+        <dl>
+          <dt>Precio</dt><dd class="precio">999 USD, una vez</dd>
+          <dt>En tus máquinas</dt><dd>hasta 3</dd>
+          <dt>Actualizaciones</dt><dd>vitalicias</dd>
+          <dt>Suscripción</dt><dd>ninguna</dd>
+          <dt>Sistemas</dt><dd>Linux · Windows · macOS</dd>
+        </dl>
+        <p class="pie-de-foto" id="recomendado" hidden></p>
+        <a class="boton boton-ambar" href="mailto:botfactoryfx@proton.me?subject=Licencia%20BotFactoryFX" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-lista="999" data-con-precio>Comprar licencia · 999 USD</a>
+        <p class="pie-de-foto">Se paga en cripto (USDT o BTC). Su licencia abre también BFQuarantine.</p>
+      </div>
+    </div>
+
+    <p class="remate">No te ahorra aprender ni el servidor. Te ahorra <em>lo caro</em>: el programa, el curso para entenderlo y la mayor parte de lo que se quema en cuentas.</p>
+  </div>
+</section>
+
+<section class="seccion seccion-alterna" id="linea-a-linea">
+  <div class="envoltura">
+    <p class="ceja">La factura, explicada</p>
+    <h2>Línea a línea</h2>
+    <p class="entradilla">Para qué es cada línea de la factura y qué hace BotFactoryFX con ella. Donde no ayuda, lo dice.</p>
+
+    <div class="libro">
+      <article class="asiento" id="linea-programa">
+        <div class="asiento-titulo">
+          <h3>El programa</h3>
+          <p class="cambio"><span class="antes">1.500–3.000 €</span><span aria-hidden="true">→</span><span class="despues">999 USD, una vez</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p><strong>Busca a escala.</strong> Un algoritmo genético prueba miles de conjuntos de reglas en cada corrida, en siete familias —tendencia, ruptura, reversión, acción del precio, impulso, volatilidad y divergencia— y las mezcla cuando sale a cuenta. Tus datos: el CSV de tu bróker, Dukascopy (1.615 instrumentos), Binance (más de 500 pares), MetaTrader&nbsp;5, JForex y web3.</p>
+          <p>Instalado en hasta tres máquinas tuyas, con todas las actualizaciones de por vida. Sin suscripción.</p>
+        </div>
+        <figure class="captura"><img src="../capturas/es/datos.webp" alt="La pantalla de Datos con EURUSD de Dukascopy y once pares de Binance en la biblioteca de históricos" width="2000" height="1190" loading="lazy"><figcaption>Datos: EURUSD de Dukascopy y once pares de Binance en la biblioteca de históricos. Se guardan en disco, así que cada fichero se carga una sola vez; el resaltado es el que se usa para el backtest.</figcaption></figure>
+      </article>
+
+      <article class="asiento" id="linea-curso">
+        <div class="asiento-titulo">
+          <h3>El curso</h3>
+          <p class="cambio"><span class="antes">1.000 € o más</span><span aria-hidden="true">→</span><span class="despues">dentro del programa</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p><strong>Pídeselo en una frase.</strong> «Constrúyeme un sistema de ruptura para EURUSD en H1», y el piloto automático busca, mide, juzga, guarda y arma la cartera, y antes de empezar te enseña todo lo que decidió por ti.</p>
+          <p>Un tour enseña cada pantalla en el orden del trabajo. La Ayuda está dentro. Y Dr.&nbsp;Quant —con tu propia clave de IA o con un modelo en tu máquina— conoce el juez y la Ayuda, y te dice lo que costó cada respuesta.</p>
+        </div>
+      </article>
+
+      <article class="asiento" id="linea-cuentas">
+        <div class="asiento-titulo">
+          <h3>Las cuentas que se queman</h3>
+          <p class="cambio"><span class="antes">2.000–3.000 $</span><span aria-hidden="true">→</span><span class="despues">antes, el juez</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p class="lema">Que las balas te den en el backtest, no en tu cuenta.</p>
+          <p>El <strong>Reality Check</strong> no pregunta «¿ganó dinero?», sino «¿es real el resultado?». Juzga cada estrategia con 13 comprobaciones, nueve de ellas sobre el último tramo del histórico, el que la búsqueda no vio. Y sabe cuántas variantes se probaron hasta dar con cada una: la mejor de mil tiene que demostrar más que la primera.</p>
+          <ul class="comprobaciones" aria-label="Las 13 comprobaciones">
+            <li><span>01</span>Fuera de muestra</li><li><span>02</span>Mejor que el azar</li><li><span>03</span>Walk-forward</li>
+            <li><span>04</span>Sensibilidad a los parámetros</li><li><span>05</span>Monte Carlo</li><li><span>06</span>Otros instrumentos</li>
+            <li><span>07</span>Otras temporalidades</li><li><span>08</span>Tamaño de la muestra</li><li><span>09</span>Consistencia por periodos</li>
+            <li><span>10</span>Perturbación</li><li><span>11</span>Resolución de vela</li><li><span>12</span>Tolerancia al coste</li>
+            <li><span>13</span>Drawdown</li>
+          </ul>
+          <p class="caso"><strong>Un caso real, hecho para esta página: el del vídeo de arriba.</strong> Una frase al piloto; 9963 juegos de reglas probados; cinco estrategias guardadas, la mejor ganando el 77 % de sus operaciones en el backtest. El juez no dejó pasar ninguna. Ése es su trabajo: una línea de la factura que no llegas a pagar.</p>
+          <p>Además prueba el procedimiento que encontró la estrategia: repite la búsqueda entera en cinco ventanas del histórico. Después, la <strong>Cuarentena</strong> compara lo prometido con lo que pasa, antes de poner dinero, y <strong>En vivo</strong> lee tus robots en MetaTrader&nbsp;5 y JForex, enseña cuánto se separan de su backtest y te avisa si uno se para o toca su corte de cuenta.</p>
+        </div>
+        <figure class="captura"><img src="../capturas/es/juez.webp" alt="El veredicto del Reality Check sobre una estrategia, con sus 13 comprobaciones" width="2000" height="1739" loading="lazy"><figcaption>El Reality Check sobre la mejor de las cinco estrategias del vídeo, la que acertó el 77 % de sus operaciones. Factor de beneficio 1,68 en el histórico donde se construyó y 1,00 en el que nunca vio; pierde dinero en los otros once instrumentos; reconstruida en H4 se queda en 1,05. Y en el tramo que nadie vio opera sólo 9 veces: el juez no da nota, dice que no hay pruebas suficientes para juzgarla. Todas las cifras salen del programa.</figcaption></figure>
+      </article>
+
+      <article class="asiento" id="linea-formacion">
+        <div class="asiento-titulo">
+          <h3>La formación</h3>
+          <p class="cambio"><span class="antes igual">1.000–2.000 $</span><span aria-hidden="true">→</span><span class="igual">no la sustituye</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p>Y no lo finge. Lo que sí hace es enseñarte <strong>por qué una estrategia no vale</strong>, con el número delante, cada vez. Eso enseña más que muchos cursos.</p>
+        </div>
+      </article>
+
+      <article class="asiento" id="linea-servidor">
+        <div class="asiento-titulo">
+          <h3>El servidor</h3>
+          <p class="cambio"><span class="antes igual">cada mes</span><span aria-hidden="true">→</span><span class="igual">tampoco</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p>El robot corre donde ya corre el tuyo. BotFactoryFX lo escribe en <strong>código nativo para MQL4, MQL5, Java (JForex), Pine Script y Python (Hyperliquid)</strong>, compilado de verdad con el compilador de cada plataforma, y con protección dentro: corte de cuenta, horario y cierre del viernes.</p>
+        </div>
+        <figure class="captura"><img src="../capturas/es/exportar.webp" alt="Exportar una estrategia en código nativo para cinco plataformas" width="2000" height="759" loading="lazy"><figcaption>Cada estrategia guardada está a un clic de cinco plataformas: MQL4, MQL5, Java para JForex, Pine Script y Python para Hyperliquid. Lo que se escribe es la estrategia que midió el juez.</figcaption></figure>
+      </article>
+
+      <article class="asiento" id="linea-impuestos">
+        <div class="asiento-titulo">
+          <h3>Impuestos</h3>
+          <p class="cambio"><span class="igual">si sale bien</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p class="lema">La única línea de la factura que te deseamos.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" id="programas">
+  <div class="envoltura">
+    <div class="cabecera-centrada">
+      <p class="ceja">Tres programas, una familia</p>
+      <h2>Empieza por el gratuito</h2>
+      <p class="entradilla">Inspecciona el robot que te quieren vender, vigila el que ya compraste o construye los tuyos.</p>
+    </div>
+    <div class="programas">
+      <article class="programa">
+        <p class="etiqueta">Inspeccionar</p>
+        <h3>BFInspector</h3>
+        <p class="precio">Gratis</p>
+        <p>La inspección técnica del robot que te quieren vender. Le levanta acta —cuándo compra, cuándo vende, con cuánto—, busca siete trampas conocidas, como la martingala u operar sin stop, rehace su backtest con tu dinero y lo compara con el historial de tu cuenta. Sin servidor, sin cuenta y sin registro.</p>
+        <a class="boton boton-linea" href="descargas/#inspector">Descargar gratis</a>
+      </article>
+      <article class="programa">
+        <p class="etiqueta">Vigilar</p>
+        <h3>BFQuarantine</h3>
+        <p class="precio">99 USD <small>una vez</small></p>
+        <p>Pon el robot que te vendieron frente al backtest con el que te lo vendieron, en la cuenta donde corre —MetaTrader&nbsp;5, JForex o un monedero web3—, y mira cada semana si se sigue pareciendo.</p>
+        <a class="boton boton-linea" href="mailto:botfactoryfx@proton.me?subject=Licencia%20BFQuarantine" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-producto="quarantine">Comprar · 99 USD</a>
+      </article>
+      <article class="programa programa-destacado">
+        <p class="etiqueta">Construir y juzgar</p>
+        <h3>BotFactoryFX</h3>
+        <p class="precio">999 USD <small>una vez</small></p>
+        <p>Todo: búsqueda, juez, cuarentena, en vivo, cartera, Dr.&nbsp;Quant y la exportación a cinco plataformas. Su licencia abre también BFQuarantine.</p>
+        <a class="boton boton-ambar" href="mailto:botfactoryfx@proton.me?subject=Licencia%20BotFactoryFX" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-lista="999" data-con-precio>Comprar licencia · 999 USD</a>
+      </article>
+    </div>
+    <p class="sistemas">Los tres, para Linux, Windows 11 y macOS (Apple Silicon e Intel).</p>
+  </div>
+</section>
+
+<div class="franja" aria-label="Condiciones">
+  <div class="envoltura">
+    <ul>
+      <li>Pago único en cripto (USDT o BTC)</li>
+      <li>Actualizaciones vitalicias</li>
+      <li>Hasta 3 máquinas por licencia</li>
+      <li><a href="referidos/">Recomienda y gana: 100 USDT para ti, 100 $ menos para quien compra</a></li>
+    </ul>
+  </div>
+</div>
+
+<section class="seccion" id="probar">
+  <div class="envoltura">
+    <div class="cabecera-centrada">
+      <p class="ceja">Prueba antes de comprar</p>
+      <h2>El programa entero, en tu navegador</h2>
+      <p class="entradilla">La versión del navegador es el programa casi entero: sin conexión con tu bróker, con un tope de 25.000 velas, y sin guardar nada al recargar. Sin registro y sin límite de tiempo: pruébalo todo lo que quieras.</p>
+      <div class="acciones" style="margin-top:28px"><a class="boton boton-ambar" href="../demo/?lang=es">Probar gratis <span class="flecha" aria-hidden="true">→</span></a></div>
+    </div>
+    <div class="compra-justa">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      <div>
+        <p><strong>Sin devolución «porque sí», y por eso se prueba antes.</strong> Puedes pasar semanas con el programa antes de pagar un céntimo: compra cuando sepas lo que compras.</p>
+        <p>Y si algo falla, escríbenos: lo miramos contigo y, si tienes razón, te devolvemos el dinero.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cierre">
+  <div class="envoltura">
+    <h2>No compres estrategias. <span>Compra la forma de descartarlas.</span></h2>
+    <div class="acciones">
+      <a class="boton boton-ambar" href="../demo/?lang=es">Probar gratis <span class="flecha" aria-hidden="true">→</span></a>
+      <a class="boton boton-linea" href="mailto:botfactoryfx@proton.me?subject=Licencia%20BotFactoryFX" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-lista="999" data-con-precio>Comprar licencia · 999 USD</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="pie">
+  <div class="envoltura">
+    <div class="pie-rejilla">
+      <div>
+        <a class="marca" href="./"><img src="../assets/logo-split.svg" alt="" width="30" height="30">BotFactory<b>FX</b></a>
+        <p style="margin-top:12px;max-width:36ch">Búsqueda de estrategias con un juez que intenta demostrar que cada una no vale nada.</p>
+        <div class="controles">
+          <div class="tema" role="group" aria-label="Tema">
+            <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+            <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+            <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+          </div>
+          <a class="idioma" href="../" hreflang="en" lang="en">English</a>
+        </div>
+      </div>
+      <div>
+        <h3>Producto</h3>
+        <ul>
+          <li><a href="../demo/?lang=es">Probar gratis</a></li>
+          <li><a href="#precio">Comprar licencia</a></li>
+          <li><a href="descargas/">Descargas</a></li>
+          <li><a href="descargas/#inspector">BFInspector, gratis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Aprender</h3>
+        <ul>
+          <li><a href="documentacion/">Documentación</a></li>
+          <li><a href="como-funciona/">Cómo funciona</a></li>
+          <li><a href="referidos/">Recomienda y gana</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="mailto:botfactoryfx@proton.me">botfactoryfx@proton.me</a></li>
+        </ul>
+        <p style="margin-top:10px">Contesta una persona, no un formulario. Si escribes por un fallo, di qué sistema y qué versión: sale en el pie del programa.</p>
+      </div>
+    </div>
+    <div class="legal">
+      <p><strong>Operar puede costarte todo tu capital.</strong> Ningún resultado pasado —ni en un backtest, ni en cuarentena, ni en una cuenta real— garantiza el futuro. BotFactoryFX es software de análisis: no da consejo de inversión, no gestiona dinero y no opera por ti.</p>
+      <p>Esta web no usa cookies ni rastreadores, y no carga nada de fuera de su dominio. Si eliges un tema, tu navegador lo recuerda en tu equipo. Comprar habla con nuestro cobro y con Plisio, y sólo cuando pulsas Comprar.</p>
+      <p>© 2026 BotFactoryFX</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

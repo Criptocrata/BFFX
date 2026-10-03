@@ -1,2488 +1,335 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BotFactoryFX</title>
-<link rel="stylesheet" href="/tipografias/tipografias.css">
+<meta name="description" content="BotFactoryFX generates trading strategies by the thousand and judges each one with 13 checks, nine of them on history the search never saw. Native code for MetaTrader 4 and 5, JForex, TradingView and Python. Linux, Windows and macOS. One-time payment.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/logo-split.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="./">
+<link rel="alternate" hreflang="es" href="es/">
+<link rel="stylesheet" href="assets/fuentes.css">
+<link rel="stylesheet" href="assets/web.css">
+<script>
+  /* El tema elegido, antes de pintar: sin esto la página parpadea en el otro. */
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="assets/web.js" defer></script>
+</head>
+<body>
+<a class="saltar" href="#contenido">Skip to content</a>
 
-<style>
-  /* ---------------------------------------------------------------
-     Tema claro, y solo claro: es la decisión tomada, no un valor por
-     defecto a la espera del tema del visitante. Los colores salen del
-     bloque .light del propio producto (src/app/globals.css), con la
-     regla que los acompaña allí: verde y rojo quedan reservados para
-     lo que hacen los números, de modo que el color nunca mienta.
-     --------------------------------------------------------------- */
-  :root {
-    --ink:        #eeedea;
-    --surface:    #ffffff;
-    --surface-2:  #e7e5e0;
-    --line:       #d6d3cc;
-    --text:       #14171c;
-    --text-soft:  #454b54;
-    --muted:      #5b6169;
-    --phosphor:   #b8730f;
-    --phos-deep:  #8a5207;
-    --phos-wash:  #f7ecdc;
-    --trace:      #33556f;
-    --profit:     #0b7d55;
-    --loss:       #b53434;
-
-    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-
-    --s1: .35rem; --s2: .7rem; --s3: 1.15rem;
-    --s4: 1.9rem; --s5: 3rem; --s6: 5rem;
-  }
-
-  * { box-sizing: border-box; }
-
-  /* La barra superior es fija, así que un salto por el menú dejaría el título
-     de la sección escondido detrás de ella. */
-  html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-
-  body {
-    margin: 0;
-    background: var(--ink);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 1rem;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .wrap { max-width: 66rem; margin: 0 auto; padding: 0 var(--s3); }
-
-  /* ---------- barra superior ---------- */
-  .topbar {
-    background: var(--surface); border-bottom: 1px solid var(--line);
-    position: sticky; top: 0; z-index: 20;
-  }
-  /* La barra puede ser más ancha que la columna de lectura, y aquí tiene que
-     serlo: marca (151) + menú (889) + botón (142) son 1.182 px, y la columna
-     mide 1.056. Con el ancho de los textos, el botón de comprar caía a una
-     tercera fila él solo, huérfano y feo. Una barra de navegación no está
-     obligada a medir lo que mide un párrafo. */
-  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 3.7rem; flex-wrap: nowrap; max-width: 78rem; }
-  .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--text); }
-  .brand b { font-family: var(--mono); font-weight: 600; font-size: 1.02rem; letter-spacing: -.03em; }
-  .brand b i { font-style: normal; color: var(--phosphor); }
-
-  /* min-width:0 para que el menú pueda encogerse: sin eso un contenedor flex
-     se niega a bajar del ancho de su contenido y es el botón el que sale
-     expulsado. Cuando ya no cabe, el menú se desliza en vez de partirse. */
-  .nav { display: flex; gap: 0; align-items: stretch; margin-left: auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-  .nav::-webkit-scrollbar { display: none; }
-  .nav a {
-    font-size: .87rem; color: var(--text-soft); text-decoration: none;
-    padding: 1.15rem .85rem .95rem; border-bottom: 2px solid transparent;
-    white-space: nowrap;
-  }
-  .nav a:hover, .nav a:focus-visible { color: var(--text); border-bottom-color: var(--phosphor); }
-  .nav a[aria-current] { color: var(--text); border-bottom-color: var(--phosphor); font-weight: 600; }
-
-  /* El botón de la barra. No encoge nunca: si algo tiene que ceder ancho es el
-     menú, no el único sitio de la página donde se paga. */
-  .barra-comprar { margin-left: var(--s3); flex-shrink: 0; }
-  .barra-comprar[hidden] { display: none; }
-  .barra-comprar .cifra { font-variant-numeric: tabular-nums; opacity: .75; font-weight: 400; }
-  @media (max-width: 56rem) {
-    .barra-comprar { order: 2; margin-left: auto; }
-  }
-  @media (max-width: 56rem) {
-    /* En estrecho sí se envuelve: marca y botón arriba, menú deslizante debajo.
-       Es el orden que importa — lo primero que se ve es el precio y el botón. */
-    .topbar .wrap { padding-top: .6rem; padding-bottom: 0; flex-wrap: wrap; }
-    .nav { margin-left: 0; width: 100%; order: 3; }
-    .nav a { padding: .7rem .7rem .6rem; }
-  }
-
-  /* ---------- botones ---------- */
-  .btn {
-    display: inline-flex; align-items: center; gap: .5rem;
-    font-family: var(--mono); font-size: .82rem; font-weight: 500;
-    letter-spacing: .04em; text-transform: uppercase;
-    padding: .72rem 1.15rem; border-radius: 2px; text-decoration: none;
-    border: 1px solid var(--phosphor); color: var(--phosphor);
-    background: transparent; cursor: pointer;
-    transition: background .15s, color .15s, border-color .15s;
-  }
-  .btn:hover { background: var(--phos-wash); }
-  .btn.solid { background: var(--phosphor); color: #fff; }
-  .btn.solid:hover { background: var(--phos-deep); border-color: var(--phos-deep); }
-  .btn.ghost { border-color: var(--line); color: var(--text-soft); }
-  .btn.ghost:hover { border-color: var(--muted); color: var(--text); background: transparent; }
-  .btn.sm { font-size: .74rem; padding: .5rem .8rem; }
-
-  /* ---------- secciones ---------- */
-  section { padding: var(--s6) 0; border-bottom: 1px solid var(--line); }
-  .eyebrow {
-    font-family: var(--mono); font-size: .72rem; font-weight: 500;
-    letter-spacing: .16em; text-transform: uppercase; color: var(--phosphor);
-    margin: 0 0 var(--s2) 0;
-  }
-  .eyebrow .dim { color: var(--muted); }
-  h1 {
-    font-family: var(--mono); font-weight: 600;
-    font-size: clamp(2rem, 5.4vw, 3.15rem); line-height: 1.07;
-    letter-spacing: -.035em; margin: 0 0 var(--s3) 0; text-wrap: balance;
-  }
-  h2 {
-    font-family: var(--mono); font-weight: 600;
-    font-size: clamp(1.45rem, 3.4vw, 2rem); line-height: 1.15;
-    letter-spacing: -.03em; margin: 0 0 var(--s3) 0; text-wrap: balance;
-  }
-  h3 { font-family: var(--mono); font-weight: 600; font-size: 1rem; margin: 0 0 var(--s1) 0; letter-spacing: -.01em; }
-  p { margin: 0 0 var(--s3) 0; color: var(--text-soft); }
-  p.lead { font-size: 1.15rem; max-width: 44rem; }
-  /* Sólo el de la portada. Ya no tiene un titular encima —lo dice el pórtico—
-     así que es lo primero que se lee en la parte clara y tiene que aguantar
-     ese peso solo. Los otros ocho `.lead` de la página sí llevan su h2
-     delante y no necesitan crecer. */
-  .hero .lead { font-size: 1.3rem; line-height: 1.55; max-width: 46rem; }
-  p:last-child { margin-bottom: 0; }
-  strong { color: var(--text); font-weight: 600; }
-
-  /* ---------- héroe ---------- */
-  .hero { padding-top: var(--s5); }
-  .hero-cta { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s2); }
-
-  /* La banda de cifras.
-     Las cuatro ya estaban en la página, enterradas dentro de párrafos: los
-     8.455.409 en el pie de una captura, las 4.180 en una etiqueta, las doce
-     comprobaciones a mitad de un texto de once líneas. Son lo más concreto que
-     tiene esto que decir y no se leían. Aquí arriba se leen en dos segundos.
-
-     Se llaman .dato y no .cifra porque .cifra ya es el precio del botón de la
-     barra, y dos cosas distintas con el mismo nombre acaban heredando la una
-     de la otra el día que alguien toque una de las dos. */
-  .datos {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    background: var(--surface); margin-top: var(--s4);
-  }
-
-  /* La criba, en la portada.
-     El titular AFIRMA que sobreviven pocas. Esto lo enseña, en cinco segundos
-     y encima de las cifras que lo repiten. Es la única parte de la página que
-     demuestra algo en vez de contarlo, y por eso va arriba: quien no lea nada
-     más habrá visto morir novecientas curvas antes de irse.
-     Al terminar, el pie se convierte en la frase — que es donde la frase se
-     ha ganado, y no tres mil palabras antes. */
-  .criba-banda {
-    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    background: var(--surface); margin-top: var(--s4);
-  }
-  .criba-banda .datos { border: 0; border-top: 1px solid var(--line); margin-top: 0; background: none; }
-
-  .criba { margin: 0; padding: var(--s3) var(--s3) var(--s2); }
-  .criba canvas { display: block; width: 100%; height: 190px; }
-  /* Las dos mitades del pie ocupan la MISMA casilla de la rejilla y se
-     cruzan ahí. En el flujo normal darían un salto de alto al cambiar, y
-     arrastrarían media portada con él; en posición absoluta se salen del pie
-     y en pantalla estrecha aterrizan encima de las cifras. Con la rejilla, el
-     alto lo marca sola la más alta de las dos, a cualquier ancho. */
-  .criba figcaption {
-    display: grid; padding-top: var(--s2);
-    font-family: var(--mono); font-size: .74rem; letter-spacing: .02em;
-  }
-  .criba-vivo, .criba-frase {
-    grid-area: 1 / 1;
-    display: flex; flex-wrap: wrap; gap: 0 var(--s3); align-items: baseline;
-    transition: opacity .5s ease;
-  }
-  .criba-frase { opacity: 0; color: var(--phos-deep); }
-  .criba-frase b { font-weight: 600; }
-  .criba-cifra { margin-left: auto; color: var(--muted); font-weight: 400; }
-  .criba-fin .criba-vivo { opacity: 0; }
-  .criba-fin .criba-frase { opacity: 1; }
-  .criba-vivo { color: var(--muted); }
-  .criba-vivo b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
-  .criba-paso { margin-left: auto; }
-
-  @media (max-width: 46rem) {
-    .criba canvas { height: 140px; }
-    .criba figcaption { font-size: .68rem; line-height: 1.45; }
-    .criba-vivo > span:first-child, .criba-frase b { flex: 1 0 100%; }
-  }
-  .dato { padding: var(--s3); border-left: 1px solid var(--line); }
-  .dato:first-child { border-left: 0; }
-  .dato b {
-    display: block; font-family: var(--mono); font-weight: 600; font-size: 1.35rem;
-    letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.15;
-    color: var(--text);
-  }
-  .dato span { font-size: .76rem; color: var(--muted); }
-  @media (max-width: 46rem) {
-    .datos { grid-template-columns: repeat(2, 1fr); }
-    .dato:nth-child(3) { border-left: 0; border-top: 1px solid var(--line); }
-    .dato:nth-child(4) { border-top: 1px solid var(--line); }
-  }
-
-  /* La tira de compatibilidad.
-     Nombres, no logotipos: decir que tu programa lee ficheros de MetaTrader es
-     uso nominativo y es terreno firme; reproducir su logotipo entra en las
-     normas de marca de cada empresa. El distintivo de al lado es una figura
-     neutra —no imita el de nadie— y está para dar ritmo a la fila.
-
-     Va aquí y lejos del botón de pagar a propósito: al lado del precio dejaría
-     de decir «esto lee tus ficheros» para insinuar «estas empresas nos
-     respaldan», que es pedir prestada una credibilidad que no se tiene. Es
-     justo lo que esta página acusa de hacer a los demás. */
-  .compat { padding: var(--s3) 0 0; }
-  .compat-et {
-    font-family: var(--mono); font-size: .7rem; letter-spacing: .14em;
-    text-transform: uppercase; color: var(--muted); margin: 0 0 var(--s2) 0;
-  }
-  .marcas { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s4); }
-  .marcas .m {
-    display: inline-flex; align-items: center; gap: .45rem;
-    font-family: var(--mono); font-size: .87rem; color: var(--text-soft);
-    letter-spacing: -.01em;
-  }
-  .marcas .m svg { flex-shrink: 0; opacity: .8; }
-  .marcas .m.otros { color: var(--muted); }
-  .compat-pie { font-size: .72rem; color: var(--muted); margin: var(--s2) 0 0; }
-  .runs-on {
-    font-family: var(--mono); font-size: .78rem; color: var(--muted);
-    margin: 0; letter-spacing: .02em;
-  }
-  .runs-on b { color: var(--text-soft); font-weight: 500; }
-
-  /* ---------- capturas de la aplicación ---------- */
-  .shot { margin-top: var(--s5); }
-  .shot figure { margin: 0; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: var(--surface); }
-  /* El marco de ventana va suelto de `.shot` porque el televisor de «En vivo»
-     lo usa igual, y ahí no hay ninguna captura debajo. */
-  .chrome {
-    display: flex; align-items: center; gap: .5rem;
-    padding: .55rem var(--s3); border-bottom: 1px solid var(--line);
-    background: var(--surface-2);
-    font-family: var(--mono); font-size: .72rem; color: var(--muted);
-  }
-  .chrome .dots { display: flex; gap: .3rem; }
-  .chrome .dots i { width: .5rem; height: .5rem; border-radius: 50%; background: var(--line); display: block; }
-  .shot img { display: block; width: 100%; height: auto; }
-  .shot figcaption { padding: var(--s2) var(--s3); font-size: .84rem; color: var(--muted); border-top: 1px solid var(--line); background: var(--surface-2); }
-  .shot figcaption b { color: var(--text-soft); font-weight: 600; }
-
-  /* ---------- panel instrumento ---------- */
-  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; margin-top: var(--s5); }
-  .panel-head {
-    display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
-    padding: .7rem var(--s3); border-bottom: 1px solid var(--line); background: var(--surface-2);
-    font-family: var(--mono); font-size: .76rem; color: var(--muted); flex-wrap: wrap;
-  }
-  .verdict {
-    font-family: var(--mono); font-size: .72rem; font-weight: 600;
-    letter-spacing: .1em; text-transform: uppercase; padding: .22em .6em;
-    border-radius: 2px; border: 1px solid var(--loss); color: var(--loss);
-  }
-  /* El veredicto favorable. Sin esta regla el sello dice "supera" en rojo, que
-     en una página cuya norma es que el color no mienta es el peor fallo posible. */
-  .verdict.pass { border-color: var(--profit); color: var(--profit); }
-  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
-  .metric { padding: var(--s3); border-right: 1px solid var(--line); }
-  .metric:last-child { border-right: none; }
-  .metric .k { font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: .25rem; }
-  .metric .v { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.02em; display: block; }
-  .metric .v.up { color: var(--profit); }
-  .metric .v.down { color: var(--loss); }
-  @media (max-width: 40rem) {
-    .metrics { grid-template-columns: repeat(2, 1fr); }
-    .metric:nth-child(2) { border-right: none; }
-    .metric:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
-  }
-  .curve { display: block; width: 100%; height: auto; background: var(--surface); }
-  .panel-foot { padding: var(--s3); border-top: 1px solid var(--line); font-size: .92rem; color: var(--text-soft); background: var(--surface-2); }
-  .panel-foot b { color: var(--text); }
-
-  /* ---------- pasos ---------- */
-  /* ---------- el tráiler ---------- */
-  .trailer { background: #05070a; border-bottom: 1px solid #1b2128; padding: var(--s4) 0; }
-  .trailer-marco { aspect-ratio: 16 / 9; background: #0b0d10; overflow: hidden; border-radius: 3px; }
-  .trailer-marco iframe { display: block; width: 100%; height: 100%; border: 0; }
-  .trailer-pie {
-    display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); justify-content: space-between;
-    align-items: baseline; margin: var(--s2) 0 0;
-    font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; color: #6f7883;
-  }
-  .trailer-pie a { color: var(--phosphor); text-decoration: none; }
-  .trailer-pie a:hover { text-decoration: underline; }
-
-  /* ---------- la pantalla del recorrido ---------- */
-  .pantalla { margin-bottom: var(--s3); }
-  .pantalla[hidden] { display: none; }
-  .pantalla-marco {
-    border: 1px solid var(--line); border-radius: 3px; overflow: hidden;
-    background: #0e1013; aspect-ratio: 16 / 9;
-  }
-  .pantalla-marco iframe { display: block; width: 100%; height: 100%; border: 0; }
-  .pantalla-pie {
-    display: flex; align-items: baseline; gap: var(--s2) var(--s3);
-    flex-wrap: wrap; margin-top: var(--s2);
-  }
-  .pantalla-paso {
-    font-family: var(--mono); font-size: .72rem; letter-spacing: .12em;
-    text-transform: uppercase; color: var(--phosphor); flex: none;
-  }
-  .pantalla-txt { font-size: .88rem; color: var(--muted); flex: 1 1 14rem; }
-  .pantalla-btn {
-    font-family: var(--mono); font-size: .7rem; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--text-soft); background: transparent;
-    border: 1px solid var(--line); border-radius: 2px; padding: .3rem .7rem;
-    cursor: pointer; flex: none;
-  }
-  .pantalla-btn:hover { border-color: var(--muted); color: var(--text); }
-
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
-  /* El paso que se está viendo. El borde superior ámbar es el mismo recurso que
-     marca la columna de pago en el cierre: en esta página el ámbar señala
-     siempre «esto es lo que importa ahora». */
-  a.step.viendo { background: var(--phos-wash); box-shadow: inset 0 3px 0 var(--phosphor); }
-  .step { background: var(--surface); padding: var(--s4) var(--s3); }
-  .step .n { font-family: var(--mono); font-size: .72rem; color: var(--phosphor); letter-spacing: .12em; display: block; margin-bottom: var(--s2); }
-  .step p { font-size: .92rem; margin: 0; }
-  @media (max-width: 52rem) { .steps { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 34rem) { .steps { grid-template-columns: 1fr; } }
-
-  /* ---------- dos columnas ---------- */
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s5); align-items: start; }
-  @media (max-width: 46rem) { .cols { grid-template-columns: 1fr; gap: var(--s4); } }
-
-  .rule-card { border: 1px solid var(--line); border-left: 2px solid var(--phosphor); background: var(--surface); padding: var(--s3); border-radius: 0 3px 3px 0; }
-  .rule-card p { margin: 0; font-size: .92rem; }
-
-  /* ---------- listas ---------- */
-  ul.ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s2); }
-  /* El punto va posicionado, no en una columna de grid: con grid, cada hijo
-     del <li> —cada <strong> y cada trozo de texto suelto— sería una celda
-     propia, y una línea con negritas se rompería en una palabra por fila. */
-  ul.ticks li { position: relative; padding-left: 1.1rem; font-size: .94rem; color: var(--text-soft); }
-  ul.ticks li::before { content: "·"; position: absolute; left: 0; top: 0; font-family: var(--mono); color: var(--phosphor); font-weight: 600; }
-
-  /* ---------- perfiles ---------- */
-  .profiles { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
-  .profile { background: var(--surface); padding: var(--s4) var(--s3); }
-  .profile .who {
-    font-family: var(--mono); font-size: .7rem; letter-spacing: .13em;
-    text-transform: uppercase; color: var(--phosphor); display: block; margin-bottom: var(--s2);
-  }
-  .profile p { font-size: .92rem; }
-  .profile p.gives { color: var(--text); margin-bottom: 0; }
-  .profile p.gives::before {
-    content: "→ "; font-family: var(--mono); color: var(--phosphor); font-weight: 600;
-  }
-  @media (max-width: 46rem) { .profiles { grid-template-columns: 1fr; } }
-
-  .notfor { border: 1px solid var(--line); border-radius: 3px; background: var(--surface-2); padding: var(--s4) var(--s3); }
-  .notfor h3 { margin-bottom: var(--s3); }
-
-  /* ---------- precio ---------- */
-  .price-box { border: 1px solid var(--line); border-radius: 3px; background: var(--surface); overflow: hidden; }
-  .price-top { padding: var(--s4); border-bottom: 1px solid var(--line); }
-  .price-fig { font-family: var(--mono); font-size: clamp(2.6rem, 8vw, 3.6rem); font-weight: 600; letter-spacing: -.04em; font-variant-numeric: tabular-nums; line-height: 1; display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
-  .price-fig .unit { font-size: .85rem; font-weight: 400; color: var(--muted); letter-spacing: .06em; }
-  .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
-  .price-grid > div { background: var(--surface); padding: var(--s3); }
-  .porque {
-    border-top: 1px solid var(--line); padding: var(--s3);
-    background: var(--surface);
-  }
-  .porque h3 {
-    font-family: var(--mono); font-size: .92rem; font-weight: 600;
-    margin: 0 0 var(--s2) 0; letter-spacing: -.01em;
-  }
-  .porque p { font-size: .92rem; margin: 0 0 var(--s2) 0; }
-  .porque p:last-child { margin-bottom: 0; }
-
-  /* ── Los tres escalones ───────────────────────────────────────────────
-     Uno gratis, uno de 99 y uno de 499. Se enseñan juntos y no en tres
-     secciones porque la pregunta de quien mira es comparativa —«¿cuál me
-     hace falta?»— y contestarla obliga a tener los tres delante.
-
-     El de en medio NO se destaca como «el recomendado». Ese truco empuja a
-     la fila que más conviene al vendedor, y aquí la que conviene depende de
-     si vas a traer una idea o a buscarlas. Se destaca el grande, que es el
-     producto, y el orden va de menos a más como se lee. */
-  .escalones {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-    background: var(--line); border: 1px solid var(--line); border-radius: 3px;
-    overflow: hidden; margin-bottom: var(--s4);
-  }
-  .escalon { background: var(--surface); padding: var(--s3); display: flex; flex-direction: column; }
-  .escalon.destacado { background: var(--phos-wash); }
-  .escalon h3 {
-    font-family: var(--mono); font-size: .95rem; font-weight: 600;
-    margin: 0 0 var(--s1) 0; letter-spacing: -.01em;
-  }
-  .escalon .cuanto {
-    font-family: var(--mono); font-weight: 600; font-size: 1.9rem;
-    letter-spacing: -.04em; line-height: 1.1; font-variant-numeric: tabular-nums;
-    margin: var(--s2) 0 var(--s1);
-  }
-  .escalon .cuanto small { font-size: .62rem; font-weight: 400; color: var(--muted); letter-spacing: .08em; display: block; }
-  .escalon .para { font-size: .86rem; color: var(--text-soft); margin: 0 0 var(--s3); }
-  .escalon ul { list-style: none; margin: 0 0 var(--s3); padding: 0; display: flex; flex-direction: column; gap: .3rem; }
-  .escalon li { font-size: .82rem; color: var(--text-soft); padding-left: 1.1rem; position: relative; }
-  .escalon li::before { content: "·"; position: absolute; left: .35rem; color: var(--phosphor); font-weight: 700; }
-  .escalon li.no { color: var(--muted); }
-  .escalon li.no::before { content: "—"; color: var(--line); font-weight: 400; }
-  .escalon .abajo { margin-top: auto; }
-  @media (max-width: 52rem) { .escalones { grid-template-columns: 1fr; } }
-
-  .price-cta {
-    padding: var(--s3) var(--s4) var(--s4); border-top: 1px solid var(--line);
-    background: var(--phos-wash);
-    display: flex; flex-wrap: wrap; gap: var(--s2) var(--s3); align-items: center;
-  }
-  .price-cta .runs-on { flex-basis: 100%; }
-  .recomendado {
-    flex-basis: 100%; margin: 0 0 var(--s1); font-size: .86rem; color: var(--text-soft);
-  }
-  .recomendado[hidden] { display: none; }
-  .recomendado b { font-family: var(--mono); font-weight: 500; }
-
-  /* La glosa de un tecnicismo, la primera vez que aparece. Va en el tamaño de
-     la letra pequeña y no en el del cuerpo: quien ya sabe lo que es un Sharpe
-     tiene que poder saltársela de un vistazo. */
-  .glosa {
-    font-size: .82rem; line-height: 1.5; color: var(--muted);
-    margin: var(--s2) 0 0; padding: var(--s2) var(--s3);
-    border-left: 2px solid var(--line); background: var(--surface-2);
-  }
-  .glosa b { font-family: var(--mono); font-weight: 500; color: var(--text-soft); }
-
-  /* ---------- el cierre ---------- */
-  .cierre { background: var(--phos-wash); border-bottom: 0; }
-  .cierre h2 { max-width: 34rem; }
-  .dos-vias {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-    background: var(--line); border: 1px solid var(--line); border-radius: 3px;
-    overflow: hidden; margin-top: var(--s4);
-  }
-  .via { background: var(--surface); padding: var(--s4) var(--s3); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); }
-  /* La de pago va sobre blanco puro y con el borde de la marca: de las dos
-     columnas, ésta es la que tiene que ganar la mirada. */
-  .via.destacada { box-shadow: inset 0 3px 0 var(--phosphor); }
-  .via h3 { margin: 0; }
-  .via p { margin: 0; font-size: .92rem; flex-grow: 1; }
-  .via .btn { margin-top: var(--s1); }
-  @media (max-width: 46rem) { .dos-vias { grid-template-columns: 1fr; } }
-
-  .cierre-nota {
-    margin-top: var(--s4); font-size: .92rem; max-width: 46rem;
-    padding-top: var(--s3); border-top: 1px solid var(--line);
-  }
-  @media (max-width: 40rem) { .price-grid { grid-template-columns: 1fr; } }
-
-  /* ---------- plataformas ---------- */
-  /* La captura del banco. Ancha, con su marco y su pie: es una imagen de un
-     programa, no una ilustración, y un pie que diga de qué informe salió es la
-     diferencia entre enseñar y presumir. */
-  .captura {
-    margin: var(--s4) 0 0; border: 1px solid var(--line); border-radius: 3px;
-    background: #0b0d10; overflow: hidden;
-  }
-  .captura img { display: block; width: 100%; height: auto; }
-  .captura figcaption {
-    font-family: var(--mono); font-size: .74rem; color: var(--muted);
-    letter-spacing: .02em; padding: var(--s2) var(--s3);
-    border-top: 1px solid var(--line); background: var(--surface);
-  }
-
-  .plats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
-  .plat { background: var(--surface); padding: var(--s4) var(--s3); }
-  .plat .os { font-family: var(--mono); font-weight: 600; font-size: 1rem; margin-bottom: var(--s1); }
-  .plat .state { font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; padding: .2em .55em; border-radius: 2px; display: inline-block; margin-bottom: var(--s2); border: 1px solid var(--line); color: var(--muted); }
-  .plat.live .state { border-color: var(--profit); color: var(--profit); }
-  .plat p { font-size: .88rem; margin: 0 0 var(--s3) 0; }
-  @media (max-width: 46rem) { .plats { grid-template-columns: 1fr; } }
-
-  .note-strip { background: var(--phos-wash); border: 1px solid var(--phosphor); border-radius: 3px; padding: var(--s3); font-size: .9rem; color: var(--text-soft); }
-  .note-strip b { color: var(--phos-deep); font-family: var(--mono); }
-
-  footer { padding: var(--s5) 0 var(--s4); font-size: .84rem; color: var(--muted); background: var(--surface); }
-  .pie-enlaces {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s4) var(--s3);
-    padding-bottom: var(--s4); border-bottom: 1px solid var(--line);
-  }
-  .pie-enlaces h3 {
-    font-family: var(--mono); font-size: .74rem; font-weight: 500;
-    letter-spacing: .12em; text-transform: uppercase; color: var(--phosphor);
-    margin: 0 0 var(--s2) 0;
-  }
-  .pie-enlaces ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
-  .pie-enlaces a { color: var(--text-soft); text-decoration: none; font-size: .85rem; }
-  .pie-enlaces a:hover { color: var(--phos-deep); text-decoration: underline; text-underline-offset: 3px; }
-  .pie-enlaces p { font-size: .78rem; line-height: 1.5; color: var(--muted); margin: var(--s2) 0 0; }
-  @media (max-width: 60rem) { .pie-enlaces { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 34rem) { .pie-enlaces { grid-template-columns: 1fr; } }
-
-  .pie-cols {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4) var(--s3);
-    padding-top: var(--s4);
-    padding-bottom: var(--s4); border-bottom: 1px solid var(--line);
-  }
-  .pie-cols h3 {
-    font-family: var(--mono); font-size: .74rem; font-weight: 500;
-    letter-spacing: .12em; text-transform: uppercase; color: var(--phosphor);
-    margin: 0 0 var(--s2) 0;
-  }
-  .pie-cols p { font-size: .8rem; line-height: 1.55; margin: 0 0 var(--s2) 0; color: var(--muted); }
-  .pie-cols p:last-child { margin-bottom: 0; }
-  .pie-cols b { color: var(--text-soft); font-weight: 500; }
-  .pie-cols a { color: var(--phos-deep); }
-  @media (max-width: 60rem) { .pie-cols { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 34rem) { .pie-cols { grid-template-columns: 1fr; } }
-
-  .pie-linea {
-    display: flex; justify-content: space-between; gap: var(--s2) var(--s3);
-    flex-wrap: wrap; padding-top: var(--s3); font-family: var(--mono); font-size: .74rem;
-  }
-
-  /* ---------- cada paso abre su animación ----------
-     El recuadro es un <a> al fichero de la pieza y el guion le intercepta el
-     clic para abrirla en el diálogo. Así, sin JavaScript, el enlace sigue
-     llevando a la animación en vez de no hacer nada. */
-  /* En columna, para que el pie «Ver:» caiga al fondo de la tarjeta: los
-     párrafos no miden lo mismo y si no, la fila queda con los seis pies a
-     distinta altura. */
-  a.step { display: flex; flex-direction: column; color: inherit; text-decoration: none; transition: background .15s; }
-  /* El hueco mínimo lo pone el párrafo; el `margin-top: auto` del pie solo
-     reparte lo que sobre. Sin esto, en la tarjeta más larga de la fila el
-     filete quedaría pegado al texto. */
-  a.step p { margin-bottom: var(--s3); }
-  a.step:hover, a.step:focus-visible { background: var(--phos-wash); }
-  a.step:focus-visible { outline: 2px solid var(--phosphor); outline-offset: -3px; }
-
-  /* El pie que dice qué animación abre. Va suelto de `.step` porque la pieza
-     de Linux lo usa igual desde la sección de descargas. */
-  .ver {
-    display: flex; align-items: center; gap: .45rem;
-    font-family: var(--mono); font-size: .7rem; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--muted); transition: color .15s;
-  }
-  .ver svg { width: .62rem; height: .62rem; flex: none; fill: currentColor; }
-  .ver .dur { margin-left: auto; letter-spacing: .04em; }
-  a:hover .ver, a:focus-visible .ver { color: var(--phosphor); }
-  /* En la tarjeta de un paso cae al fondo, separado por un filete. */
-  .step .ver { margin-top: auto; padding-top: var(--s3); border-top: 1px solid var(--line); }
-
-  /* ---------- la pieza de Linux, bajo las tres plataformas ----------
-     Ancha y fuera de la rejilla a propósito: no es una cuarta plataforma, es
-     la prueba de que la primera dice la verdad. */
-  a.pieza-ancha {
-    display: block; margin-top: var(--s3); padding: var(--s3) var(--s4);
-    background: var(--surface); border: 1px solid var(--line); border-radius: 3px;
-    color: inherit; text-decoration: none; transition: background .15s, border-color .15s;
-  }
-  a.pieza-ancha:hover, a.pieza-ancha:focus-visible { background: var(--phos-wash); border-color: var(--phosphor); }
-  a.pieza-ancha:focus-visible { outline: 2px solid var(--phosphor); outline-offset: -3px; }
-  a.pieza-ancha .t { display: block; font-family: var(--mono); font-size: .95rem; font-weight: 600; margin: var(--s2) 0 var(--s1); }
-  a.pieza-ancha .d { display: block; font-size: .88rem; color: var(--text-soft); max-width: 52em; }
-
-  /* ---------- el proyector ----------
-     Fondo en tinta porque las piezas lo son: un marco claro alrededor de un
-     16:9 oscuro le roba el contraste a lo único que hay que mirar. Los colores
-     van literales y no por variable: aquí dentro manda la paleta de las
-     piezas, no la de la página. */
-  dialog.cine {
-    width: min(72rem, 94vw); max-width: none; padding: 0; border: 0; border-radius: 4px;
-    background: #0b0d10; color: #e9ecef; overflow: hidden;
-  }
-  dialog.cine::backdrop { background: rgba(8, 10, 13, .84); }
-  .cine-top {
-    display: flex; align-items: baseline; gap: var(--s3); flex-wrap: wrap;
-    padding: var(--s3) var(--s4); border-bottom: 1px solid #262d35;
-  }
-  .cine-top .num { font-family: var(--mono); font-size: .7rem; letter-spacing: .18em; color: #e08a1e; }
-  .cine-top h3 { font-family: var(--mono); font-size: 1rem; font-weight: 600; letter-spacing: -.02em; margin: 0; }
-  .cine-top .paso {
-    font-family: var(--mono); font-size: .66rem; letter-spacing: .14em;
-    text-transform: uppercase; color: #6f7883; border-left: 1px solid #262d35; padding-left: var(--s3);
-  }
-  dialog.cine iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #05070a; }
-  .cine-pie {
-    display: flex; align-items: flex-start; gap: var(--s4); flex-wrap: wrap;
-    padding: var(--s3) var(--s4) var(--s4);
-  }
-  .cine-pie p { margin: 0; font-size: .9rem; color: #aab3bc; max-width: 46em; flex: 1 1 22rem; }
-  .cine-mandos { display: flex; gap: var(--s2); margin-left: auto; }
-  .cine-mandos > * {
-    font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
-    background: transparent; color: #e08a1e; border: 1px solid #e08a1e; border-radius: 2px;
-    padding: .5rem .9rem; cursor: pointer; text-decoration: none; white-space: nowrap;
-  }
-  .cine-mandos > *:hover { background: #241a0d; }
-  .cine-x {
-    margin-left: auto; background: transparent; border: 0; cursor: pointer; padding: .2rem .35rem;
-    font-family: var(--mono); font-size: .9rem; line-height: 1; color: #6f7883;
-  }
-  .cine-x:hover { color: #e9ecef; }
-  @media (max-width: 40rem) {
-    .cine-top .paso { border-left: 0; padding-left: 0; }
-    .cine-mandos { margin-left: 0; }
-  }
-
-  /* ---------- la tesis ----------
-     Ni cita ni testimonio: la frase que la sección se compromete a sostener con
-     lo que viene debajo. En mono y grande porque tiene que leerse antes que el
-     dibujo, no después de él. */
-  .tesis { border-left: 2px solid var(--phosphor); padding: var(--s2) 0 var(--s2) var(--s3); margin: var(--s4) 0; max-width: 46rem; }
-  .tesis p {
-    font-family: var(--mono); font-size: clamp(1.02rem, 2.3vw, 1.3rem);
-    line-height: 1.44; letter-spacing: -.02em; color: var(--text);
-    margin: 0; text-wrap: balance;
-  }
-  .tesis .apostilla { display: block; font-size: .86rem; font-family: var(--sans); color: var(--muted); margin-top: var(--s2); letter-spacing: 0; }
-
-  /* ---------- el arco: la misma estrategia, medida tres veces ----------
-     Tres curvas y no una. Dibujarlas seguidas insinuaría que se suman, y no se
-     suman: cada medida arranca de su propia línea, que es exactamente la regla
-     que la aplicación se impone en Inicio.
-
-     Lo que sí comparten es la ESCALA vertical —un punto de altura vale lo mismo
-     en las tres—, que es lo único que hace que mirarlas juntas signifique algo.
-
-     Y la escalera de realidad va en el TRAZO, no en el color: pelo fino para el
-     pasado, trazo partido para lo que ocurrió sin dinero, trazo entero con
-     punto final para lo que ocurrió con él. El color no está libre en esta
-     página: verde y rojo son de los números, y el ámbar es de la casa. */
-  .arco-caja { padding: var(--s4) var(--s3) var(--s3); }
-  /* La proporción va en el CSS y no en el viewBox porque en un móvil los 800
-     de ancho dejarían el dibujo en 64 px de alto, que no es un gráfico sino
-     una raya. Con `none` el escalado deja de ser uniforme, y por eso dentro
-     del SVG no hay ni una letra: los porcentajes viven en los titulares de
-     abajo, donde además se leen mejor. */
-  .arco { display: block; width: 100%; height: auto; aspect-ratio: 800 / 172; }
-  .arco-cols {
-    display: grid; grid-template-columns: repeat(3, 29.5%);
-    justify-content: space-between; margin-top: var(--s3);
-  }
-  .arco-cols h3 { font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; color: var(--phosphor); margin-bottom: var(--s1); }
-  .arco-cols h3 b { color: var(--text); font-weight: 600; letter-spacing: 0; font-variant-numeric: tabular-nums; margin-left: .35rem; }
-  .arco-cols p { font-size: .86rem; margin: 0 0 var(--s2) 0; }
-  /* En columna estrecha ya no cuadran con los tramos del dibujo, y no pasa
-     nada: el orden los empareja. Lo que no puede pasar es que se estrujen. */
-  @media (max-width: 46rem) {
-    .arco { aspect-ratio: 2 / 1; }
-    .arco-cols { grid-template-columns: 1fr; gap: var(--s3); }
-  }
-  .dinero {
-    font-family: var(--mono); font-size: .64rem; letter-spacing: .12em;
-    text-transform: uppercase; border: 1px solid var(--line); border-radius: 2px;
-    padding: .2em .5em; display: inline-block; color: var(--muted);
-  }
-  .dinero.si { border-color: var(--phosphor); color: var(--phos-deep); background: var(--phos-wash); }
-
-  /* ---------- el intervalo ----------
-     El veredicto de la cuarentena no es un porcentaje, es una banda. Dibujarla
-     entera —con lo ancha que es— es el argumento: un puñado de operaciones no
-     permite afirmar gran cosa, y la pantalla lo enseña en vez de disimularlo. */
-  .banda { display: block; width: 100%; height: auto; max-width: 30rem; margin: var(--s3) 0 var(--s2); }
-
-  /* ---------- el televisor ----------
-     Dibujado, no capturado, y la página lo dice debajo. La ventana existe para
-     que se entienda de qué pantalla se habla, no para hacerla pasar por una
-     foto. */
-  .tele { border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: var(--surface); margin-top: var(--s4); }
-  .tele-cuerpo { display: grid; grid-template-columns: 1fr 15.5rem; }
-  .tele-graf { padding: var(--s3) var(--s3) var(--s2); border-right: 1px solid var(--line); }
-  .tele-graf svg { display: block; width: 100%; height: auto; }
-  .tele-rail { background: var(--surface-2); }
-  @media (max-width: 52rem) {
-    .tele-cuerpo { grid-template-columns: 1fr; }
-    .tele-graf { border-right: 0; border-bottom: 1px solid var(--line); }
-  }
-  .cuenta { padding: var(--s3); border-bottom: 1px solid var(--line); }
-  .cuenta .sitio { font-family: var(--mono); font-size: .78rem; font-weight: 600; display: block; }
-  .cuenta .dir { font-family: var(--mono); font-size: .7rem; color: var(--muted); display: block; margin-bottom: var(--s2); }
-  .cuenta .cifra { display: flex; align-items: baseline; gap: .5rem; font-family: var(--mono); font-size: 1.12rem; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
-  .cuenta .cifra svg { margin-left: auto; width: 3.75rem; height: 1.12rem; flex: none; }
-  .cuenta .sub { font-size: .76rem; color: var(--muted); display: block; margin-top: .2rem; }
-  .cuenta .sub b { font-family: var(--mono); font-weight: 600; }
-  .cuenta .sub b.up { color: var(--profit); }
-  .cuenta .sub b.down { color: var(--loss); }
-  .cuenta.mas { border-bottom: 0; }
-  .cuenta.mas span {
-    display: block; text-align: center; border: 1px dashed var(--line); border-radius: 2px;
-    padding: .55rem; font-family: var(--mono); font-size: .74rem; color: var(--muted);
-  }
-  .tele-pie { padding: var(--s2) var(--s3); border-top: 1px solid var(--line); background: var(--surface-2); font-size: .82rem; color: var(--muted); }
-  .tele-pie b { color: var(--text-soft); font-weight: 600; }
-
-  /* ---------- fichas ----------
-     Un mismo componente para el muro de proveedores y para el selector de
-     Inicio: los dos son «esto es lo que hay, y esto es lo elegido». */
-  .fichas { display: flex; flex-wrap: wrap; gap: .38rem; margin: var(--s3) 0; }
-  .fichas span {
-    font-family: var(--mono); font-size: .76rem; border: 1px solid var(--line);
-    border-radius: 2px; padding: .3rem .55rem; color: var(--text-soft); background: var(--surface);
-  }
-  .fichas span.on { border-color: var(--phosphor); color: var(--phos-deep); background: var(--phos-wash); font-weight: 500; }
-  .fichas span.mas { border-style: dashed; color: var(--muted); }
-
-  /* ---------- la vida de una operación ---------- */
-  .vida { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; margin: var(--s3) 0; }
-  .vida > div { background: var(--surface); padding: var(--s3); }
-  .vida .n { font-family: var(--mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--phosphor); display: block; margin-bottom: .3rem; }
-  .vida p { font-size: .84rem; margin: 0; }
-  @media (max-width: 46rem) { .vida { grid-template-columns: repeat(2, 1fr); } }
-
-  /* ── El pórtico ─────────────────────────────────────────────────────────────
-     Los últimos segundos de la animación cuatro, a la entrada del sitio: fondo
-     oscuro, la marca, el nombre y el eslogan emergiendo en ese orden. Es el
-     mismo remate, con los mismos tiempos y la misma curva, reescrito en CSS en
-     vez de traído en un iframe: son tres elementos apareciendo, y montar un
-     marco con su propio documento para eso costaría medio segundo de la
-     primera pintura a cambio de nada.
-
-     El nombre en la barra de arriba se apaga mientras esto se ve. Tenerlo dos
-     veces en la misma pantalla, uno grande emergiendo y otro pequeño quieto,
-     es la clase de detalle que no se sabe nombrar pero se nota. */
-  .portico {
-    background: #0b0d10; color: #eef1f5;
-    padding: clamp(var(--s4), 6.5vh, var(--s6)) 0;
-    overflow: hidden;
-  }
-  .portico-marca { display: flex; align-items: center; gap: var(--s3); }
-  .portico-marca svg { width: clamp(2.1rem, 4.4vw, 3.2rem); height: auto; flex: none; }
-  .portico-nombre {
-    font-family: var(--mono); font-weight: 600;
-    font-size: clamp(1.3rem, 3.3vw, 2.05rem); letter-spacing: -.035em;
-  }
-  .portico-nombre i { font-style: normal; color: #e08a1e; }
-  .portico-frase {
-    font-family: var(--mono); font-weight: 600; color: #fbfaf8;
-    font-size: clamp(1.45rem, 4.2vw, 2.6rem); line-height: 1.1;
-    letter-spacing: -.03em; margin: var(--s3) 0 0; text-wrap: balance;
-  }
-
-  /* `both` deja puesto el fotograma inicial durante la espera, así que el
-     estado natural de estos elementos es «ya visible»: quitando la animación
-     —abajo, para quien no quiera movimiento— queda el remate quieto y no un
-     hueco en blanco. */
-  @keyframes portico-ver  { from { opacity: 0 } to { opacity: 1 } }
-  @keyframes portico-sube { from { opacity: 0; transform: translateY(1em) } to { opacity: 1; transform: none } }
-
-  .portico-marca { animation: portico-sube .9s ease .35s both; }
-  .portico-frase { animation: portico-sube .9s ease 1.15s both; }
-  /* Se apaga el NOMBRE, no la marca entera: el icono sostiene la fila. Al
-     ocultar el enlace completo, en pantalla estrecha la barra se queda con
-     una fila en blanco encima del menú. */
-  .topbar .brand b { transition: opacity .6s ease; }
-  .portico-arriba .topbar .brand b { opacity: 0; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .portico-marca, .portico-frase { animation: none; }
-    .portico-arriba .topbar .brand b { opacity: 1; }
-  }
-
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-</style>
-
-<div class="topbar">
-  <div class="wrap">
-    <a class="brand" href="./">
-      
-      <svg width="30" height="30" viewBox="0 0 64 64" role="img" aria-label="BotFactoryFX">
-        <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.28"/>
-        <line x1="32" y1="11" x2="32" y2="53" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
-        <rect x="23" y="17" width="18" height="15" rx="2" fill="var(--phosphor)"/>
-        <rect x="23" y="37" width="18" height="11" rx="2" fill="var(--phosphor)" opacity="0.38"/>
-        <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
-      </svg>
-      <b>BotFactory<i>FX</i></b>
-    </a>
-    <nav class="nav">
-      <a href="#reality" aria-current="page">El método</a>
-      <a href="#recorrido">Cómo funciona</a>
-      <a href="#cuarentena">Cuarentena</a>
-      <a href="#salida">Exportación</a>
-      <a href="#perfiles">Para quién es</a>
-      <a href="#plataformas">Descargas</a>
-      <a href="#banco">BotFactoryIR</a>
-      <a href="manual/">Documentación</a>
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="./"><img src="assets/logo-split.svg" alt="" width="30" height="30">BotFactory<b>FX</b></a>
+    <nav class="barra-enlaces" aria-label="Main">
+      <a href="#bill">The bill</a>
+      <a href="how-it-works/">How it works</a>
+      <a href="#programs">Programs</a>
+      <a href="downloads/">Downloads</a>
+      <a href="docs/">Docs</a>
+      <a href="referrals/">Referrals</a>
     </nav>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Theme">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" href="es/" hreflang="es" lang="es" title="Leer en español">ES</a>
+      <a class="boton boton-ambar boton-chico" href="#pricing">Buy · $999</a>
+      <details class="menu-movil">
+        <summary>Menu</summary>
+        <nav aria-label="Main (mobile)">
+          <a href="#bill">The bill</a>
+          <a href="how-it-works/">How it works</a>
+          <a href="#programs">Programs</a>
+          <a href="downloads/">Downloads</a>
+          <a href="docs/">Docs</a>
+          <a href="referrals/">Referrals</a>
+          <a href="demo/?lang=en">Try it free</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
 
-    <a class="btn solid sm barra-comprar" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="comprar-barra" hidden>
-      <span class="cifra">499&nbsp;USD</span> Comprar
-    </a>
+<main id="contenido">
+
+<section class="heroe">
+  <div class="envoltura heroe-rejilla">
+    <div>
+      <p class="ceja">v1.31.2 · Linux · Windows 11 · macOS · one-time payment</p>
+      <h1>Generate thousands. <span>Keep the ones that hold&nbsp;up.</span></h1>
+      <p class="entradilla">A backtest almost always looks good. BotFactoryFX builds trading strategies by the thousand, then spends most of its effort trying to prove each one is worth nothing: 13 checks, nine of them on history the search never saw. What survives ships as native code, compiled for real, for MetaTrader&nbsp;4 and&nbsp;5, JForex, TradingView and Python.</p>
+      <div class="acciones">
+        <a class="boton boton-ambar" href="demo/?lang=en">Try it free in your browser <span class="flecha" aria-hidden="true">→</span></a>
+        <a class="boton boton-linea" href="#pricing">Buy a licence · $999</a>
+      </div>
+      <p class="letra-chica"><span>Try the whole thing before you pay</span><span>No subscription</span><span>Lifetime updates</span><span>Up to 3 machines</span></p>
+    </div>
+    <figure style="margin:0">
+      <div class="ventana">
+        <div class="ventana-barra"><i></i><i></i><i></i><span>BotFactoryFX — Autopilot</span></div>
+        <video id="video-piloto" data-bucle autoplay muted loop playsinline preload="metadata" poster="capturas/en/piloto.webp" width="1440" height="900">
+          <source src="video/piloto-en.webm" type="video/webm">
+          <source src="video/piloto-en.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption class="pie-de-foto"><button class="video-mando" type="button" data-mando="video-piloto">Pause</button><b>Not a mock-up: the program itself.</b> One sentence to the Autopilot — <i>“Build me a breakout system for EURUSD on H1”</i> — and it searches, measures, judges and saves. EURUSD from Dukascopy, 2019–2026, sped up.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="seccion" id="bill">
+  <div class="envoltura">
+    <div class="cabecera-centrada">
+      <p class="ceja">What it really costs</p>
+      <h2>The bill for getting started in trading</h2>
+      <p class="entradilla">Before earning a cent, this is what someone starting out pays. Ballpark figures — the ones you hear again and again. Click any line to see what BotFactoryFX does about it.</p>
+    </div>
+
+    <div class="factura-rejilla">
+      <div class="tique" aria-label="The bill">
+        <div class="tique-cabeza"><strong>GETTING STARTED</strong><small>receipt · a trader’s first years</small></div>
+        <ol>
+          <li><a href="#line-training"><span class="concepto">Training</span><span class="relleno"></span><span class="importe">$1,000–2,000</span></a></li>
+          <li><a href="#line-accounts"><span class="concepto">Funded accounts you burn</span><span class="relleno"></span><span class="importe">$2,000–3,000</span></a></li>
+          <li><a href="#line-software"><span class="concepto">Strategy-building software</span><span class="relleno"></span><span class="importe">€1,500–3,000</span><span class="nota">or a monthly fee</span></a></li>
+          <li><a href="#line-course"><span class="concepto">A course to learn that software</span><span class="relleno"></span><span class="importe">€1,000+</span></a></li>
+          <li><a href="#line-server"><span class="concepto">A server for the robot</span><span class="relleno"></span><span class="importe">every month</span></a></li>
+          <li><a href="#line-taxes"><span class="concepto">Taxes</span><span class="relleno"></span><span class="importe">if it goes well</span></a></li>
+        </ol>
+        <div class="tique-total"><span>TOTAL</span><span>before your first trade</span><small>Add it up yourself. It is never the small number.</small></div>
+      </div>
+
+      <div class="tique-bfx" id="pricing">
+        <header><img src="assets/logo-split.svg" alt="" width="28" height="28"><span>BotFactory<b>FX</b> — desktop licence</span></header>
+        <dl>
+          <dt>Price</dt><dd class="precio">$999, once</dd>
+          <dt>On your machines</dt><dd>up to 3</dd>
+          <dt>Updates</dt><dd>lifetime</dd>
+          <dt>Subscription</dt><dd>none</dd>
+          <dt>Systems</dt><dd>Linux · Windows · macOS</dd>
+        </dl>
+        <p class="pie-de-foto" id="recomendado" hidden></p>
+        <a class="boton boton-ambar" href="mailto:botfactoryfx@proton.me?subject=BotFactoryFX%20licence" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-lista="999" data-con-precio>Buy a licence · $999</a>
+        <p class="pie-de-foto">Paid in crypto (USDT or BTC). Its licence also opens BFQuarantine.</p>
+      </div>
+    </div>
+
+    <p class="remate">It won’t save you the learning or the server. It saves you <em>the expensive part</em>: the software, the course to understand it, and most of what burns in accounts.</p>
+  </div>
+</section>
+
+<section class="seccion seccion-alterna" id="line-by-line">
+  <div class="envoltura">
+    <p class="ceja">The bill, explained</p>
+    <h2>Line by line</h2>
+    <p class="entradilla">What each line of the bill is for, and what BotFactoryFX does about it. Where it doesn’t help, it says so.</p>
+
+    <div class="libro">
+      <article class="asiento" id="line-software">
+        <div class="asiento-titulo">
+          <h3>The software</h3>
+          <p class="cambio"><span class="antes">€1,500–3,000</span><span aria-hidden="true">→</span><span class="despues">$999, once</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p><strong>It searches at scale.</strong> A genetic algorithm tries thousands of rule sets per run, across seven families — trend, breakout, reversion, price action, momentum, volatility and divergence — and blends them when that pays. Your data: CSV from your broker, Dukascopy (1,615 instruments), Binance (over 500 pairs), MetaTrader&nbsp;5, JForex and web3.</p>
+          <p>Installed on up to three of your machines, with every update for life. No subscription.</p>
+        </div>
+        <figure class="captura"><img src="capturas/en/datos.webp" alt="The Data screen with EURUSD from Dukascopy and nine pairs from Binance loaded, the last two just downloaded" width="2000" height="1190" loading="lazy"><figcaption>Data: EURUSD from Dukascopy and nine pairs from Binance, the last two — BNBUSDT and LINKUSDT — downloaded side by side in the background. The program itself names the other instruments the judge can already try the rules on.</figcaption></figure>
+      </article>
+
+      <article class="asiento" id="line-course">
+        <div class="asiento-titulo">
+          <h3>The course</h3>
+          <p class="cambio"><span class="antes">€1,000+</span><span aria-hidden="true">→</span><span class="despues">built in</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p><strong>Ask in one sentence.</strong> “Build me a breakout system for EURUSD on H1” — and the Autopilot searches, measures, judges, saves and builds the portfolio, showing you every decision it took for you before it starts.</p>
+          <p>A tour walks you through each screen in the order of the work. The Help lives inside the program. And Dr.&nbsp;Quant — with your own AI key, or a model running on your machine — knows the judge and the Help, and tells you what each answer cost.</p>
+        </div>
+      </article>
+
+      <article class="asiento" id="line-accounts">
+        <div class="asiento-titulo">
+          <h3>The accounts you burn</h3>
+          <p class="cambio"><span class="antes">$2,000–3,000</span><span aria-hidden="true">→</span><span class="despues">the judge first</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p class="lema">Let the bullets hit the backtest, not your account.</p>
+          <p>The <strong>Reality Check</strong> asks not “did it make money?” but “is the result real?”. It judges every strategy with 13 checks, nine of them on the last stretch of history — the stretch the search never saw. And it knows how many variants were tried to reach each one: the best of a thousand has to prove more than the first.</p>
+          <ul class="comprobaciones" aria-label="The 13 checks">
+            <li><span>01</span>Out of sample</li><li><span>02</span>Better than chance</li><li><span>03</span>Walk-forward</li>
+            <li><span>04</span>Parameter sensitivity</li><li><span>05</span>Monte Carlo</li><li><span>06</span>Other instruments</li>
+            <li><span>07</span>Other timeframes</li><li><span>08</span>Sample size</li><li><span>09</span>Period consistency</li>
+            <li><span>10</span>Perturbation</li><li><span>11</span>Bar resolution</li><li><span>12</span>Cost tolerance</li>
+            <li><span>13</span>Drawdown</li>
+          </ul>
+          <p class="caso"><strong>A real run, made for this page.</strong> One sentence to the Autopilot; 9,660 rule sets tried; five strategies kept, the best winning 84% of its trades in the backtest. None came out solid: four passed as fragile, and on the stretch of history it had kept back, only two of those held up. That is its job: a line of the bill you never pay.</p>
+          <p>It also tests the procedure that found the strategy, repeating the whole search on five windows of history. Then the <strong>Quarantine</strong> compares what was promised with what happens, before any money is at stake, and <strong>Live</strong> reads your robots in MetaTrader&nbsp;5 and JForex, shows how far they drift from their backtest and warns you if one stops or hits its account cut-off.</p>
+        </div>
+        <figure class="captura"><img src="capturas/en/juez.webp" alt="The Reality Check verdict of a strategy, with its 13 checks" width="2000" height="1739" loading="lazy"><figcaption>The Reality Check on the best of the five strategies the Autopilot kept in the video above — the one that won 84% of its trades. Profit factor 2.94 on the history it was built on, 1.15 on the history it never saw; it loses money on the three other instruments it was tried on; rebuilt on H4, it loses money there too; and on history it never saw, random versions of the same stretch beat it 15 times out of 50. Verdict: not credible, 28 out of 100. Every number comes from the program.</figcaption></figure>
+      </article>
+
+      <article class="asiento" id="line-training">
+        <div class="asiento-titulo">
+          <h3>Training</h3>
+          <p class="cambio"><span class="antes igual">$1,000–2,000</span><span aria-hidden="true">→</span><span class="igual">it doesn’t replace it</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p>And it doesn’t pretend to. What it does is show you <strong>why a strategy is worthless</strong>, with the number in front of you, every time. That teaches more than most courses.</p>
+        </div>
+      </article>
+
+      <article class="asiento" id="line-server">
+        <div class="asiento-titulo">
+          <h3>The server</h3>
+          <p class="cambio"><span class="antes igual">every month</span><span aria-hidden="true">→</span><span class="igual">nor that</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p>The robot runs where yours already runs. BotFactoryFX writes it in <strong>native code for MQL4, MQL5, Java (JForex), Pine Script and Python (Hyperliquid)</strong>, compiled for real with each platform’s own compiler, and with protection inside: account cut-off, trading hours and Friday close.</p>
+        </div>
+        <figure class="captura"><img src="capturas/en/exportar.webp" alt="Exporting a strategy as native code for five platforms" width="2000" height="759" loading="lazy"><figcaption>Every saved strategy is one click away from five platforms: MQL4, MQL5, Java for JForex, Pine Script, and Python for Hyperliquid. What gets written is the strategy the judge measured.</figcaption></figure>
+      </article>
+
+      <article class="asiento" id="line-taxes">
+        <div class="asiento-titulo">
+          <h3>Taxes</h3>
+          <p class="cambio"><span class="igual">if it goes well</span></p>
+        </div>
+        <div class="asiento-cuerpo">
+          <p class="lema">The only line on the bill we wish on you.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="seccion" id="programs">
+  <div class="envoltura">
+    <div class="cabecera-centrada">
+      <p class="ceja">Three programs, one family</p>
+      <h2>Start with the free one</h2>
+      <p class="entradilla">Inspect a robot someone wants to sell you, watch one you already bought, or build your own.</p>
+    </div>
+    <div class="programas">
+      <article class="programa">
+        <p class="etiqueta">Inspect</p>
+        <h3>BFInspector</h3>
+        <p class="precio">Free</p>
+        <p>The inspection for the robot someone wants to sell you. It writes up what the robot does — when it buys, when it sells, with how much —, looks for seven known traps such as martingale or trading without a stop, redoes its backtest with your money and compares it with your account’s history. No server, no account, no sign-up. For now, its screens are in Spanish.</p>
+        <a class="boton boton-linea" href="downloads/#inspector">Download free</a>
+      </article>
+      <article class="programa">
+        <p class="etiqueta">Watch</p>
+        <h3>BFQuarantine</h3>
+        <p class="precio">$99 <small>once</small></p>
+        <p>Put the robot you were sold next to the backtest it was sold with, on the account where it runs — MetaTrader&nbsp;5, JForex or a web3 wallet — and check every week whether it still looks the same.</p>
+        <a class="boton boton-linea" href="mailto:botfactoryfx@proton.me?subject=BFQuarantine%20licence" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-producto="quarantine">Buy · $99</a>
+      </article>
+      <article class="programa programa-destacado">
+        <p class="etiqueta">Build and judge</p>
+        <h3>BotFactoryFX</h3>
+        <p class="precio">$999 <small>once</small></p>
+        <p>Everything: search, judge, quarantine, live, portfolio, Dr.&nbsp;Quant and export to five platforms. Its licence also opens BFQuarantine.</p>
+        <a class="boton boton-ambar" href="mailto:botfactoryfx@proton.me?subject=BotFactoryFX%20licence" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-lista="999" data-con-precio>Buy a licence · $999</a>
+      </article>
+    </div>
+    <p class="sistemas">All three for Linux, Windows 11 and macOS (Apple Silicon and Intel).</p>
+  </div>
+</section>
+
+<div class="franja" aria-label="Terms">
+  <div class="envoltura">
+    <ul>
+      <li>One-time payment in crypto (USDT or BTC)</li>
+      <li>Lifetime updates</li>
+      <li>Up to 3 machines per licence</li>
+      <li><a href="referrals/">Refer and earn: 100 USDT for you, $100 off for them</a></li>
+    </ul>
   </div>
 </div>
 
-<section class="portico" aria-label="BotFactoryFX">
-  <div class="wrap">
-    <p class="portico-marca">
-      <svg width="52" height="52" viewBox="0 0 64 64" aria-hidden="true">
-        <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#e08a1e" stroke-width="2.5" opacity="0.28"/>
-        <line x1="32" y1="11" x2="32" y2="53" stroke="#e08a1e" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
-        <rect x="23" y="17" width="18" height="15" rx="2" fill="#e08a1e"/>
-        <rect x="23" y="37" width="18" height="11" rx="2" fill="#e08a1e" opacity="0.38"/>
-        <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="#e08a1e" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
-      </svg>
-      <span class="portico-nombre">BotFactory<i>FX</i></span>
-    </p>
-    <h1 class="portico-frase">Genera miles.<br>Quédate con las que aguantan.</h1>
-  </div>
-</section>
-
-<section class="hero">
-  <div class="wrap">
-    
-    <p class="eyebrow">499 USD <span class="dim">· pago único · sin suscripción · v1.18.0</span></p>
-    
-    <p class="lead">Un algoritmo genético explora combinaciones a una velocidad que
-      ningún trader alcanza a mano. Un examen de robustez descarta las que solo
-      funcionaban sobre el papel. Lo que sale al final son <strong>pocas candidatas,
-      pero defendibles</strong> — y en código listo para tu plataforma.</p>
-
-    <div class="hero-cta">
-      <a class="btn solid" href="demo/">Probar gratis en el navegador</a>
-      <a class="btn" href="#precio">Comprar licencia</a>
+<section class="seccion" id="try">
+  <div class="envoltura">
+    <div class="cabecera-centrada">
+      <p class="ceja">Try before you buy</p>
+      <h2>The whole program, in your browser</h2>
+      <p class="entradilla">The browser version is almost the entire program: no connection to your broker, a cap of 25,000 candles, and nothing is kept when you reload. No sign-up and no time limit — try it as long as you like.</p>
+      <div class="acciones" style="margin-top:28px"><a class="boton boton-ambar" href="demo/?lang=en">Try it free <span class="flecha" aria-hidden="true">→</span></a></div>
     </div>
-    <p class="runs-on">Escritorio: <b>Linux</b> · Windows y macOS en preparación &nbsp;—&nbsp;
-      la versión web funciona en cualquier navegador, sin instalar y sin registro.</p>
-
-    <div class="criba-banda">
-      <figure class="criba">
-        <canvas id="criba" role="img"
-                aria-label="Novecientas estrategias candidatas trazadas a la vez. Al llegar al tramo de histórico que no habían visto, casi todas se apagan; seis siguen subiendo."></canvas>
-        <figcaption>
-          <span class="criba-vivo">
-            <span><b id="criba-vivas">0</b> candidatas en pie</span>
-            <span class="criba-paso" id="criba-paso">generando</span>
-          </span>
-          <span class="criba-frase" aria-hidden="true">
-            <b>Genera miles. Quédate con las que aguantan.</b>
-            <span class="criba-cifra">6 de 900, fuera de muestra</span>
-          </span>
-        </figcaption>
-      </figure>
-
-      <div class="datos">
-        <div class="dato"><b>8.455.409</b><span>velas en un solo histórico</span></div>
-        <div class="dato"><b>4.180</b><span>candidatas en una búsqueda</span></div>
-        <div class="dato"><b>12</b><span>comprobaciones de robustez</span></div>
-        <div class="dato"><b>5</b><span>lenguajes de salida</span></div>
-      </div>
-    </div>
-
-    <div class="compat">
-      <p class="compat-et">Lee tu histórico y escribe tu robot para</p>
-      <div class="marcas">
-        <span class="m">
-          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
-            <rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
-            <path d="M4.5 10.5V6l3.5 3 3.5-3v4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>MetaTrader 4 · 5</span>
-        <span class="m">
-          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
-            <rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
-            <path d="M4 11l2.6-3.4 2 2L11 5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>TradingView</span>
-        <span class="m">
-          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
-            <rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
-            <circle cx="8" cy="8" r="3.1" fill="none" stroke="currentColor" stroke-width="1.3"/>
-          </svg>Dukascopy JForex</span>
-        <span class="m">
-          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
-            <rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
-            <path d="M4 9.5l2.4-2.6 1.9 1.7L12 5.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M4 11.6h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-          </svg>Hyperliquid</span>
-        <span class="m otros">CSV de cualquier bróker</span>
-      </div>
-      <p class="compat-pie">Marcas de sus respectivos titulares. Sin afiliación ni patrocinio.</p>
-    </div>
-
-    <div class="shot">
-      <figure>
-        <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX — Datos</span></div>
-        
-        <img src="/capturas/aplicacion-datos.webp" width="1200" height="928" alt="La pantalla de Datos de BotFactoryFX: el histórico cargado de GBPJPY H1 con 20.000 velas traídas de MetaTrader 5, la biblioteca con tres históricos y los costes de bróker declarados." loading="eager" fetchpriority="high">
-        <figcaption><b>La aplicación real, sin retocar.</b> Tres históricos cargados —uno de
-          8.455.409 velas de un minuto—, la importación directa desde MetaTrader 5, y los
-          costes del bróker declarados una vez para todo lo que venga después.</figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
-
-<section class="trailer" id="trailer">
-  <div class="wrap">
-    <div class="trailer-marco">
-      <iframe id="trailer-marco" title="BotFactoryFX en veintiséis segundos"
-              loading="lazy" scrolling="no"></iframe>
-    </div>
-    <p class="trailer-pie">
-      <span>Veintiséis segundos · en bucle · sin sonido</span>
-      <a href="piezas/pieza-trailer.html">Verla suelta</a>
-    </p>
-  </div>
-</section>
-<section id="reality">
-  <div class="wrap">
-    <p class="eyebrow">01 · El método</p>
-    <h2>Buscar a escala. Filtrar con criterio.</h2>
-    <div class="cols">
+    <div class="compra-justa">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
       <div>
-        <p>Una sola persona prueba diez ideas en una tarde. <strong>Una búsqueda genética
-          evalúa miles en el mismo rato</strong>, combinando entradas, salidas, filtros y
-          niveles que nadie se pararía a escribir a mano. Ahí está el volumen que hace
-          falta para que aparezca algo bueno.</p>
-        <p>Pero buscar mucho tiene un precio conocido: cuantas más variantes pruebas, más
-          fácil es que la mejor lo sea por casualidad. Por eso la búsqueda no vale sin el
-          examen — y el examen no vale sin la búsqueda. <strong>Juntos son el método;
-          por separado son media herramienta.</strong></p>
-      </div>
-      <div class="rule-card">
-        <h3>Qué sale al otro lado</h3>
-        <p>Pocas, no muchas. Estrategias que siguen funcionando sobre el tramo de
-          histórico que nunca vieron, que aguantan tus costes reales y que no dependen
-          de tres operaciones afortunadas. <strong>Pocas y defendibles</strong> es el
-          objetivo — y es un objetivo alcanzable.</p>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <span>EURUSD · H1 · 2018–2026 · 49.612 velas · <b style="color:var(--text-soft);font-weight:500">1 de 4.180 candidatas</b></span>
-        <span class="verdict pass">Supera</span>
-      </div>
-      <div class="metrics">
-        <div class="metric"><span class="k">Sharpe</span><span class="v">0,94</span></div>
-        <div class="metric"><span class="k">Profit factor</span><span class="v">1,21</span></div>
-        <div class="metric"><span class="k">Retorno</span><span class="v up">+18,3 %</span></div>
-        <div class="metric"><span class="k">Operaciones</span><span class="v">412</span></div>
-      </div>
-      
-      <p class="glosa">
-        <b>Sharpe</b>, cuánto beneficio saca por cada unidad de vaivén que hace falta
-        aguantar: más alto es mejor, y sobre pocas operaciones no significa nada.
-        <b>Profit factor</b>, cuánto gana por cada euro que pierde — por debajo de 1
-        está perdiendo dinero.
-      </p>
-      <svg class="curve" viewBox="0 0 800 190" preserveAspectRatio="none" role="img"
-           aria-label="Curva de capital que sube con fuerza dentro de la muestra y se aplana fuera de ella">
-        <defs>
-          <linearGradient id="fillIn" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="var(--phosphor)" stop-opacity=".18"/>
-            <stop offset="1" stop-color="var(--phosphor)" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <line x1="0" y1="47"  x2="800" y2="47"  stroke="var(--line)" stroke-width="1"/>
-        <line x1="0" y1="95"  x2="800" y2="95"  stroke="var(--line)" stroke-width="1"/>
-        <line x1="0" y1="143" x2="800" y2="143" stroke="var(--line)" stroke-width="1"/>
-        <path d="M0,168 L60,158 L110,150 L150,136 L200,128 L240,110 L290,104 L330,88 L380,80 L420,64 L470,58 L520,44 L540,40 L540,190 L0,190 Z" fill="url(#fillIn)"/>
-        <path d="M0,168 L60,158 L110,150 L150,136 L200,128 L240,110 L290,104 L330,88 L380,80 L420,64 L470,58 L520,44 L540,40"
-              fill="none" stroke="var(--phosphor)" stroke-width="2"/>
-        <line x1="540" y1="8" x2="540" y2="182" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
-        <path d="M540,40 L585,34 L625,37 L668,26 L710,29 L752,19 L790,15 L800,13"
-              fill="none" stroke="var(--trace)" stroke-width="2"/>
-        <text x="548" y="22" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">fuera de muestra</text>
-      </svg>
-      <div class="panel-foot">
-        <b>Por qué supera:</b> 412 operaciones repartidas por todo el periodo, ninguna
-        de ellas decisiva por sí sola, y la pendiente se mantiene sobre el tramo que la
-        estrategia nunca vio. Cifras modestas — así es como se ve una ventaja de verdad,
-        y no un Sharpe de 1,8 sostenido por doce operaciones.
+        <p><strong>No refunds “just because” — and that is why you can try it first.</strong> You can spend weeks with the program before paying a cent, so buy when you know what you are buying.</p>
+        <p>And if something doesn’t work, write to us: we will look into it with you, and if you are right, you get your money back.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="recorrido">
-  <div class="wrap">
-    <p class="eyebrow">02 · El recorrido</p>
-    <h2>Seis pasos, y en ese orden.</h2>
-    <p class="lead" style="margin-bottom:var(--s4)">El menú de la aplicación es el
-      recorrido del trabajo. No hay saltos hacia atrás.</p>
-    
-    <div class="pantalla" id="pantalla" hidden>
-      <div class="pantalla-marco">
-        <iframe id="pantalla-marco" title="Animación del paso que se está viendo"
-                loading="lazy" scrolling="no"></iframe>
-      </div>
-      <div class="pantalla-pie">
-        <span class="pantalla-paso" id="pantalla-paso"></span>
-        <span class="pantalla-txt" id="pantalla-txt"></span>
-        <button type="button" class="pantalla-btn" id="pantalla-btn" aria-live="off">Pausa</button>
-      </div>
-    </div>
-
-    <div class="steps">
-      <a class="step" href="piezas/pieza-datos.html"
-         data-paso="01 · DATOS" data-num="05" data-titulo="El coste decide" data-dur="29 s"
-         data-pie="Cómo el spread se va comiendo la ventaja hasta hacerla desaparecer, y dónde queda el tuyo.">
-        <span class="n">01 · DATOS</span>
-        <h3>Tu histórico</h3>
-        <p>CSV de tu bróker, exportación de TradingView, descarga directa desde
-          MetaTrader 5 con el conector incluido, o los perpetuos de Hyperliquid sin cuenta
-          ni clave. Aquí también se declaran spread, comisión, deslizamiento y —cuando lo
-          hay— el carry: una vez por instrumento, y los usa todo lo demás.</p>
-        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-          Ver: datos y costes <span class="dur">29 s</span></span>
-      </a>
-      <a class="step" href="piezas/pieza-construir.html"
-         data-paso="02 · CONSTRUIR" data-num="04" data-titulo="Dos caminos, la misma clase de estrategia" data-dur="27 s"
-         data-pie="A mano o por evolución: las dos vías producen la misma clase de reglas y pasan el mismo examen.">
-        <span class="n">02 · CONSTRUIR</span>
-        <h3>Reglas o evolución</h3>
-        <p>Escribe las condiciones a mano si sabes lo que buscas, o deja que un algoritmo
-          genético las busque por ti si no. Las dos vías producen la misma clase de
-          estrategia y pasan el mismo examen.</p>
-        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-          Ver: construir <span class="dur">27 s</span></span>
-      </a>
-      <a class="step" href="piezas/pieza-reality-check.html"
-         data-paso="03 · REALITY CHECK" data-num="02" data-titulo="Las catorce pruebas" data-dur="24 s"
-         data-pie="Las doce comprobaciones, una a una, y un veredicto que señala por dónde flojea en vez de dar un aprobado.">
-        <span class="n">03 · REALITY CHECK</span>
-        <h3>El examen</h3>
-        <p>El paso que da nombre a todo. Decide si el resultado es una ventaja o un
-          espejismo, y sobre todo explica con qué evidencia lo decide, para que puedas
-          discutirlo en vez de creértelo. Sobre una estrategia tuya, sobre una lista
-          entera, o sobre el robot que te vendió otro.</p>
-        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-          Ver: Reality Check <span class="dur">24 s</span></span>
-      </a>
-      <a class="step" href="piezas/pieza-busqueda.html"
-         data-paso="04 · LA CRIBA" data-num="01" data-titulo="Del ruido a las que aguantan" data-dur="32 s"
-         data-pie="Mil ochocientas candidatas, cribadas a golpe de backtest hasta las pocas que siguen funcionando sobre el histórico que nunca vieron.">
-        <span class="n">04 · LA CRIBA</span>
-        <h3>De muchas a las pocas</h3>
-        <p>Una búsqueda devuelve cientos ordenadas por <em>fitness</em>, que es el número
-          del que hay que desconfiar: la primera es la que mejor se ajustó a lo que ya
-          pasó. Marcas las que quieras, las mandas juntas al examen, y vuelven ordenadas
-          <strong>por veredicto</strong>. Casi nunca es el mismo orden.</p>
-        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-          Ver: la búsqueda <span class="dur">32 s</span></span>
-      </a>
-      <a class="step" href="piezas/pieza-salida.html"
-         data-paso="05 · BIBLIOTECA" data-num="06" data-titulo="Se va contigo" data-dur="31 s"
-         data-pie="Lo que la biblioteca guarda no se queda dentro: las mismas reglas convertidas en MQL5, MQL4, Java, Pine y un bot en Python. Código que compila, no un esquema.">
-        <span class="n">05 · BIBLIOTECA</span>
-        <h3>Lo que sobrevive</h3>
-        <p>Las estrategias que pasan se guardan con su histórico, sus costes y su
-          veredicto pegados. Comparables entre sí meses después, sin tener que recordar
-          con qué datos se hicieron.</p>
-        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-          Ver: la salida <span class="dur">31 s</span></span>
-      </a>
-      <a class="step" href="piezas/pieza-cartera.html"
-         data-paso="06 · CARTERA" data-num="03" data-titulo="Dos que suben no son dos apuestas" data-dur="27 s"
-         data-pie="Dos estrategias que ganan por separado y pierden a la vez. La correlación lo dice antes que el dinero.">
-        <span class="n">06 · CARTERA</span>
-        <h3>Y cómo se llevan</h3>
-        <p>Matriz de correlación y curva agregada. Dos buenas estrategias que hacen lo
-          mismo no son diversificación: son una sola estrategia con el doble de riesgo,
-          y aquí se ve antes de descubrirlo con dinero. En tres pestañas —simulada,
-          <strong>en cuarentena</strong> y en vivo—, que es donde sigue la página.</p>
-        <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-          Ver: la cartera <span class="dur">27 s</span></span>
-      </a>
-    </div>
-
-    <div class="shot">
-      <figure>
-        <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX — Reality Check</span></div>
-        <img src="/capturas/aplicacion-reality-check.webp" width="1200" height="928" alt="La pantalla Reality Check de BotFactoryFX, con la estrategia y el histórico seleccionados y la lista de las comprobaciones que ejecuta." loading="lazy">
-        
-        <figcaption><b>Doce comprobaciones, y están enumeradas.</b> Degradación fuera de
-          muestra, reajuste walk-forward, sensibilidad a parámetros, tolerancia al ruido,
-          caída incluyendo posiciones abiertas, remuestreo Monte Carlo, si la ventaja existe
-          en otros instrumentos, consistencia por periodos, desplazamiento de la vela de
-          inicio, resolución de vela, tamaño de la muestra, y cuánto coste de bróker aguanta
-          la ventaja antes de desaparecer. Cada una pesa distinto, y el informe dice cuál
-          falló.
-          <br><br>
-          Dos que suenan peor de lo que son: <b>walk-forward</b> es reajustar la estrategia
-          cada cierto tiempo y seguir midiéndola, como haría alguien de verdad en vez de
-          dejarla quieta ocho años; y <b>Monte Carlo</b> es barajar el orden de sus
-          operaciones miles de veces, para ver si el resultado dependía de que llegaran
-          justo en ese orden.</figcaption>
-      </figure>
+<section class="cierre">
+  <div class="envoltura">
+    <h2>Don’t buy strategies. <span>Buy the way to throw them out.</span></h2>
+    <div class="acciones">
+      <a class="boton boton-ambar" href="demo/?lang=en">Try it free <span class="flecha" aria-hidden="true">→</span></a>
+      <a class="boton boton-linea" href="mailto:botfactoryfx@proton.me?subject=BotFactoryFX%20licence" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-lista="999" data-con-precio>Buy a licence · $999</a>
     </div>
   </div>
 </section>
 
-<section id="cuarentena">
-  <div class="wrap">
-    <p class="eyebrow">03 · La cuarentena</p>
-    <h2>La habitación entre el backtest y el dinero.</h2>
-    <p class="lead">Tu estrategia corre sobre las velas que tu bróker está publicando
-      ahora mismo, con órdenes imaginarias, el tiempo que haga falta. Sin pedir cuenta a
-      nadie, sin caducar a los quince días, y sin que una demo te invente los llenados.</p>
+</main>
 
-    <div class="tesis">
-      <p>Una demo te da llenados falsos sobre un mercado falso.<br>Esto te da el mercado
-        real con órdenes imaginarias.</p>
-      <span class="apostilla">Una testnet es otro mercado —otros precios, otro libro, otra
-        liquidez—, así que dice si el bot está bien conectado y no dice nada sobre si la
-        estrategia tiene ventaja.</span>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <span>Ejemplo · BTCUSD · H1 · <b style="color:var(--text-soft);font-weight:500">la misma
-          estrategia, medida tres veces</b></span>
-        <span>MISMO MOTOR</span>
-      </div>
-      <div class="arco-caja">
-        
-        <svg class="arco" viewBox="0 0 800 172" preserveAspectRatio="none" role="img"
-             aria-label="Tres curvas de capital de la misma estrategia: el backtest sube un 18,3 % sobre histórico, la cuarentena un 4,6 % sobre velas ya llegadas, y la cuenta real un 2,4 %. Cada una empieza en su propia línea y comparten escala.">
-          <defs>
-            <linearGradient id="lavadoVivo" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="var(--phosphor)" stop-opacity=".22"/>
-              <stop offset="1" stop-color="var(--phosphor)" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-
-          <rect x="282" y="34" width="236" height="130" fill="var(--phos-wash)"/>
-          <line x1="282" y1="34" x2="282" y2="164" stroke="var(--phosphor)" stroke-width="1" stroke-dasharray="2 3" opacity=".55"/>
-          <line x1="518" y1="34" x2="518" y2="164" stroke="var(--phosphor)" stroke-width="1" stroke-dasharray="2 3" opacity=".55"/>
-
-          <line x1="0"   y1="150" x2="236" y2="150" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4" opacity=".5"/>
-          <line x1="282" y1="150" x2="518" y2="150" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4" opacity=".5"/>
-          <line x1="564" y1="150" x2="796" y2="150" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4" opacity=".5"/>
-
-          <path fill="none" stroke="var(--phosphor)" stroke-width="1.4" opacity=".62"
-                d="M0.0,150.0 L1.6,153.9 L3.1,152.8 L4.7,149.8 L6.3,151.5 L7.9,155.7 L9.4,156.0 L11.0,154.6 L12.6,151.3 L14.2,155.2 L15.7,159.3 L17.3,157.2 L18.9,155.8 L20.5,151.1 L22.0,148.2 L23.6,148.6 L25.2,149.5 L26.7,141.6 L28.3,142.6 L29.9,145.1 L31.5,148.8 L33.0,148.6 L34.6,148.2 L36.2,149.4 L37.8,149.6 L39.3,148.9 L40.9,146.8 L42.5,143.5 L44.1,143.0 L45.6,148.6 L47.2,146.5 L48.8,151.0 L50.3,151.6 L51.9,156.3 L53.5,156.4 L55.1,158.9 L56.6,158.3 L58.2,148.2 L59.8,148.4 L61.4,145.9 L62.9,150.1 L64.5,151.1 L66.1,149.1 L67.7,149.5 L69.2,148.4 L70.8,148.2 L72.4,151.4 L73.9,149.8 L75.5,152.4 L77.1,146.7 L78.7,148.3 L80.2,146.3 L81.8,146.4 L83.4,143.5 L85.0,145.5 L86.5,142.5 L88.1,142.9 L89.7,139.1 L91.3,137.3 L92.8,136.9 L94.4,139.4 L96.0,137.1 L97.5,135.8 L99.1,130.8 L100.7,132.0 L102.3,130.4 L103.8,128.9 L105.4,128.1 L107.0,127.6 L108.6,127.1 L110.1,129.1 L111.7,132.3 L113.3,133.6 L114.9,131.9 L116.4,127.3 L118.0,124.3 L119.6,121.2 L121.1,118.9 L122.7,116.8 L124.3,116.3 L125.9,114.0 L127.4,108.6 L129.0,109.7 L130.6,111.9 L132.2,106.0 L133.7,105.3 L135.3,102.4 L136.9,99.8 L138.5,103.4 L140.0,95.9 L141.6,90.5 L143.2,90.0 L144.7,87.8 L146.3,87.5 L147.9,90.3 L149.5,90.8 L151.0,89.7 L152.6,86.3 L154.2,84.2 L155.8,84.1 L157.3,80.0 L158.9,82.5 L160.5,80.1 L162.1,76.8 L163.6,77.8 L165.2,83.4 L166.8,86.3 L168.3,85.7 L169.9,84.1 L171.5,79.4 L173.1,82.6 L174.6,82.7 L176.2,80.8 L177.8,81.4 L179.4,88.8 L180.9,86.4 L182.5,79.3 L184.1,76.3 L185.7,79.2 L187.2,80.6 L188.8,80.0 L190.4,72.4 L191.9,70.5 L193.5,70.3 L195.1,65.5 L196.7,65.9 L198.2,60.2 L199.8,62.4 L201.4,64.0 L203.0,61.8 L204.5,57.5 L206.1,55.6 L207.7,54.7 L209.3,60.5 L210.8,62.8 L212.4,64.8 L214.0,66.5 L215.5,64.8 L217.1,65.9 L218.7,63.6 L220.3,63.4 L221.8,64.5 L223.4,64.2 L225.0,63.0 L226.6,60.4 L228.1,62.0 L229.7,62.8 L231.3,67.1 L232.9,62.3 L234.4,57.9 L236.0,58.5"/>
-
-          <path fill="none" stroke="var(--phosphor)" stroke-width="2" stroke-dasharray="5 3.5"
-                d="M282.0,150.0 L287.1,151.6 L292.3,151.5 L297.4,149.3 L302.5,150.4 L307.7,152.0 L312.8,151.3 L317.9,156.9 L323.0,152.3 L328.2,149.0 L333.3,146.4 L338.4,145.1 L343.6,141.8 L348.7,138.4 L353.8,137.6 L359.0,139.0 L364.1,139.9 L369.2,139.4 L374.3,141.6 L379.5,139.3 L384.6,135.9 L389.7,139.1 L394.9,135.6 L400.0,136.4 L405.1,136.3 L410.3,136.5 L415.4,137.7 L420.5,138.7 L425.7,138.0 L430.8,141.3 L435.9,137.9 L441.0,141.6 L446.2,141.2 L451.3,140.2 L456.4,143.0 L461.6,143.8 L466.7,145.1 L471.8,147.8 L477.0,150.2 L482.1,144.0 L487.2,139.4 L492.3,139.6 L497.5,137.6 L502.6,135.3 L507.7,132.4 L512.9,129.0 L518.0,127.0"/>
-
-          <path fill="url(#lavadoVivo)" stroke="none"
-                d="M564.0,150.0 L574.5,149.8 L585.1,147.7 L595.6,147.5 L606.2,147.5 L616.7,149.0 L627.3,148.7 L637.8,145.1 L648.4,143.2 L658.9,139.8 L669.5,138.4 L680.0,136.6 L690.5,135.3 L701.1,138.6 L711.6,135.7 L722.2,133.6 L732.7,131.6 L743.3,135.0 L753.8,138.5 L764.4,139.9 L774.9,140.3 L785.5,138.7 L796.0,138.0 L796.0,150 L564.0,150 Z"/>
-          <path fill="none" stroke="var(--phosphor)" stroke-width="2.6" stroke-linejoin="round"
-                d="M564.0,150.0 L574.5,149.8 L585.1,147.7 L595.6,147.5 L606.2,147.5 L616.7,149.0 L627.3,148.7 L637.8,145.1 L648.4,143.2 L658.9,139.8 L669.5,138.4 L680.0,136.6 L690.5,135.3 L701.1,138.6 L711.6,135.7 L722.2,133.6 L732.7,131.6 L743.3,135.0 L753.8,138.5 L764.4,139.9 L774.9,140.3 L785.5,138.7 L796.0,138.0"/>
-          <circle cx="796" cy="138" r="3.6" fill="var(--phosphor)"/>
-        </svg>
-
-        <div class="arco-cols">
-          <div>
-            <h3>Backtest <b>+18,3 %</b></h3>
-            <p>Sobre el histórico que importaste. Dos años, 412 operaciones, y el Reality
-              Check que la dejó pasar.</p>
-            <span class="dinero">Sin dinero · el pasado</span>
+<footer class="pie">
+  <div class="envoltura">
+    <div class="pie-rejilla">
+      <div>
+        <a class="marca" href="./"><img src="assets/logo-split.svg" alt="" width="30" height="30">BotFactory<b>FX</b></a>
+        <p style="margin-top:12px;max-width:36ch">Strategy search with a judge that tries to prove each one is worth nothing.</p>
+        <div class="controles">
+          <div class="tema" role="group" aria-label="Theme">
+            <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+            <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+            <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
           </div>
-          <div>
-            <h3>Cuarentena <b>+4,6 %</b></h3>
-            <p>Sobre las velas que han llegado desde que entró. 34 días, 41 operaciones,
-              del bróker que tú elijas.</p>
-            <span class="dinero">Sin dinero · ahora</span>
-          </div>
-          <div>
-            <h3>En vivo <b>+2,4 %</b></h3>
-            <p>Lo que pasó en la cuenta. 12 días, 9 operaciones, leídas del exchange o
-              del terminal.</p>
-            <span class="dinero si">Con dinero · ahora</span>
-          </div>
+          <a class="idioma" href="es/" hreflang="es" lang="es">Español</a>
         </div>
       </div>
-      <div class="panel-foot">
-        <b>Las tres empiezan en su propia línea, y no se suman nunca.</b> Lo que sí
-        comparten es la escala: un punto de altura vale lo mismo en las tres, que es lo
-        único que hace que mirarlas juntas signifique algo. Y las mide <b>el mismo
-        motor</b> — si difieren, no es porque el código sea distinto, es porque el
-        mercado lo es.
-      </div>
-    </div>
-
-    <div class="cols" style="margin-top:var(--s5)">
       <div>
-        <h2 style="font-size:clamp(1.2rem,2.6vw,1.5rem)">Y al final no te da un beneficio.</h2>
-        <p>Te dice si <strong>sigue pareciéndose al backtest que la aprobó</strong> — o si
-          ya no. Por eso el veredicto no es un porcentaje sino una banda: «62&nbsp;% de
-          acierto» sobre seis operaciones es mentir con un número correcto.</p>
-
-        <svg class="banda" viewBox="0 0 420 90" role="img"
-             aria-label="Barra de acierto de 0 a 100 por ciento. El intervalo de confianza de la cuarentena va del 36,5 al 65,7 por ciento, el acierto observado es 51,2 y el del backtest, 57,1, cae dentro.">
-          <line x1="34" y1="40" x2="400" y2="40" stroke="var(--line)" stroke-width="1"/>
-          <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
-            <line x1="34"  y1="36" x2="34"  y2="44" stroke="var(--line)"/><text x="34"  y="64">0 %</text>
-            <line x1="217" y1="36" x2="217" y2="44" stroke="var(--line)"/><text x="217" y="64">50 %</text>
-            <line x1="400" y1="36" x2="400" y2="44" stroke="var(--line)"/><text x="400" y="64">100 %</text>
-          </g>
-          <rect x="167.5" y="34" width="107.1" height="12" rx="1.5" fill="var(--phosphor)" opacity=".28"/>
-          <line x1="167.5" y1="30" x2="167.5" y2="50" stroke="var(--phosphor)" stroke-width="1.6"/>
-          <line x1="274.6" y1="30" x2="274.6" y2="50" stroke="var(--phosphor)" stroke-width="1.6"/>
-          <circle cx="221.5" cy="40" r="3.6" fill="var(--phos-deep)"/>
-          <line x1="243" y1="20" x2="243" y2="54" stroke="var(--trace)" stroke-width="1.6" stroke-dasharray="3 2.5"/>
-          <text x="243" y="14" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--trace)">backtest 57,1 %</text>
-          <text x="221" y="84" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--phos-deep)">36,5 – 65,7 %</text>
-        </svg>
-
-        <p style="font-size:.9rem">41 operaciones en cuarentena, 21 aciertos. El 57&nbsp;%
-          del backtest cae dentro de lo que esas 41 pueden sostener. <strong>Eso no
-          prueba que funcione: es la ausencia de prueba de que se haya roto</strong> — y
-          es todo lo que un puñado de operaciones permite afirmar.</p>
-      </div>
-
-      <div class="rule-card">
-        <h3>Lo que no es</h3>
-        <p>La cuarentena <strong>no coloca órdenes</strong>. El motor evalúa las reglas
-          sobre velas ya cerradas, así que no mide deslizamiento, ni llenados parciales,
-          ni rechazos, ni latencia. Una demo sí toca algo de eso, y venderla como
-          sustituta sería prometer de más.</p>
-        <p style="margin-top:var(--s3)">Lo que no hace ninguna demo es decirte si te has
-          ido de tu propio backtest. Una demo da un P&amp;L; esto lo pone al lado del que
-          dijo el backtest.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="envivo">
-  <div class="wrap">
-    <p class="eyebrow">04 · En vivo</p>
-    <h2>Tu cuenta, en la misma pantalla donde la construiste.</h2>
-    <p class="lead">Un bot en Python contra un exchange opera a ciegas: los llenados
-      salen por la consola y el gráfico está en otra ventana, de otro programa, con otra
-      escala. Aquí no. Conectas la cartera y las operaciones aparecen sobre el gráfico
-      — las de verdad, las que ejecutó el exchange.</p>
-
-    <div class="tele">
-      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span>BotFactoryFX — Cartera · En vivo</span></div>
-      <div class="tele-cuerpo">
-        <div class="tele-graf">
-          <svg viewBox="0 0 560 250" role="img"
-               aria-label="Gráfico de velas con dos operaciones reales marcadas: una compra cerrada con ganancia del 3,84 por ciento y una venta cerrada con pérdida del 1,23 por ciento.">
-            
-            <path stroke="var(--muted)" stroke-width="1" opacity=".65" fill="none"
-                  d="M6.1,189.4 L6.1,213.9 M18.3,196.0 L18.3,208.6 M30.4,190.7 L30.4,223.4 M42.6,190.2 L42.6,216.0 M54.8,210.7 L54.8,223.0 M67.0,173.0 L67.0,224.0 M79.1,161.5 L79.1,190.0 M91.3,149.5 L91.3,165.9 M103.5,152.1 L103.5,186.3 M115.7,164.9 L115.7,193.7 M127.8,156.8 L127.8,186.3 M140.0,126.6 L140.0,166.9 M152.2,113.6 L152.2,136.2 M164.3,76.4 L164.3,123.4 M176.5,78.3 L176.5,93.8 M188.7,48.7 L188.7,90.7 M200.9,38.9 L200.9,81.0 M213.0,14.0 L213.0,45.0 M225.2,20.7 L225.2,55.0 M237.4,34.7 L237.4,65.9 M249.6,25.1 L249.6,54.3 M261.7,42.5 L261.7,51.5 M273.9,37.3 L273.9,54.6 M286.1,46.3 L286.1,75.5 M298.3,69.5 L298.3,88.3 M310.4,82.4 L310.4,113.0 M322.6,104.4 L322.6,139.3 M334.8,124.9 L334.8,149.1 M347.0,126.0 L347.0,148.0 M359.1,129.5 L359.1,138.6 M371.3,116.6 L371.3,137.9 M383.5,111.9 L383.5,128.0 M395.7,126.1 L395.7,161.7 M407.8,123.8 L407.8,172.4 M420.0,132.0 L420.0,150.6 M432.2,134.2 L432.2,161.8 M444.3,151.5 L444.3,178.7 M456.5,130.1 L456.5,168.9 M468.7,123.7 L468.7,152.6 M480.9,132.2 L480.9,165.8 M493.0,157.1 L493.0,177.5 M505.2,157.1 L505.2,166.5 M517.4,150.7 L517.4,165.6 M529.6,152.0 L529.6,163.4 M541.7,141.3 L541.7,153.9 M553.9,139.8 L553.9,153.7"/>
-            
-            <g fill="none" stroke="var(--text-soft)" stroke-width="1.1">
-              <rect x="14.9" y="197.5" width="6.8" height="5.2"/><rect x="51.4" y="213.8" width="6.8" height="1.2"/><rect x="63.6" y="187.1" width="6.8" height="26.7"/><rect x="75.7" y="163.5" width="6.8" height="23.6"/><rect x="124.4" y="162.7" width="6.8" height="18.3"/><rect x="136.6" y="130.9" width="6.8" height="31.8"/><rect x="148.8" y="116.4" width="6.8" height="14.5"/><rect x="160.9" y="87.4" width="6.8" height="29.0"/><rect x="185.3" y="64.3" width="6.8" height="25.1"/><rect x="197.5" y="42.0" width="6.8" height="22.3"/><rect x="209.6" y="22.3" width="6.8" height="19.7"/><rect x="234.0" y="38.6" width="6.8" height="16.3"/><rect x="258.3" y="43.3" width="6.8" height="2.8"/><rect x="343.6" y="130.8" width="6.8" height="7.5"/><rect x="355.7" y="129.7" width="6.8" height="1.2"/><rect x="367.9" y="127.4" width="6.8" height="2.3"/><rect x="380.1" y="126.5" width="6.8" height="1.2"/><rect x="404.4" y="133.9" width="6.8" height="26.4"/><rect x="453.1" y="139.8" width="6.8" height="20.1"/><rect x="465.3" y="137.1" width="6.8" height="2.7"/><rect x="501.8" y="161.5" width="6.8" height="2.8"/><rect x="514.0" y="159.7" width="6.8" height="1.8"/><rect x="526.2" y="152.3" width="6.8" height="7.4"/><rect x="538.3" y="144.3" width="6.8" height="8.0"/><rect x="550.5" y="143.8" width="6.8" height="1.2"/>
-            </g>
-            <g fill="var(--text-soft)">
-              <rect x="2.7" y="191.0" width="6.8" height="11.7"/><rect x="27.0" y="197.5" width="6.8" height="17.2"/><rect x="39.2" y="214.7" width="6.8" height="1.2"/><rect x="87.9" y="163.5" width="6.8" height="1.2"/><rect x="100.1" y="163.8" width="6.8" height="11.8"/><rect x="112.3" y="175.6" width="6.8" height="5.4"/><rect x="173.1" y="87.4" width="6.8" height="2.0"/><rect x="221.8" y="22.3" width="6.8" height="32.6"/><rect x="246.2" y="38.6" width="6.8" height="7.5"/><rect x="270.5" y="43.3" width="6.8" height="10.6"/><rect x="282.7" y="53.9" width="6.8" height="21.1"/><rect x="294.9" y="75.0" width="6.8" height="10.0"/><rect x="307.0" y="85.0" width="6.8" height="20.8"/><rect x="319.2" y="105.8" width="6.8" height="24.3"/><rect x="331.4" y="130.1" width="6.8" height="8.2"/><rect x="392.3" y="126.5" width="6.8" height="33.8"/><rect x="416.6" y="133.9" width="6.8" height="3.9"/><rect x="428.8" y="137.8" width="6.8" height="14.4"/><rect x="440.9" y="152.2" width="6.8" height="7.7"/><rect x="477.5" y="137.1" width="6.8" height="21.2"/><rect x="489.6" y="158.3" width="6.8" height="6.0"/>
-            </g>
-            
-            <g stroke="var(--trace)" fill="var(--trace)">
-              <line x1="152.2" y1="147.2" x2="200.9" y2="92.0" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
-              <path d="M152.2,141.7 L147.6,150.6 L156.8,150.6 Z"/>
-              <rect x="197.3" y="88.4" width="7.2" height="7.2"/>
-              <line x1="395.7" y1="115.1" x2="468.7" y2="112.7" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
-              <path d="M395.7,120.6 L391.1,111.7 L400.3,111.7 Z"/>
-              <rect x="465.1" y="109.1" width="7.2" height="7.2"/>
-            </g>
-            <g font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600">
-              <text x="209" y="84" fill="var(--profit)">+3,84 %</text>
-              <text x="477" y="118" fill="var(--loss)">−1,23 %</text>
-            </g>
-          </svg>
-        </div>
-
-        <div class="tele-rail">
-          <div class="cuenta">
-            <span class="sitio">Hyperliquid</span>
-            <span class="dir">0x4b7e…9c31</span>
-            <div class="cifra">$18.402
-              <svg viewBox="0 0 60 18" aria-hidden="true"><path fill="none" stroke="var(--profit)" stroke-width="1.3" d="M0.0,11.8 L2.6,14.9 L5.2,15.1 L7.8,13.4 L10.4,16.0 L13.0,13.1 L15.7,11.7 L18.3,11.0 L20.9,11.1 L23.5,8.7 L26.1,7.9 L28.7,6.8 L31.3,10.8 L33.9,10.9 L36.5,6.7 L39.1,5.9 L41.7,8.6 L44.3,10.2 L47.0,7.1 L49.6,2.2 L52.2,4.1 L54.8,2.0 L57.4,6.0 L60.0,6.4"/></svg>
-            </div>
-            <span class="sub"><b class="up">+2,4 %</b> en 30 días · 2 posiciones abiertas</span>
-          </div>
-          <div class="cuenta">
-            <span class="sitio">MetaTrader 5</span>
-            <span class="dir">Darwinex · terminal local</span>
-            <div class="cifra">€12.845
-              <svg viewBox="0 0 60 18" aria-hidden="true"><path fill="none" stroke="var(--loss)" stroke-width="1.3" d="M0.0,7.0 L2.6,5.6 L5.2,2.5 L7.8,3.3 L10.4,2.0 L13.0,4.8 L15.7,4.6 L18.3,7.3 L20.9,7.0 L23.5,7.2 L26.1,5.4 L28.7,6.2 L31.3,8.2 L33.9,10.1 L36.5,13.8 L39.1,10.1 L41.7,14.4 L44.3,14.2 L47.0,12.6 L49.6,12.9 L52.2,16.0 L54.8,15.0 L57.4,11.7 L60.0,8.6"/></svg>
-            </div>
-            <span class="sub"><b class="down">−0,9 %</b> en 30 días · 4 robots por número mágico</span>
-          </div>
-          <div class="cuenta mas"><span>+ Añadir cartera</span></div>
-        </div>
-      </div>
-      <div class="tele-pie"><b>Esquema, no captura</b> — las dos capturas de esta página sí
-        lo son. Triángulo, entrada; cuadrado, salida; y la marca al lado contrario de la
-        vela, para que no tape el precio. Aquí, una compra cerrada con <b>+3,84 %</b> y
-        una venta con <b>−1,23 %</b>: lo que hizo la cuenta, no lo que dijo el backtest.</div>
-    </div>
-
-    <div class="cols" style="margin-top:var(--s5)">
-      <div>
-        <h3>Las carteras las pones tú</h3>
-        <p style="margin-top:var(--s2)">Se acabó «la cuenta de Hyperliquid»: una dirección
-          es de quien tiene la llave, no de un sitio. Hay un botón de añadir y una lista,
-          pegas la dirección, se prueba contra los sitios que se saben leer, y
-          <strong>el nombre lo pones tú</strong>. Los perpetuos no piden clave: para leer
-          una cuenta basta con la dirección, y guardar un secreto que no se usa es riesgo
-          sin beneficio.</p>
-        <div class="fichas">
-          <span class="on">Hyperliquid</span>
-          <span class="on">MetaTrader 5</span>
-          <span class="mas">+ Añadir cartera</span>
-        </div>
-        <p style="font-size:.9rem">MetaTrader entra por el conector propio, el mismo que
-          trae el histórico: sin clave, sin puente de pago y sin abrir un puerto. Lee
-          <strong>operaciones, no apuntes</strong> — junta la entrada con su salida y
-          separa los robots por número mágico.</p>
-      </div>
-
-      <div class="rule-card">
-        <h3>Y en Inicio eliges cuál miras</h3>
-        <p>Antes la pantalla de bienvenida enseñaba una curva y no decía cuál. Ahora se
-          elige, y debajo del título pone qué es:</p>
-        <div class="fichas" style="margin:var(--s3) 0 var(--s2)">
-          <span>Simulada</span><span>Cuarentena</span><span class="on">En vivo</span>
-        </div>
-        <p style="font-size:.9rem">Lo que <em>habría</em> pasado sobre histórico, lo que
-          <em>habría</em> pasado sobre velas ya llegadas, o lo que <em>pasó</em> con
-          dinero. Y no se suman: una medida y otra supuesta en el mismo trazo es
-          exactamente el número bonito del que este programa desconfía.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <p class="eyebrow">05 · Dr. Quant</p>
-    <div class="cols">
-      <div>
-        <h2>Un asistente al que le está prohibido halagarte.</h2>
-        <p>En modo <strong>Chat</strong> explica: qué significa un Sharpe de 1,8 con doce
-          operaciones, por qué una correlación de −0,8 entre dos estrategias importa.
-          En modo <strong>Agente</strong> trabaja: carga el histórico, define la estrategia,
-          ejecuta, itera y guarda la mejor versión, resaltando cada campo que toca
-          mientras lo hace.</p>
-      </div>
-      <div class="rule-card">
-        <h3>Regla interna</h3>
-        <p>Prohibido fabricar métricas. Si no hay un backtest real detrás de una cifra,
-          lo dice en vez de estimarla. Un asistente que inventa un Profit Factor es peor
-          que no tener asistente.</p>
-      </div>
-    </div>
-
-    <div style="margin-top:var(--s5)">
-      <h3>Diecisiete proveedores — y dos que no salen de tu máquina</h3>
-      <p style="margin-top:var(--s2);max-width:44rem">La lista de proveedores empieza
-        <strong>vacía</strong>, porque cualquier lista corta se queda corta. Pegas la
-        clave y ella dice de quién es: <span style="font-family:var(--mono)">sk-ant-…</span>
-        es Anthropic, <span style="font-family:var(--mono)">gsk_…</span> es Groq. Si la
-        forma no distingue, te ofrece los candidatos en vez de elegir por ti.</p>
-      <div class="fichas">
-        <span>OpenAI</span><span>Anthropic</span><span>Google Gemini</span>
-        <span>OpenRouter</span><span>Groq</span><span>DeepSeek</span><span>Mistral</span>
-        <span>xAI (Grok)</span><span>Perplexity</span><span>Cerebras</span>
-        <span>Fireworks</span><span>Together AI</span><span>Moonshot (Kimi)</span>
-        <span>Z.ai (GLM)</span><span>NVIDIA NIM</span>
-        <span class="on">Ollama · local</span><span class="on">LM Studio · local</span>
-      </div>
-      <p style="max-width:44rem">Los dos de la derecha no piden clave y no mandan nada a
-        ninguna parte: corren en tu ordenador, y el botón de cargar modelos lista los que
-        ya tengas descargados. <strong>Un asistente de trading que no sepa de tus
-        estrategias más que tú</strong> es un requisito razonable para mucha gente, y
-        ahora no obliga a renunciar a él.</p>
-    </div>
-  </div>
-</section>
-
-<section id="salida">
-  <div class="wrap">
-    <p class="eyebrow">06 · Salida</p>
-    <h2>Se va contigo, en código que compila.</h2>
-    <div class="cols">
-      <div>
-        <h3>Cinco destinos</h3>
-        <ul class="ticks" style="margin: var(--s3) 0">
-          <li><strong>MQL4</strong> y <strong>MQL5</strong> — MetaTrader 4 y 5</li>
-          <li><strong>Java</strong> — Dukascopy JForex</li>
-          <li><strong>Pine Script v6</strong> — TradingView</li>
-          <li><strong>Python</strong> — un bot suelto contra Hyperliquid, que ahora
-            gestiona la operación y no solo la abre</li>
-        </ul>
-        <p>Código legible, con los parámetros expuestos como entradas. No es un
-          intérprete atado a la aplicación: es un fichero que se abre en el editor de tu
-          plataforma y se compila.</p>
-        <p>El de Python es distinto de los otros cuatro: no se apoya en la librería de
-          indicadores de ninguna plataforma, lleva dentro las fórmulas del propio motor.
-          Es el único que calcula exactamente lo que calculó el backtest — y el único
-          que se niega a generarse cuando no puede prometerlo. Arranca en seco.</p>
-      </div>
-      <div>
-        <h3>Y vuelve para contrastarse</h3>
-        <p style="margin-top:var(--s3)">El informe del probador de MetaTrader, de JForex
-          o de TradingView se puede cargar de vuelta y ponerse al lado del backtest
-          propio. Si no coinciden, la diferencia es información: costes distintos, datos
-          distintos, o la barra en la que se ejecuta la orden.</p>
-      </div>
-    </div>
-
-    <div style="margin-top:var(--s5)">
-      <h3>La vida entera de una operación</h3>
-      <p style="margin-top:var(--s2);max-width:44rem">El bot de Python abría la posición y
-        la dejaba sola: sin stop, sin objetivo y sin nadie mirando. Ahora la lleva de
-        principio a fin, y las órdenes viven en el exchange.</p>
-      <div class="vida">
-        <div><span class="n">01 · Abrir</span><p>A mercado, cuando la regla dispara.</p></div>
-        <div><span class="n">02 · Proteger</span><p>Stop y objetivo puestos en el exchange, no en la memoria del proceso.</p></div>
-        <div><span class="n">03 · Mover</span><p>Trailing y break-even: <strong>el nuevo entra antes de que salga el viejo</strong>.</p></div>
-        <div><span class="n">04 · Cerrar</span><p>Con orden de solo-reducir, cancelando lo que quedara puesto.</p></div>
-      </div>
-      <p style="max-width:44rem">Ese orden del tercer paso no es una manía: al revés queda
-        un instante sin stop, y un instante sin stop es exactamente por donde pasa un
-        salto de precio. Al arrancar, además, <strong>adopta lo que ya hubiera
-        abierto</strong> en vez de duplicarlo — reiniciar el proceso no puede costarte
-        una segunda posición.</p>
-    </div>
-  </div>
-</section>
-
-<section id="perfiles">
-  <div class="wrap">
-    <p class="eyebrow">07 · Para quién es</p>
-    <h2>Cuatro maneras de llegar hasta aquí.</h2>
-    <p class="lead" style="margin-bottom:var(--s4)">No son clientes ni testimonios —
-      todavía no hay a quién citar. Son las cuatro situaciones desde las que esta
-      herramienta tiene sentido. Si te reconoces en alguna, sigue leyendo; si no, te
-      ahorramos el resto.</p>
-
-    <div class="profiles">
-      <div class="profile">
-        <span class="who">Empiezas ahora</span>
-        <p>Has leído sobre automatizar, tienes cuenta en un bróker y no programas. Cada
-          tutorial que abres termina en una pantalla de código que no sabes tocar.</p>
-        <p class="gives">Construyes sin escribir una línea. Y, más importante, algo te
-          avisa cuando lo que has construido no vale — que es justo la parte que ningún
-          tutorial enseña.</p>
-      </div>
-
-      <div class="profile">
-        <span class="who">Llevas años operando a mano</span>
-        <p>Tienes reglas. Viven en tu cabeza, las aplicas con criterio, y nunca has
-          sabido del todo si funcionan o si solo recuerdas mejor las veces que salieron
-          bien.</p>
-        <p class="gives">Escribes esas reglas, las pasas por tu propio histórico con tus
-          propios costes, y obtienes un veredicto en vez de una impresión.</p>
-      </div>
-
-      <div class="profile">
-        <span class="who">Ya programas</span>
-        <p>Escribes MQL o Pine sin ayuda. No necesitas que nadie te construya una
-          estrategia: lo que te come el tiempo es probar variantes y decidir cuál
-          sobrevive.</p>
-        <p class="gives">El buscador genético explora más rápido de lo que tú tecleas, la
-          exportación es código legible que puedes modificar, y el examen de robustez es
-          lo que tendrías que haberte construido tú.</p>
-      </div>
-
-      <div class="profile">
-        <span class="who">Vienes de otra herramienta</span>
-        <p>Ya conoces el flujo de trabajo. Lo que buscas es una factura más pequeña, o
-          que funcione de verdad en Linux, donde las opciones se cuentan con los dedos de
-          una mano.</p>
-        <p class="gives">Un pago y ya. AppImage que arranca sin instalar, y conector con
-          MetaTrader 5 bajo Wine verificado en una máquina real, no prometido.</p>
-      </div>
-    </div>
-
-    <div class="notfor" style="margin-top:var(--s4)">
-      <h3>Y para quién no es</h3>
-      <ul class="ticks">
-        <li>Si buscas <strong>señales que copiar</strong>, esto no las da. Construye
-          estrategias; no las vende ni las alquila.</li>
-        <li>Si buscas <strong>una garantía de beneficio</strong>, no existe en ningún
-          software, y el que la insinúa te está mintiendo.</li>
-        <li>Si operas <strong>solo de forma discrecional</strong> y no quieres
-          sistematizar nada, aquí no hay nada para ti. Es una herramienta para poner
-          reglas a prueba, y sin reglas no hay nada que probar.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section id="precio">
-  <div class="wrap">
-    <p class="eyebrow">08 · Precio</p>
-    <h2>Tres escalones. Ninguna suscripción.</h2>
-    
-    <div class="escalones">
-      <div class="escalon">
-        <h3>BotFactoryIR</h3>
-        <div class="cuanto">Gratis<small>SIN CUENTA · SIN CADUCIDAD</small></div>
-        <p class="para">Te vendieron un robot y no sabes qué lleva dentro.</p>
+        <h3>Product</h3>
         <ul>
-          <li>Lee el robot y te dice qué hace: cuándo compra, cuándo vende, con cuánto</li>
-          <li>Le busca siete trampas conocidas, martingala incluida</li>
-          <li>Audita el informe que te enseñaron</li>
-          <li>Compara tu cuenta en vivo contra lo prometido</li>
-          <li class="no">No construye estrategias</li>
-        </ul>
-        <div class="abajo">
-          <a class="btn ghost" href="/inspector/">Descargar</a>
-        </div>
-      </div>
-
-      <div class="escalon">
-        <h3>BotFactoryQE</h3>
-        <div class="cuanto">99<small>USD · PAGO ÚNICO</small></div>
-        <p class="para">Tienes una idea y quieres saber si funciona <strong>en tu bróker</strong>,
-          antes de arriesgar dinero.</p>
-        <ul>
-          <li>Escribes la estrategia a mano</li>
-          <li>Corre sobre las velas que llegan ahora</li>
-          <li>Cuarentena sin límite de tiempo</li>
-          <li>Exporta el robot a las cinco plataformas</li>
-          <li class="no">Sin buscador genético</li>
-          <li class="no">Sin Reality Check</li>
-        </ul>
-        <div class="abajo">
-          <a class="btn" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-producto="quarantine" id="comprar-quarantine">Comprar · 99 USD</a>
-        </div>
-      </div>
-
-      <div class="escalon destacado">
-        <h3>BotFactoryFX</h3>
-        <div class="cuanto">499<small>USD · PAGO ÚNICO</small></div>
-        <p class="para">No tienes la idea todavía. Quieres que la máquina encuentre las que
-          aguantan.</p>
-        <ul>
-          <li>Todo lo de Quarantine</li>
-          <li><strong>El buscador genético</strong> — miles de estrategias</li>
-          <li><strong>Reality Check</strong> — las catorce pruebas</li>
-          <li>Carteras y matriz de correlación</li>
-          <li>Dr. Quant, con modelos locales</li>
-        </ul>
-        <div class="abajo">
-          <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="comprar-escalon">Comprar · 499 USD</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="price-box">
-      <div class="price-top">
-        <div class="price-fig">499 <span class="unit">USD · PAGO ÚNICO</span></div>
-        <p style="margin:var(--s2) 0 0 0">Pago con criptomoneda (USDT o BTC).
-          Actualizaciones de la rama 1.x incluidas.</p>
-      </div>
-      <div class="price-grid">
-        <div>
-          <h3>Incluido</h3>
-          <ul class="ticks" style="margin-top:var(--s3)">
-            <li>Aplicación de escritorio completa</li>
-            <li>Estrategias y carteras ilimitadas</li>
-            <li>Constructor genético completo</li>
-            <li>Reality Check y matriz de correlación</li>
-            <li><strong>Cuarentena</strong> sin límite de tiempo ni de expedientes</li>
-            <li>Cuentas <strong>en vivo</strong>: Hyperliquid y MetaTrader 5</li>
-            <li>Exportación a los cinco destinos</li>
-            <li>Dr. Quant en modo Chat y Agente, con modelos locales</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Gratis en el navegador</h3>
-          <ul class="ticks" style="margin-top:var(--s3)">
-            <li>Sin límite de tiempo ni de pruebas</li>
-            <li>Histórico acotado por capacidad del navegador</li>
-            <li>No guarda estrategias ni carteras</li>
-            <li>Sin instalación y sin registro</li>
-          </ul>
-          <p style="margin-top:var(--s3);font-size:.9rem">La versión web existe para que
-            juzgues el producto antes de pagar, no como cebo recortado.</p>
-        </div>
-      </div>
-
-      <div class="porque">
-        <h3>¿Por qué sólo criptomonedas?</h3>
-        <p>Porque cobrar con tarjeta es pagarle una comisión a la pasarela y otra al
-          banco, y ese porcentaje no sale de la nada: sale del precio. <strong>Menos
-          intermediarios, menos precio</strong> — la misma razón por la que esto es un
-          pago único y no una suscripción.</p>
-        <p>Lo que pierdes es el «que me lo devuelva el banco»: una transferencia en
-          cripto no se deshace. Lo que lo sustituye es más corto de leer que la letra
-          pequeña de un banco — <strong>catorce días para devolverlo, sin preguntas y
-          por el importe íntegro</strong>, y el programa entero funcionando gratis en
-          el navegador para que nadie compre a ciegas.</p>
-      </div>
-
-      <div class="price-cta">
-        <p class="recomendado" id="recomendado" hidden></p>
-        <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="comprar-precio">Comprar licencia · 499 USD</a>
-        <a class="btn ghost" href="demo/" id="probar-precio">Probar gratis, sin registro</a>
-        <p class="runs-on" style="width:100%;margin:0">
-          Hoy sólo <b>Linux</b> (AppImage). Windows y macOS en preparación — si ese es tu
-          sistema, <a href="#plataformas">avísanos</a> y te escribimos el día que abra,
-          en vez de cobrarte por algo que aún no puedes ejecutar.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="plataformas">
-  <div class="wrap">
-    <p class="eyebrow">09 · Descargas</p>
-    <h2>Linux hoy. Windows y macOS cuando estén.</h2>
-    <p class="lead" style="margin-bottom:var(--s4)">Se vende lo que está verificado en
-      una máquina real. Lo demás se anuncia cuando lo esté.</p>
-    <div class="plats">
-      <div class="plat live">
-        <div class="os">Linux</div>
-        <span class="state">Disponible</span>
-        <p>AppImage, sin instalación. Probado en Linux Mint 22.3, con conector de
-          MetaTrader 5 funcionando bajo Wine 11.</p>
-        <a class="btn solid sm" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev">Comprar</a>
-      </div>
-      <div class="plat">
-        <div class="os">Windows</div>
-        <span class="state">En preparación</span>
-        <p>El paquete existe y el detector de MetaTrader tiene su rama, pero no está
-          verificado en una máquina real. No se vende hasta que lo esté.</p>
-        <a class="btn ghost sm" href="soon/?system=windows">Avisadme</a>
-      </div>
-      <div class="plat">
-        <div class="os">macOS</div>
-        <span class="state">En preparación</span>
-        <p>Pendiente de firma y de verificación en máquina real. Mismo criterio: nada a
-          la venta sin comprobar.</p>
-        <a class="btn ghost sm" href="soon/?system=macos">Avisadme</a>
-      </div>
-    </div>
-
-    <a class="pieza-ancha" href="piezas/pieza-linux.html"
-       data-num="07" data-paso="09 · Descargas" data-titulo="El puente que nadie construyó" data-dur="33 s"
-       data-pie="El muro de «solo Windows», y el puente que sí cruza: veinte mil velas traídas de un terminal real bajo Wine.">
-      <span class="ver"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>
-        Ver: MetaTrader 5 en Linux <span class="dur">33 s</span></span>
-      <span class="t">Veinte mil velas traídas de un MetaTrader real bajo Wine</span>
-      <span class="d">Casi todo lo que se vende para trading algorítmico es solo para
-        Windows, y de ahí sale la pregunta razonable de si esto funciona de verdad en
-        Linux o solo arranca. La animación enseña el conector trabajando: el terminal
-        abierto bajo Wine, la petición, y el histórico entrando en la aplicación.</span>
-    </a>
-  </div>
-</section>
-
-<section id="banco">
-  <div class="wrap">
-    <p class="eyebrow">10 · Gratis</p>
-    <h2>Y si lo que quieres es<br>saber qué lleva dentro el de otro.</h2>
-    <p class="lead" style="margin-bottom:var(--s4)">
-      <strong>BotFactoryIR</strong> es un programa aparte, gratuito y de descarga
-      libre. Le das el robot que te vendieron y te dice qué lleva dentro; si además
-      tienes su informe, te dice si se sostiene. No hace falta cuenta, no hace falta
-      pagar, y el fichero no sale de tu ordenador — no hay servidor que lo reciba.
-      AppImage para Linux, como éste; Windows y macOS cuando estén.</p>
-
-    <div class="plats">
-      <div class="plat live">
-        <div class="os">Qué hace el robot, en cristiano</div>
-        <p>Lee el fichero y levanta acta: qué mira, cuándo compra, cuándo vende, cómo
-          cierra y con cuánto. <strong>Cada frase lleva el número de línea donde se
-          leyó</strong>, y lo que no se pudo leer lo dice en vez de rellenarlo.</p>
-      </div>
-      <div class="plat live">
-        <div class="os">Siete trampas conocidas</div>
-        <p>Si dobla el lote tras perder, si abre sin stop, si arriesga 400 para ganar
-          20 —y entonces acierta el 95 % por aritmética, no por bueno—, si sólo
-          funciona en ciertas cuentas, o si mira el futuro.</p>
-      </div>
-      <div class="plat live">
-        <div class="os">Sus cuentas contra sus operaciones</div>
-        <p>Recalcula cada cifra desde su propia lista de operaciones, nunca desde su
-          página de totales. Un resumen es una afirmación; una lista de operaciones
-          es una prueba.</p>
-      </div>
-      <div class="plat live">
-        <div class="os">Precios que no existieron</div>
-        <p>Con tu histórico debajo, comprueba si entraron a precios que su vela
-          nunca tocó, si operaron cuando no había mercado, y si aciertan el mínimo
-          exacto más veces de lo que cabe por azar.</p>
-      </div>
-      <div class="plat live">
-        <div class="os">Y antes de todo eso</div>
-        <p>Si todavía no tienes robot, la <a href="/inspector/probar/rachas/">calculadora de
-          rachas</a> te dice cuántas pérdidas seguidas trae un sistema con el acierto que
-          le pongas, cada cuánto, y cuánto se tarda en salir. <strong>Sin ficheros y sin
-          registro</strong> — se abre y ya está.</p>
-      </div>
-      <div class="plat live">
-        <div class="os">Y si ya lo tienes puesto</div>
-        <p>Sube el historial de tu cuenta y lo compara contra el backtest que te
-          enseñaron: si rinde lo que prometía, si acierta lo mismo y si opera al mismo
-          ritmo. <strong>Y si todavía no hay operaciones suficientes, lo dice</strong> en
-          vez de darte un veredicto que no se sostiene.</p>
-      </div>
-      <div class="plat live">
-        <div class="os">Y con tu dinero</div>
-        <p>Su informe se corrió con el capital de otro y su diferencial. Pon el tuyo
-          y sale otra curva, otras operaciones y un informe completo — el que
-          habrías tenido tú. <strong>Y las mismas operaciones a los costes de varios
-          brókers a la vez</strong>, que es como se ve si una estrategia es buena o
-          sólo barata de operar donde la probaron.</p>
-      </div>
-    </div>
-
-    <figure class="captura">
-      <img src="/capturas/banco-veredicto.webp" loading="lazy" width="1400" height="1255"
-           alt="El veredicto de BotFactoryIR sobre un informe de ejemplo: «Nada falso, pero 1 cosa merece una mirada». Tres comprobaciones hechas y tres que dicen «sin datos» porque necesitan el histórico.">
-      <figcaption>BotFactoryIR sobre un informe de ejemplo. Tres comprobaciones salen
-        con su fichero; las otras tres necesitan tu histórico, y lo dice en vez de
-        inventárselas.</figcaption>
-    </figure>
-
-    <p class="lead" style="margin-top:var(--s4)">
-      <strong>BotFactoryIR</strong> te dice <strong>qué pasó</strong>. El Reality Check de BotFactoryFX te
-      dice <strong>si es verdad</strong> — catorce pruebas sobre una estrategia, y un
-      algoritmo genético que cría las siguientes.</p>
-    <div class="hero-cta" style="margin-top:var(--s3)">
-      <a class="btn solid" href="/inspector/" id="ir-al-inspector">Descargar BotFactoryIR</a>
-    </div>
-  </div>
-</section>
-
-<section id="empezar" class="cierre">
-  <div class="wrap">
-    <p class="eyebrow">Empezar</p>
-    <h2>No compras estrategias.<br>Compras la forma de descartarlas.</h2>
-    <p class="lead">
-      La búsqueda genética, las doce comprobaciones, la cuarentena — todo sirve para lo
-      mismo: quitarte de encima las ideas que sólo funcionaban sobre el papel, antes de
-      que te lo cuente tu cuenta. Lo que sobreviva es tuyo, en código que compila y se
-      va contigo.
-    </p>
-
-    <div class="dos-vias">
-      <div class="via">
-        <h3>Antes de pagar</h3>
-        <p>La versión del navegador es el programa entero: sin límite de tiempo, sin
-          registro y sin funciones recortadas. Carga tu histórico, construye una
-          estrategia y pásale el examen. Si no te convence, ya lo sabes — y no has
-          puesto un euro.</p>
-        <a class="btn" href="demo/" id="probar-cierre">Probar gratis en el navegador</a>
-      </div>
-      <div class="via destacada">
-        <h3>Cuando te convenza</h3>
-        <p>Un pago de <strong>499 USD</strong> y ya está. Sin suscripción, sin
-          renovación y sin límite de estrategias. Actualizaciones de la rama 1.x
-          incluidas.</p>
-        <a class="btn solid" href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="comprar-cierre">Comprar licencia · 499 USD</a>
-      </div>
-    </div>
-
-    <p class="cierre-nota">
-      Se paga en criptomoneda, y una criptomoneda no se devuelve. <strong>Por eso la
-      versión gratuita es el programa completo y no un cebo recortado</strong>: cuando el
-      pago no tiene vuelta atrás, la prueba tiene que ir antes y tiene que ser de verdad.
-      Hoy sólo hay compilación para Linux, y no lleva firma de código — las dos cosas
-      están dichas arriba, antes del botón, y no en una nota a pie de página.
-    </p>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-
-    <div class="pie-enlaces">
-      <div>
-        <h3>Producto</h3>
-        <ul>
-          <li><a href="demo/" id="pie-demo">Probar gratis en el navegador</a></li>
-          <li><a href="https://plisio.net/payment-button/new/jvdSf6CcbhCK" rel="noopener" data-cobro="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" id="pie-comprar">Comprar licencia</a></li>
-          <li><a href="#plataformas">Descargas</a></li>
-          <li><a href="/inspector/" id="pie-inspector">BotFactoryIR, gratis</a></li>
+          <li><a href="demo/?lang=en">Try it free</a></li>
+          <li><a href="#pricing">Buy a licence</a></li>
+          <li><a href="downloads/">Downloads</a></li>
+          <li><a href="downloads/#inspector">BFInspector, free</a></li>
         </ul>
       </div>
       <div>
-        <h3>Aprender</h3>
+        <h3>Learn</h3>
         <ul>
-          <li><a href="manual/" id="pie-manual">El manual · 21 capítulos</a></li>
-          <li><a href="piezas/" id="pie-piezas">Las ocho animaciones</a></li>
-          <li><a href="#reality">Qué es el Reality Check</a></li>
-          <li><a href="#cuarentena">Qué es la cuarentena</a></li>
+          <li><a href="docs/">Documentation</a></li>
+          <li><a href="how-it-works/">How it works</a></li>
+          <li><a href="referrals/">Refer and earn</a></li>
         </ul>
       </div>
       <div>
-        <h3>Antes de comprar</h3>
-        <ul>
-          <li><a href="#precio">Qué cuesta y qué incluye</a></li>
-          <li><a href="#perfiles">Para quién es — y para quién no</a></li>
-          <li><a href="#recorrido">Cómo se trabaja con esto</a></li>
-          <li><a href="#trailer">Verlo en veintiséis segundos</a></li>
-          <li><a href="/inspector/probar/rachas/">Cuántas pérdidas seguidas vas a tragar</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Contacto</h3>
+        <h3>Contact</h3>
         <ul>
           <li><a href="mailto:botfactoryfx@proton.me">botfactoryfx@proton.me</a></li>
-          <li><a href="referidos/">Recomendar y llevarte el 10 %</a></li>
         </ul>
-        <p>Contesta una persona, no un formulario. Si escribes por un fallo, di qué
-          sistema y qué versión: sale en el pie de la aplicación.</p>
+        <p style="margin-top:10px">A person answers, not a form. If you write about a bug, say which system and which version — it’s at the bottom of the program.</p>
       </div>
     </div>
-
-    <div class="pie-cols">
-      <div>
-        <h3>Devoluciones</h3>
-        <p><b>Catorce días, sin preguntas.</b> Escribe dentro de los catorce días
-          siguientes al pago y se te devuelve el importe íntegro, en la misma moneda y a
-          la dirección que digas. No hace falta motivo ni explicación.</p>
-        <p>Y antes de pagar no hace falta arriesgar nada: la versión del navegador es el
-          programa entero, sin recortes.</p>
-      </div>
-      <div>
-        <h3>Riesgo</h3>
-        <p><b>Operar puede costarte todo tu capital.</b> Ningún resultado pasado —ni en un
-          backtest, ni en cuarentena, ni en una cuenta real— garantiza el futuro.</p>
-        <p>Esto es una herramienta de medida, no un asesor: no recomienda operaciones, no
-          gestiona dinero y no da consejo financiero. Las decisiones y las pérdidas son
-          tuyas.</p>
-      </div>
-      <div>
-        <h3>Privacidad</h3>
-        <p>Esta página <b>no usa cookies, ni analítica, y no pide nada a terceros</b>.
-          Ni una sola petición sale de este dominio: hasta las tipografías se sirven
-          desde aquí, para que tu IP no llegue a Google por leernos.</p>
-        <p>Las aplicaciones no mandan tus ficheros a ninguna parte. El pago lo procesa
-          <a href="https://plisio.net" rel="noopener">Plisio</a>, con sus propias
-          condiciones.</p>
-      </div>
-      <div>
-        <h3>La licencia</h3>
-        <p>Una licencia por sistema, sin caducidad y sin suscripción, con las
-          actualizaciones de la rama 1.x incluidas. Si cambias de máquina, escribe y se te
-          da una clave nueva sin coste.</p>
-        <p>No hay activación por internet ni comprobación periódica: el programa funciona
-          sin conexión, para siempre, con o sin este sitio en pie.</p>
-      </div>
-    </div>
-
-    <div class="pie-linea">
-      <span>BotFactoryFX v1.18.0</span>
-      <span>Operar conlleva riesgo. Ningún resultado pasado garantiza el futuro.</span>
+    <div class="legal">
+      <p><strong>Trading can cost you all your capital.</strong> No past result — in a backtest, in quarantine or on a real account — guarantees the future. BotFactoryFX is analysis software: it gives no investment advice, does not manage money and does not trade for you.</p>
+      <p>This site uses no cookies and no trackers, and loads nothing from outside its own domain. If you pick a theme, your browser remembers it locally. Buying talks to our checkout and to Plisio, and only when you click Buy.</p>
+      <p>© 2026 BotFactoryFX</p>
     </div>
   </div>
 </footer>
-
-<dialog class="cine" id="cine" aria-labelledby="cine-tit">
-  <div class="cine-top">
-    <span class="num" id="cine-num"></span>
-    <h3 id="cine-tit"></h3>
-    <span class="paso" id="cine-paso"></span>
-    <button class="cine-x" id="cine-x" type="button" aria-label="Cerrar">✕</button>
-  </div>
-  <iframe id="cine-marco" title="Animación" allow="fullscreen"></iframe>
-  <div class="cine-pie">
-    <p id="cine-txt"></p>
-    <div class="cine-mandos">
-      <button type="button" id="cine-otra">Repetir</button>
-      <a id="cine-aparte" target="_blank" rel="noopener">Abrir aparte</a>
-    </div>
-  </div>
-</dialog>
-
-<script>
-/* Los seis pasos del recorrido abren su animación en el diálogo de arriba.
-   Las piezas se reproducen solas al cargarse, así que basta con darle una
-   dirección al marco; el sufijo #marco les dice que se queden solo con el
-   escenario, porque la barra de mandos la pone el diálogo.
-   Al cerrar se le quita la dirección: una pieza escondida seguiría pidiendo
-   fotogramas y calentando el portátil de quien la abrió. */
-(() => {
-  "use strict";
-  const cine = document.getElementById("cine");
-  // Sólo la pieza ancha de Descargas. Los seis pasos del recorrido dejaron de
-  // pasar por aquí el 4 de septiembre de 2026: los reproduce la pantalla de su
-  // propia sección, que además es más grande que este diálogo. Dos manejadores
-  // sobre el mismo enlace se pisan —el primero registrado gana— y el resultado
-  // era un modal abriéndose encima de la pantalla que acababa de arrancar.
-  const pasos = document.querySelectorAll("a[data-titulo][href]:not(.step)");
-  if (!cine || typeof cine.showModal !== "function") return;   // sin <dialog>, el enlace hace su trabajo
-
-  const marco  = document.getElementById("cine-marco");
-  const num    = document.getElementById("cine-num");
-  const titulo = document.getElementById("cine-tit");
-  const paso   = document.getElementById("cine-paso");
-  const texto  = document.getElementById("cine-txt");
-  const aparte = document.getElementById("cine-aparte");
-
-  pasos.forEach((a) => a.addEventListener("click", (e) => {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;  // abrir en otra pestaña sigue funcionando
-    e.preventDefault();
-    const ruta = a.getAttribute("href");
-    num.textContent    = "Pieza " + a.dataset.num;
-    titulo.textContent = a.dataset.titulo;
-    paso.textContent   = a.dataset.paso;
-    texto.textContent  = a.dataset.pie;
-    aparte.href = ruta;
-    marco.src   = ruta + "#marco";
-    cine.showModal();
-  }));
-
-  const cerrar = () => cine.close();
-  document.getElementById("cine-x").addEventListener("click", cerrar);
-  cine.addEventListener("click", (e) => { if (e.target === cine) cerrar(); });   // el fondo también cierra
-  cine.addEventListener("close", () => marco.removeAttribute("src"));
-
-  /* Escape cierra. Debería hacerlo <dialog> por su cuenta, pero no en todos
-     los motores —aquí se comprobó que la tecla llega y el `cancel` no—, y un
-     modal del que no se sale con Escape es un modal roto. Cerrar dos veces no
-     hace nada, así que sobra con esto aunque el navegador ya lo hiciera. */
-  cine.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") { e.preventDefault(); cerrar(); }
-  });
-
-  /* Repetir recarga el marco, que es lo que vuelve a disparar la pieza. */
-  document.getElementById("cine-otra").addEventListener("click", () => {
-    const src = marco.src;
-    marco.removeAttribute("src");
-    marco.src = src;
-  });
-})();
-
-/* Quien llega recomendado, con ?ref=… en la dirección.
-   ═══════════════════════════════════════════════════════════════════════════
-   El código es un NÚMERO DE PEDIDO, no un correo. No es cosmética: con el
-   10 % a cada lado, un código que cualquiera pueda inventarse es un 20 % de
-   descuento para quien se recomiende a sí mismo con dos direcciones. Un
-   número de pedido lleva su sello, tiene que constar pagado, y de paso no es
-   un dato personal de nadie.
-
-   Se comprueba contra el servidor ANTES de enseñar nada. Enseñar 449,10 sin
-   comprobarlo y que luego la factura ponga 499 es peor que no enseñarlo.
-
-   NO se guarda. Ni cookie, ni localStorage — el pie de esta página promete
-   que no se guarda nada en el navegador del visitante, y un programa de
-   referidos no es motivo para romper la única promesa que la página hace
-   sobre él. El dato viaja mientras el parámetro esté en la dirección.
-
-   Y no se enciende hasta que los botones pasen por nuestro cobro: mientras
-   sigan apuntando al botón viejo de Plisio, enseñar un descuento sería
-   prometer algo que ese botón no puede cumplir —cobra 499 pase lo que pase—.
-   La comprobación de abajo hace que esto se active solo el día que cambien,
-   sin que haya que acordarse. */
-(function () {
-  const ref = (new URLSearchParams(location.search).get("ref") || "").trim().toUpperCase();
-  const caja = document.getElementById("recomendado");
-  const botones = [...document.querySelectorAll("a.btn.solid[id^=comprar-]")];
-  if (!ref || !caja || !botones.length) return;
-  if (!/^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref)) return;
-
-  /* La dirección del cobro sale del propio botón y no de un marcador que
-     rellene la construcción: así no puede quedarse desincronizada, y esta
-     página no necesita saber nada que no esté ya escrito en ella. Si los
-     botones no la llevan, el descuento no se puede aplicar y no se enseña:
-     prometer un precio que el botón no va a cobrar es peor que no decir nada. */
-  const cobro = botones[0].dataset.cobro;
-  if (!cobro) return;
-
-  fetch(cobro + "/recomendacion?ref=" + encodeURIComponent(ref))
-    .then((r) => r.json())
-    .then((v) => {
-      if (!v || !v.vale) return;
-      const precio = String(v.precio).replace(".", ",");
-      caja.textContent = `Vienes recomendado: pagas ${precio} USD en vez de 499. `
-        + "El descuento se aplica en la factura, sin pedirlo.";
-      caja.hidden = false;
-      for (const b of botones) {
-        // Sólo los del producto grande: el escalón de 99 tiene su propio
-        // precio y poner aquí el descuento del otro sería mentir en su botón.
-        if (!b.dataset.producto) b.textContent = `Comprar licencia · ${precio} USD`;
-      }
-    })
-    .catch(() => {});   // sin descuento visible, que es el lado prudente
-})();
-
-/* El tráiler: se pide cuando se acerca, y se suelta cuando se va lejos.
-   ═══════════════════════════════════════════════════════════════════════════
-   Está casi en lo alto de la página, así que lo normal es que se cargue casi
-   siempre; el observador está por el caso contrario, el visitante que rebota
-   en la portada sin llegar a bajar.
-
-   Y se descarga al alejarse de verdad —no al primer píxel, sino pasada una
-   pantalla entera— porque es lo único de esta página que sigue trabajando
-   cuando nadie lo mira: un bucle de veintiséis segundos repintando un lienzo
-   para siempre calienta un portátil y se nota en la batería de un móvil.
-   Vaciar el src detiene su reloj sin que esta página tenga que hablar con él.
-
-   Si vuelve a entrar se vuelve a poner, y arranca desde el principio: es un
-   bucle, no un vídeo con minuto guardado, así que no hay nada que retomar. */
-(function () {
-  const marco = document.getElementById("trailer-marco");
-  const caja = document.getElementById("trailer");
-  const suelta = document.querySelector(".trailer-pie a");
-  if (!marco || !caja || !suelta) return;
-
-  /* La dirección se lee del enlace «Verla suelta», no se escribe aquí.
-     Al publicar, las piezas se copian planas y publicar.py reescribe los href
-     de `piezas/listas/…` a `piezas/…` — pero sólo los href, no las cadenas de
-     JavaScript. Escrita a mano aquí, la ruta funcionaba en la propuesta y daba
-     404 en el sitio publicado, que es donde nadie la estaba mirando. Es el
-     mismo truco que ya usa el proyector de las piezas, y por lo mismo. */
-  const ruta = suelta.getAttribute("href") + "#marco";
-
-  if (!("IntersectionObserver" in window)) { marco.src = ruta; return; }
-
-  new IntersectionObserver((entradas) => {
-    const dentro = entradas[0].isIntersecting;
-    if (dentro && !marco.getAttribute("src")) marco.src = ruta;
-    else if (!dentro && marco.getAttribute("src")) marco.removeAttribute("src");
-  }, { rootMargin: "600px 0px" }).observe(caja);
-})();
-
-/* La pantalla del recorrido: las seis piezas, solas y en orden.
-   ═══════════════════════════════════════════════════════════════════════════
-   Tres decisiones que no se ven leyendo el código:
-
-   No se carga hasta que hace falta. El marco nace sin dirección y sólo la
-   recibe cuando la sección se acerca a la pantalla — 253 KB que no se piden
-   si el visitante nunca baja hasta aquí.
-
-   Para saber cuándo termina una pieza se usa su duración declarada, la misma
-   que enseña cada tarjeta. No hay forma de que un iframe avise de que sus
-   animaciones CSS han acabado sin meterle un guion dentro a las siete, y la
-   duración ya estaba escrita en el marcado desde el principio.
-
-   Y se para al salir de pantalla. Una animación corriendo donde nadie la ve
-   gasta batería y calienta un portátil sin dar nada a cambio.
-
-   Con «reducir movimiento» activado no arranca sola. Las piezas ya respetan
-   esa preferencia por dentro —colapsan a 0,01 ms y se quedan en su fotograma
-   final—, así que autoarrancarlas daría un pase de diapositivas mudo y sin
-   sentido. En ese caso la pantalla espera a que se pulse el botón. */
-(function () {
-  const caja = document.getElementById("pantalla");
-  const marco = document.getElementById("pantalla-marco");
-  const pasos = [...document.querySelectorAll(".steps a.step[href]")];
-  if (!caja || !marco || !pasos.length) return;
-
-  // En pantalla estrecha, nada. Las piezas dejan de escalar por debajo de unos
-  // 640 px y su letra pequeña se queda clavada en 7,2 px: en un móvil se verían
-  // y no se leerían. Ni siquiera abriéndolas a pantalla completa se arregla —
-  // el problema es el ancho del teléfono, no el del marco— así que aquí los
-  // seis enlaces se quedan como enlaces y llevan a la pieza, que al menos se
-  // queda con toda la pantalla y se puede girar el aparato.
-  //
-  // El umbral es exactamente donde se midió el suelo, no un número redondo.
-  if (!matchMedia("(min-width: 40rem)").matches) return;
-
-  const etiqueta = document.getElementById("pantalla-paso");
-  const pie = document.getElementById("pantalla-txt");
-  const boton = document.getElementById("pantalla-btn");
-  const quieto = matchMedia("(prefers-reduced-motion: reduce)");
-
-  let actual = -1, reloj = null, enPantalla = false, pausado = quieto.matches;
-
-  // El margen es porque la duración declarada es la de la pieza, y el marco
-  // tarda un poco en pedirla y pintarla. Sin él, el salto llega justo antes
-  // del último fotograma y el final se pierde siempre.
-  //
-  // `Number.isFinite` y no `|| 30`: con `||`, un data-dur de cero segundos
-  // —falso en JavaScript— caería al valor por defecto. No pasa hoy porque las
-  // siete declaran su duración, pero es la clase de red que sólo se nota el
-  // día que alguien añade la octava y se deja el atributo a medias.
-  const segundos = (a) => {
-    const d = parseInt(a.dataset.dur, 10);
-    return (Number.isFinite(d) ? d : 30) + 1.5;
-  };
-
-  function poner(i, contando) {
-    actual = ((i % pasos.length) + pasos.length) % pasos.length;
-    const a = pasos[actual];
-    marco.src = a.getAttribute("href") + "#marco";
-    etiqueta.textContent = a.dataset.paso;
-    pie.textContent = a.dataset.pie;
-    pasos.forEach((p, n) => p.classList.toggle("viendo", n === actual));
-    clearTimeout(reloj);
-    if (contando) reloj = setTimeout(() => poner(actual + 1, true), segundos(a) * 1000);
-  }
-
-  function arrancar() {
-    if (pausado) { if (actual < 0) poner(0, false); return; }
-    poner(actual < 0 ? 0 : actual, true);
-  }
-
-  function parar() { clearTimeout(reloj); reloj = null; }
-
-  boton.addEventListener("click", () => {
-    pausado = !pausado;
-    boton.textContent = pausado ? "Reanudar" : "Pausa";
-    if (pausado) parar(); else if (enPantalla) poner(actual < 0 ? 0 : actual, true);
-  });
-
-  // Elegir un paso lo pone en la pantalla en vez de abrir el proyector: el
-  // marco de aquí ya es más grande que el del diálogo, así que abrir un modal
-  // encima sería enseñar lo mismo más pequeño.
-  pasos.forEach((a, i) => a.addEventListener("click", (e) => {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;   // otra pestaña sigue abriendo la pieza suelta
-    e.preventDefault();
-    pausado = false;
-    boton.textContent = "Pausa";
-    poner(i, true);
-    caja.scrollIntoView({ behavior: quieto.matches ? "instant" : "smooth", block: "center" });
-  }));
-
-  caja.hidden = false;
-  boton.textContent = pausado ? "Reanudar" : "Pausa";
-
-  new IntersectionObserver((entradas) => {
-    enPantalla = entradas[0].isIntersecting;
-    if (enPantalla) arrancar(); else parar();
-  }, { rootMargin: "200px 0px" }).observe(caja);
-})();
-
-/* Llegar de fuera con un ancla y quedarse arriba del todo.
-   Comprobado el 3 de septiembre de 2026: abrir /#precio o /#banco en una
-   pestaña nueva dejaba la página en scrollY 0, con el destino a diez mil
-   píxeles y el documento ya completo. Todos los enlaces de dentro funcionaban
-   —esos saltan con la página ya medida— así que no se veía nunca navegando;
-   sólo lo sufría quien llegaba desde fuera, que es justo el que viene de un
-   enlace compartido o del botón de soon/.
-
-   Es `scroll-behavior: smooth` contra una página que crece mientras carga: el
-   navegador arranca el desplazamiento suave hacia una posición que todavía no
-   es la definitiva —faltan siete capturas y dos tipografías— y lo que llega
-   después lo cancela.
-
-   Se rehace el salto cuando ya no queda nada por cargar, y de golpe en vez de
-   suave, porque un desplazamiento instantáneo no se puede interrumpir a mitad.
-   Si el visitante ya ha empezado a moverse por su cuenta, no se le toca: que
-   la página te arrebate el scroll es peor que aparecer en el sitio de siempre.
-
-   «instant» y no «auto». No son sinónimos: `auto` significa «lo que diga el
-   CSS», y el CSS de esta página dice `smooth`, así que con `auto` el parche
-   arranca precisamente el desplazamiento suave que viene a sustituir y se
-   cancela igual que el original. Estuvo escrito «auto» unos minutos y
-   funcionaba sólo porque a la página le faltaba el doctype: en modo quirks el
-   `scroll-behavior` no se aplicaba y `auto` salía instantáneo por accidente. */
-(function () {
-  const destino = location.hash
-    && document.getElementById(decodeURIComponent(location.hash.slice(1)));
-  if (!destino) return;
-
-  let suyo = false;
-  const marcar = () => { suyo = true; };
-  addEventListener("wheel", marcar, { once: true, passive: true });
-  addEventListener("touchstart", marcar, { once: true, passive: true });
-  addEventListener("keydown", marcar, { once: true });
-
-  const ir = () => { if (!suyo) destino.scrollIntoView({ behavior: "instant", block: "start" }); };
-  ir();
-  addEventListener("load", () => { ir(); requestAnimationFrame(ir); });
-})();
-
-/* El botón de comprar de la barra: aparece cuando la portada se va.
-   Con IntersectionObserver y no escuchando el scroll: el observador avisa dos
-   veces en toda la visita —al salir la portada y al volver— mientras que un
-   listener de scroll se dispara cientos de veces por segundo para contestar la
-   misma pregunta.
-
-   Si el navegador no lo tiene, el botón se queda visible desde el principio. Es
-   el fallo correcto: peor es que no salga nunca y que la página se quede otra
-   vez sin un solo sitio donde pagar. */
-(function () {
-  const boton = document.getElementById("comprar-barra");
-  const portada = document.querySelector(".hero");
-  if (!boton || !portada) return;
-  if (!("IntersectionObserver" in window)) { boton.hidden = false; return; }
-
-  new IntersectionObserver(
-    ([entrada]) => { boton.hidden = entrada.isIntersecting; },
-    { rootMargin: "-60px 0px 0px 0px" },
-  ).observe(portada);
-})();
-
-/* ── La criba de la portada ──────────────────────────────────────────────────
-
-   Las mismas reglas que la animación cuatro, en cinco segundos y media altura.
-   Cada candidata es un paseo aleatorio con su propia deriva, y la deriva CAMBIA
-   al cruzar el corte: ahí se separa la que tenía una ventaja real de la que
-   sólo había memorizado el tramo de diseño. Sin ese cambio de deriva el dibujo
-   sería bonito y mentiría, porque enseñaría una criba que no criba nada.
-
-   Un solo pase, y al acabar se queda quieta. En bucle competiría con el titular
-   que tiene al lado, y el titular es lo que vende. */
-(function () {
-  "use strict";
-  const cv = document.getElementById("criba");
-  const elVivas = document.getElementById("criba-vivas");
-  const elPaso = document.getElementById("criba-paso");
-  const pie = cv && cv.closest("figure");
-  if (!cv || !cv.getContext || !elVivas || !pie) return;
-  const cx = cv.getContext("2d");
-
-  const N = 900, PTS = 48, CORTE = 0.63, FIN = 5.6, VIVEN = 6;
-
-  // Semilla fija: la portada tiene que salir igual en todas las visitas. Una
-  // criba distinta cada vez sería una demostración distinta cada vez.
-  let semilla = 20260828 >>> 0;
-  const rnd = () => (semilla = (semilla * 1664525 + 1013904223) >>> 0) / 4294967296;
-  const suave = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
-  const entre = (t, a, b) => suave((t - a) / (b - a));
-
-  const curvas = [];
-  for (let i = 0; i < N; i++) {
-    const dentro = (rnd() - 0.46) * 0.034;
-    const real = rnd() < 0.05;                       // pocas conservan la ventaja
-    const fuera = real ? dentro * (0.55 + rnd() * 0.5) : (rnd() - 0.62) * 0.016;
-    const vol = 0.012 + rnd() * 0.034;
-    const y = new Float32Array(PTS);
-    let v = 0;
-    for (let p = 0; p < PTS; p++) {
-      v += (p / (PTS - 1) > CORTE ? fuera : dentro) + (rnd() - 0.5) * vol;
-      y[p] = v;
-    }
-    const iC = Math.round(CORTE * (PTS - 1));
-    curvas.push({ y, dentro: y[iC], fuera: y[PTS - 1] - y[iC], orden: rnd() });
-  }
-
-  const porDentro = curvas.slice().sort((a, b) => b.dentro - a.dentro);
-  porDentro.forEach((c, i) => { c.rankDentro = i / N; });
-  const finalistas = porDentro.slice(0, Math.round(N * 0.16));
-  finalistas.sort((a, b) => b.fuera - a.fuera);
-  finalistas.forEach((c, i) => { c.rankFuera = i; });
-
-  /* Tres suertes, y se decide por pertenencia al conjunto de finalistas y no
-     comparando el rango con 0,16: la curva que cae justo en el canto empata
-     con el umbral, se escapa por el «else» y aparece de superviviente. El
-     síntoma era un contador que ponía siete debajo de seis curvas verdes. */
-  const suerteDe = (c) =>
-    c.rankFuera === undefined ? "dentro" : c.rankFuera >= VIVEN ? "fuera" : "vive";
-
-  const nacida = (c, t) => entre(t, 0.15 + c.orden * 0.7, 0.75 + c.orden * 0.7);
-
-  /** ¿Sigue en pie? Es lo que cuenta el contador, y no tiene que ver con lo
-      que se ve: las cribadas dejan rastro justamente para poder verse. */
-  function enPie(c, t) {
-    if (nacida(c, t) < 0.5) return false;
-    const s = suerteDe(c);
-    if (s === "dentro") return entre(t, 2.0, 3.0) < 0.5;
-    if (s === "fuera") return entre(t, 3.6, 4.6) < 0.5;
-    return true;
-  }
-
-  /* Las cribadas se apagan hasta un rastro, no hasta cero. Si desaparecieran,
-     el fotograma en el que se queda la portada serían seis rayas verdes sobre
-     blanco: la mitad de la frase —«genera miles»— se habría borrado justo
-     antes de que nadie la leyera. */
-  function alfa(c, t) {
-    let a = nacida(c, t) * 0.085;
-    const s = suerteDe(c);
-    if (s === "dentro") a *= 1 - entre(t, 2.0, 3.0) * 0.91;
-    else if (s === "fuera") a *= 1 - entre(t, 3.6, 4.6) * 0.62;
-    else a *= 1 + entre(t, 3.6, 4.6) * 3.4;
-    return a;
-  }
-
-  let caja = { w: 0, h: 0 };
-  function medir() {
-    const r = cv.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    cv.width = Math.round(r.width * dpr);
-    cv.height = Math.round(r.height * dpr);
-    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    caja = { w: r.width, h: r.height };
-  }
-
-  function dibujar(t) {
-    const { w, h } = caja;
-    if (!w || !h) return;
-    cx.clearRect(0, 0, w, h);
-
-    const rect = { x: 1, y: h * 0.06, w: w - 2, h: h * 0.88 };
-    const xCorte = rect.x + rect.w * CORTE;
-    /* Escala fija, y ajustada a lo que estas novecientas curvas recorren de
-       verdad —medido: de -0,663 a 0,845—. Heredada de la animación grande iba
-       de -0,62 a 1,28, y su cuarta parte de arriba no la pisaba nadie: la
-       banda se veía medio vacía y, apenas asomada por el borde de la pantalla,
-       parecía un rectángulo en blanco.
-       Fija y no automática: si el eje se reajustara solo, la nube
-       «respiraría» y el movimiento parecería un fallo del dibujo en vez de
-       una búsqueda. */
-    const esc = (v) => rect.y + rect.h * (1 - (v + 0.72) / 1.64);
-
-    const avDentro = entre(t, 0.2, 1.9);
-    const avFuera = entre(t, 3.0, 4.2);
-    const hasta = CORTE * avDentro + (1 - CORTE) * avFuera;
-    const fin = Math.round((PTS - 1) * hasta);
-
-    /* Agrupadas por opacidad y cada grupo de un trazo: con novecientas
-       llamadas a stroke por fotograma no se llega a sesenta imágenes. */
-    const cubos = new Map();
-    for (const c of curvas) {
-      const a = alfa(c, t);
-      if (a < 0.004) continue;
-      const k = Math.min(52, Math.round(a * 170));
-      if (!cubos.has(k)) cubos.set(k, []);
-      cubos.get(k).push(c);
-    }
-    for (const par of cubos) {
-      const k = par[0], grupo = par[1];
-      const superviviente = k > 34;
-      cx.beginPath();
-      cx.strokeStyle = superviviente
-        ? "rgba(11,125,85," + Math.min(1, k / 60).toFixed(3) + ")"
-        : "rgba(184,115,15," + (k / 170).toFixed(3) + ")";
-      cx.lineWidth = superviviente ? 1.8 : 1;
-      for (const c of grupo) {
-        for (let p = 0; p <= fin; p++) {
-          const x = rect.x + (rect.w * p) / (PTS - 1);
-          const y = esc(c.y[p]);
-          p === 0 ? cx.moveTo(x, y) : cx.lineTo(x, y);
-        }
-      }
-      cx.stroke();
-    }
-
-    const aCorte = entre(t, 2.4, 3.0);
-    if (aCorte > 0) {
-      cx.save();
-      cx.setLineDash([3, 5]);
-      cx.strokeStyle = "rgba(91,97,105," + (aCorte * 0.85).toFixed(3) + ")";
-      cx.lineWidth = 1;
-      cx.beginPath();
-      cx.moveTo(xCorte, rect.y);
-      cx.lineTo(xCorte, rect.y + rect.h);
-      cx.stroke();
-      cx.restore();
-      cx.fillStyle = "rgba(91,97,105," + aCorte.toFixed(3) + ")";
-      cx.font = '10px "IBM Plex Mono", ui-monospace, monospace';
-      cx.fillText("fuera de muestra", xCorte + 6, rect.y + 10);
-    }
-
-    let vivas = 0;
-    for (const c of curvas) if (enPie(c, t)) vivas++;
-    elVivas.textContent = vivas.toLocaleString("es-ES");
-    if (elPaso) {
-      elPaso.textContent = t < 2.0 ? "generando"
-        : t < 3.4 ? "cribando sobre el histórico de diseño"
-        : t < 4.8 ? "probando fuera de muestra"
-        : "las que aguantan";
-    }
-  }
-
-  /* Al terminar, el pie se convierte en la frase. Es el mismo remate de la
-     animación cuatro, y aquí llega donde se ha ganado: después de ver morir
-     ochocientas noventa y cuatro. */
-  const rematar = () => { pie.classList.add("criba-fin"); };
-
-  const quieto = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  let arrancada = false;
-  function correr() {
-    if (arrancada) return;
-    arrancada = true;
-    medir();
-
-    /* Quien pidió que no le muevan la pantalla se lleva el último fotograma y
-       ya. Por el mismo camino que el resto —y no midiendo nada más cargar—
-       porque el lienzo aún no tiene ancho mientras se colocan las tipografías,
-       y medirlo entonces lo dejaba en blanco para siempre. */
-    if (quieto) { dibujar(FIN); rematar(); return; }
-
-    const t0 = performance.now();
-    (function paso(ahora) {
-      const t = Math.min(FIN, (ahora - t0) / 1000);
-      dibujar(t);
-      if (t < FIN) requestAnimationFrame(paso);
-      else rematar();
-    })(t0);
-  }
-
-  // Sólo cuando se ve. En una pestaña de fondo el navegador congela los
-  // fotogramas, y sin esto la criba «pasaría» sin que nadie la viera y la
-  // portada se encontraría ya rematada al volver.
-  if ("IntersectionObserver" in window) {
-    const obs = new IntersectionObserver(function (entradas) {
-      if (entradas[0].isIntersecting) { obs.disconnect(); correr(); }
-    }, { threshold: 0.25 });
-    obs.observe(cv);
-  } else {
-    correr();
-  }
-
-  // A mitad de pase basta con volver a medir: el fotograma siguiente redibuja
-  // solo. Terminada, hay que repintarla a mano o se queda estirada.
-  window.addEventListener("resize", function () {
-    if (!arrancada) return;
-    medir();
-    if (pie.classList.contains("criba-fin")) dibujar(FIN);
-  });
-})();
-
-/* El nombre de la barra se apaga mientras el pórtico se ve.
-   Leer «BotFactoryFX» dos veces en cuarenta píxeles —uno grande emergiendo y
-   otro pequeño quieto— es la clase de detalle que no se sabe nombrar pero se
-   nota. El icono se queda, que es lo que sostiene la fila.
-   Con el mismo observador que usa la barra de comprar, y por lo mismo: avisa
-   dos veces en toda la visita en vez de cientos por segundo. */
-(function () {
-  const portico = document.querySelector(".portico");
-  if (!portico || !("IntersectionObserver" in window)) return;
-  new IntersectionObserver(
-    ([e]) => { document.documentElement.classList.toggle("portico-arriba", e.isIntersecting); },
-    { threshold: 0.35 },
-  ).observe(portico);
-})();
-
-/* Comprar: la factura se pide aquí y se manda al comprador a pagarla.
-   ═══════════════════════════════════════════════════════════════════════════
-   Los botones siguen teniendo como href el botón de pago viejo de Plisio, y
-   no es un resto: es la red debajo. Sin JavaScript no habría manera de
-   comprar, y si el cobro se cae, esto manda ahí en vez de enseñar un error.
-   Por ese camino se pagan los 499 y se atiende a mano — que es exactamente
-   lo que pasaba antes de que existiera el cobro automático. Una venta
-   atendida a mano es infinitamente mejor que una venta perdida.
-
-   Se pide con POST porque crear una factura no es leer nada: si fuera un
-   enlace normal, cada rastreador que pasara por la página abriría una factura.
-
-   El pedido va en la respuesta y el comprador acaba en Plisio; a la vuelta,
-   /descarga/?p=… ya sabe quién es. */
-(function () {
-  "use strict";
-  const botones = [...document.querySelectorAll("a[data-cobro]")];
-  if (!botones.length) return;
-
-  const ref = (new URLSearchParams(location.search).get("ref") || "").trim().toUpperCase();
-  let pidiendo = false;
-
-  for (const boton of botones) {
-    boton.addEventListener("click", async function (e) {
-      // Cmd/Ctrl+clic, o el botón central: quien abre en otra pestaña espera
-      // el href, y robárselo para hacer otra cosa es de mala educación.
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-      e.preventDefault();
-      if (pidiendo) return;
-      pidiendo = true;
-
-      const dice = boton.textContent;
-      boton.textContent = "Creando tu factura…";
-
-      try {
-        /* El producto sale del propio botón. Sin `data-producto` se compra el
-           grande, que es lo que hacían todos los botones antes de que hubiera
-           dos: un botón que se olvide del atributo cobra de más, no de menos. */
-        const cuerpo = {};
-        if (ref) cuerpo.ref = ref;
-        if (boton.dataset.producto) cuerpo.producto = boton.dataset.producto;
-
-        const r = await fetch(boton.dataset.cobro + "/comprar", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(cuerpo),
-        });
-        const v = await r.json();
-        if (!v || !v.pagar) throw new Error(v && v.error ? v.error : "sin factura");
-        location.href = v.pagar;
-        return;                       // sin restaurar el botón: nos vamos
-      } catch (err) {
-        // A Plisio por el camino viejo. El comprador no se entera de nada más
-        // que de haber tardado un segundo, y la venta no se pierde.
-        console.warn("el cobro no ha contestado, se usa el botón de siempre:", err);
-        location.href = boton.href;
-      }
-    });
-  }
-})();
-</script>
+</body>
+</html>

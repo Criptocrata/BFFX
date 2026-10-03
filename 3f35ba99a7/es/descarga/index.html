@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tu descarga · BotFactoryFX</title>
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../../assets/logo-split.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/fuentes.css">
+<link rel="stylesheet" href="../../assets/web.css">
+<link rel="stylesheet" href="../../assets/descarga.css">
+<script>
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="../../assets/web.js" defer></script>
+<script src="../../assets/descarga.js" defer></script>
+</head>
+<body>
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="../"><img src="../../assets/logo-split.svg" alt="" width="30" height="30">BotFactory<b>FX</b></a>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Tema">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" id="otro-idioma" href="../../descarga/" hreflang="en" lang="en">EN</a>
+    </div>
+  </div>
+</header>
+
+<main class="envoltura compra" data-api="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-sitio="https://botfactoryfx.com/3f35ba99a7/" data-lengua="es">
+  <p class="ceja">Tu compra</p>
+
+  <section id="sin-pedido" hidden>
+    <h1>Esta página necesita tu número de pedido.</h1>
+    <p>Llega en la dirección que te dio Plisio al pagar, y también en el correo que te mandaron. Empieza por <code>BFX</code> o por <code>BFQ</code>, según lo que compraras: <code>BFX-XXXXXXXX-XXXXXXXX</code>.</p>
+    <p>Si lo has perdido, escribe a <a href="mailto:botfactoryfx@proton.me">botfactoryfx@proton.me</a> desde la dirección con la que pagaste y te lo devolvemos.</p>
+  </section>
+
+  <section id="cargando">
+    <h1>Un momento.</h1>
+    <p class="latido"><span class="punto"></span> Consultando tu pedido…</p>
+  </section>
+
+  <section id="esperando" hidden>
+    <h1>Tu pago está en camino.</h1>
+    <div class="tarjeta">
+      <p class="latido"><span class="punto"></span> Esperando a que la red confirme la transacción…</p>
+      <p>Esto no depende de nosotros: lo que tarda es la red de la moneda que elegiste. Suelen ser minutos, y con la red congestionada puede irse a un par de horas. <strong>No hace falta que te quedes aquí</strong>: esta página se actualiza sola, y puedes volver a ella cuando quieras.</p>
+      <p><strong>Guarda esta dirección.</strong> Es la forma de volver a tu descarga.</p>
+    </div>
+  </section>
+
+  <section id="listo" hidden>
+    <h1>Ya es tuyo.</h1>
+
+    <div class="tarjeta paso">
+      <h2><span>1</span> El programa</h2>
+      <p>Elige tu sistema. <span id="sugerido"></span></p>
+      <div class="sistemas-botones">
+        <a class="boton boton-linea" data-sistema="windows" href="#">Windows 11 <small>instalador · x64</small></a>
+        <a class="boton boton-linea" data-sistema="macos-arm64" href="#">macOS <small>chip de Apple (M1–M4)</small></a>
+        <a class="boton boton-linea" data-sistema="macos-x64" href="#">macOS <small>Intel</small></a>
+        <a class="boton boton-linea" data-sistema="linux" href="#">Linux <small>AppImage · x64</small></a>
+      </div>
+      <p class="nota">Te quedan <b id="quedan-descargas">—</b> descargas de este enlace, de cualquiera de los sistemas. Si se acaban, escríbenos.</p>
+      <details class="primera-vez">
+        <summary>La primera vez que lo abras</summary>
+        <p>El programa todavía no va firmado —firmar exige certificados de Microsoft y de Apple que aún no hay—, así que cada sistema avisa la primera vez. Es lo esperado, y se pasa así:</p>
+        <h3>Windows 11</h3>
+        <ol><li>Doble clic en el instalador. Windows dice <i>«Windows protegió su PC»</i>.</li><li>Pulsa <i>Más información</i> → <i>Ejecutar de todas formas</i>.</li><li>Elige dónde instalarlo, o acepta la carpeta que propone.</li></ol>
+        <h3>macOS</h3>
+        <ol><li>Doble clic en el zip: sale <code>BotFactoryFX.app</code>. Arrástrala a Aplicaciones.</li><li>Abre el Terminal (Aplicaciones → Utilidades) y pega, en una línea:<pre>xattr -cr /Applications/BotFactoryFX.app</pre>Quita la marca de «descargado de internet», que es la que hace que macOS diga que la aplicación está dañada.</li><li>Sólo en los Mac con chip de Apple, si aun así no abre, pega también:<pre>codesign --force --deep --sign - /Applications/BotFactoryFX.app</pre>La firma en local; no necesita cuenta ni certificado.</li><li>Si macOS insiste: Ajustes del Sistema → Privacidad y seguridad → <i>Abrir igualmente</i>.</li></ol>
+        <h3>Linux</h3>
+        <ol><li>Dale permiso de ejecución: botón derecho → Propiedades → <i>Permitir ejecutar como programa</i>, o <code>chmod +x</code> sobre el fichero.</li><li>Doble clic. No se instala nada.</li></ol>
+        <p>Para BFQuarantine, lo mismo con su nombre.</p>
+      </details>
+    </div>
+
+    <div class="tarjeta paso">
+      <h2><span>2</span> Tu licencia</h2>
+      <p>Abre el programa. Te enseñará <strong>la huella de tu ordenador</strong>: pégala aquí y te devolvemos tu licencia al momento. Cada máquina tiene la suya: la licencia de tu Linux no abre el programa en tu Mac.</p>
+      <label for="huella">La huella que te enseña el programa</label>
+      <input id="huella" placeholder="XXXX-XXXX-XXXX-XXXX" spellcheck="false" autocapitalize="off" autocorrect="off">
+      <p><button class="boton boton-ambar" id="pedir" type="button">Dame mi licencia</button></p>
+      <p id="error-licencia" class="nota malo" role="alert" hidden></p>
+      <div id="salida" hidden>
+        <label for="clave">Tu licencia: cópiala en el programa</label>
+        <div class="licencia" id="clave"></div>
+        <p class="nota">Guárdala. No caduca nunca, pero es de <b>este</b> ordenador. Puedes tenerla en hasta tres máquinas: te quedan <b id="quedan-huellas">—</b>.</p>
+      </div>
+    </div>
+
+    <div class="tarjeta paso" id="recomendar">
+      <h2><span>3</span> Recomendarlo, si te sirve</h2>
+      <p>Tu número de pedido <strong>es también tu código</strong>. Quien compre BotFactoryFX con él se ahorra <strong>100 $</strong>, y tú cobras <strong>100 USDT</strong> por TRON. Sin registrarte y sin dar un correo.</p>
+      <label for="enlace-ref">Tu enlace, para pegarlo donde quieras</label>
+      <div class="licencia" id="enlace-ref"></div>
+      <p class="nota" id="ya-recomendadas" hidden></p>
+      <p><a href="../referidos/">Cómo funciona y cómo se cobra</a></p>
+    </div>
+
+    <p class="pedido">Pedido <span class="num"></span></p>
+  </section>
+
+  <section id="revisar" hidden>
+    <h1>Hay algo que mirar a mano.</h1>
+    <div class="tarjeta">
+      <p>La cantidad que llegó no cuadra con la facturada. No es necesariamente un problema —pasa con las comisiones de algunas redes—, pero no lo resuelve un ordenador.</p>
+      <p>Escribe a <a href="mailto:botfactoryfx@proton.me">botfactoryfx@proton.me</a> con tu número de pedido y se soluciona el mismo día. <strong>Tu dinero está registrado</strong>; no se ha perdido nada.</p>
+    </div>
+    <p class="pedido">Pedido <span class="num"></span></p>
+  </section>
+
+  <section id="cerrado" hidden>
+    <h1>Este pedido no llegó a completarse.</h1>
+    <div class="tarjeta">
+      <p>La factura caducó o se canceló antes de recibir el pago. Si crees que pagaste, escribe a <a href="mailto:botfactoryfx@proton.me">botfactoryfx@proton.me</a> con tu número de pedido y la referencia de la transacción.</p>
+      <p><a href="../#precio">Volver a empezar</a></p>
+    </div>
+  </section>
+</main>
+</body>
+</html>
