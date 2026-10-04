@@ -36,8 +36,28 @@
 
   <section id="sin-pedido" hidden>
     <h1>Esta página necesita tu número de pedido.</h1>
-    <p>Llega en la dirección que te dio Plisio al pagar, y también en el correo que te mandaron. Empieza por <code>BFX</code> o por <code>BFQ</code>, según lo que compraras: <code>BFX-XXXXXXXX-XXXXXXXX</code>.</p>
+    <p>Es el que te enseñó esta página antes de pagar, y el correo de Plisio lo trae como número de pedido. Empieza por <code>BFX</code> o por <code>BFQ</code>, según lo que compraras: <code>BFX-XXXXXXXX-XXXXXXXX</code>.</p>
+    <form id="buscar-pedido" class="buscar-pedido" novalidate>
+      <label for="numero">Tu número de pedido</label>
+      <input id="numero" placeholder="BFX-XXXXXXXX-XXXXXXXX" spellcheck="false" autocapitalize="characters" autocorrect="off" autocomplete="off">
+      <button class="boton boton-ambar" type="submit">Abrir mi compra</button>
+      <p id="numero-error" class="nota malo" role="alert" hidden></p>
+    </form>
     <p>Si lo has perdido, escribe a <a href="mailto:botfactoryfx@proton.me">botfactoryfx@proton.me</a> desde la dirección con la que pagaste y te lo devolvemos.</p>
+  </section>
+
+  <section id="por-pagar" hidden>
+    <h1>Tu pedido, listo para pagar.</h1>
+    <div class="tarjeta">
+      <p>Tu número de pedido es <strong class="num"></strong>. <strong>Guarda la dirección de esta página</strong> —en tus marcadores, o cópiala—: es el camino de vuelta a tu descarga y a tu licencia, cuando quieras.</p>
+      <div class="enlace-y-copiar">
+        <div class="licencia" id="enlace-compra"></div>
+        <button class="boton boton-linea" id="copiar-enlace" type="button">Copiar</button>
+      </div>
+      <p><a class="boton boton-ambar" id="pagar" href="#" target="_blank" rel="noopener">Pagar con Plisio</a></p>
+      <p class="nota">Plisio se abre en otra pestaña. Cuando la red confirme tu pago, esta página se convierte sola en tu descarga: puedes cerrar la de Plisio.</p>
+      <p class="latido"><span class="punto"></span> Esperando tu pago…</p>
+    </div>
   </section>
 
   <section id="cargando">

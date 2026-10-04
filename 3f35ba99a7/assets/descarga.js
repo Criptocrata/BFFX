@@ -51,6 +51,9 @@
         sinConexion: "No se ha podido conectar. Inténtalo otra vez en un minuto.",
         creando: "Creando tu factura…",
         mejoraUsada: "Este pedido ya se usó para pasarse a BotFactoryFX.",
+        numeroMal: "Eso no parece un número de pedido: empieza por BFX o BFQ y lleva dos grupos de ocho letras y cifras.",
+        noEsNuestro: "Ese número no es de ningún pedido nuestro. Revisa que esté entero, o escríbenos.",
+        copiado: "Copiado",
         mejoraNoVale: "Este pedido no da el descuento. Escríbenos con tu número de pedido y lo miramos.",
         ref: "es/",
       }
@@ -84,6 +87,9 @@
         mejoraUsada: "This order has already been used to move up to BotFactoryFX.",
         mejoraNoVale: "This order doesn’t carry the discount. Write to us with your order number and we’ll look into it.",
         ref: "",
+        numeroMal: "That doesn’t look like an order number: it starts with BFX or BFQ and has two groups of eight letters and digits.",
+        noEsNuestro: "That number isn’t one of our orders. Check that it’s complete, or write to us.",
+        copiado: "Copied",
       };
 
   /* El sistema del visitante, para resaltar su botón. Con userAgentData se
@@ -106,7 +112,20 @@
     return null;
   }
 
-  const pedido = (new URLSearchParams(location.search).get("p") || "").trim().toUpperCase();
+  const params = new URLSearchParams(location.search);
+  const pedido = (params.get("p") || "").trim().toUpperCase();
+  /* La factura de Plisio, cuando se llega aquí ANTES de pagar (04-10-2026): la
+     web manda primero a esta página, con su número y su dirección para
+     guardarla, y desde aquí se paga. Sólo si es de Plisio: un «pagar» de otro
+     sitio no se convierte en botón, que un enlace así se puede fabricar. */
+  const pagar = (() => {
+    try {
+      const u = new URL(params.get("pagar") || "");
+      return u.protocol === "https:" && (u.hostname === "plisio.net" || u.hostname.endsWith(".plisio.net")) ? u.toString() : null;
+    } catch { return null; }
+  })();
+  /* La dirección para guardar: ésta, sin la factura. */
+  const enlaceCompra = (() => { const u = new URL(location.href); u.searchParams.delete("pagar"); u.hash = ""; return u.toString(); })();
   const otro = document.getElementById("otro-idioma");
   if (otro) {
     otro.href = otro.getAttribute("href") + location.search;
@@ -115,13 +134,50 @@
     otro.addEventListener("click", () => { try { sessionStorage.setItem("bfx-web-idioma", ES ? "en" : "es"); } catch { /* nada */ } });
   }
   const ver = (id) => {
-    for (const s of ["sin-pedido", "cargando", "esperando", "listo", "revisar", "cerrado"]) {
+    for (const s of ["sin-pedido", "por-pagar", "cargando", "esperando", "listo", "revisar", "cerrado"]) {
       const el = document.getElementById(s);
       if (el) el.hidden = s !== id;
     }
   };
-  if (!/^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(pedido)) { ver("sin-pedido"); return; }
+
+  /* Quien llega sin número, o con uno que no es nuestro, lo escribe aquí
+     (04-10-2026): el correo de Plisio trae el número, no esta página. Se
+     acepta pegado de cualquier manera —en minúsculas, con espacios o la
+     dirección entera—: se busca el número dentro. */
+  const buscar = document.getElementById("buscar-pedido");
+  const numeroError = document.getElementById("numero-error");
+  const casilla = document.getElementById("numero");
+  if (buscar) {
+    buscar.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const m = (casilla.value || "").toUpperCase().replace(/\s+/g, "").match(/BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}/);
+      if (!m) { numeroError.textContent = T.numeroMal; numeroError.hidden = false; return; }
+      const u = new URL(location.href); u.search = ""; u.hash = ""; u.searchParams.set("p", m[0]);
+      location.href = u.toString();
+    });
+  }
+  const sinPedido = (motivo) => {
+    if (motivo && numeroError) { numeroError.textContent = motivo; numeroError.hidden = false; }
+    if (casilla && pedido) casilla.value = pedido;
+    ver("sin-pedido");
+  };
+  if (!/^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(pedido)) { sinPedido(pedido ? T.numeroMal : null); return; }
   for (const el of document.querySelectorAll(".num")) el.textContent = pedido;
+
+  /* El paso de pagar: la dirección para guardar, copiarla, y el botón a la factura. */
+  const elEnlace = document.getElementById("enlace-compra");
+  if (elEnlace) elEnlace.textContent = enlaceCompra;
+  const botonPagar = document.getElementById("pagar");
+  if (botonPagar && pagar) botonPagar.href = pagar;
+  const copiar = document.getElementById("copiar-enlace");
+  if (copiar) {
+    copiar.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(enlaceCompra); copiar.textContent = T.copiado; }
+      catch { /* el enlace se puede seleccionar a mano: .licencia lleva user-select: all */ }
+    });
+  }
+  /* Resuelto el pedido —pagado, cerrado o para revisar—, la factura sobra en la dirección. */
+  const sinFactura = () => { if (pagar) { try { history.replaceState(null, "", enlaceCompra); } catch { /* nada */ } } };
 
   for (const a of document.querySelectorAll("[data-sistema]")) {
     a.href = `${API}/descarga?p=${encodeURIComponent(pedido)}&sistema=${a.dataset.sistema}`;
@@ -161,13 +217,15 @@
       // 100 sobre 99 se vendería a pérdida), y la tarjeta no se enseña.
       pintaRecomendacion(v.recomendacion);
       pintaPasarse(v.mejora);
+      sinFactura();
       ver("listo");
       return;
     }
-    if (v.estado === "revisar") { ver("revisar"); return; }
-    if (v.estado === "cerrado") { ver("cerrado"); return; }
-    if (v.estado === "desconocido") { ver("sin-pedido"); return; }
-    ver("esperando");
+    if (v.estado === "revisar") { sinFactura(); ver("revisar"); return; }
+    if (v.estado === "cerrado") { sinFactura(); ver("cerrado"); return; }
+    if (v.estado === "desconocido") { sinPedido(T.noEsNuestro); return; }
+    // Con la factura en la mano, el paso de pagar; sin ella, ya pagó y espera a la red.
+    ver(pagar ? "por-pagar" : "esperando");
     espera = Math.min(espera * 1.4, 60_000);
     setTimeout(mirar, espera);
   }
@@ -199,10 +257,14 @@
           body: JSON.stringify({ producto: "fx", mejora: pedido }),
         });
         const v = await r.json();
-        if (!v || !v.pagar) throw new Error(v && v.motivo ? v.motivo : "sin factura");
+        if (!v || !v.pagar || !v.pedido) throw new Error(v && v.motivo ? v.motivo : "sin factura");
         // Plisio vuelve a /descarga/, la inglesa: que sepa en qué lengua se compró.
         try { sessionStorage.setItem("bfx-web-idioma", ES ? "es" : "en"); } catch { /* nada */ }
-        location.href = v.pagar;
+        /* A la página del pedido NUEVO, con su factura, y no derecho a Plisio
+           (04-10-2026): el mismo paso de pagar que trae la web. */
+        const nueva = new URL(location.href); nueva.search = ""; nueva.hash = "";
+        nueva.searchParams.set("p", v.pedido); nueva.searchParams.set("pagar", v.pagar);
+        location.href = nueva.toString();
       } catch (e) {
         botonPasarse.innerHTML = dice;
         botonPasarse.disabled = false;

@@ -144,9 +144,13 @@
 
   /* ── Comprar ─────────────────────────────────────────────────────────────
      POST a /comprar (crear una factura no es leer nada: con un enlace, cada
-     rastreador abriría una) y al comprador a Plisio. Si el cobro no contesta,
-     NO se manda a un botón de pago de importe fijo —el viejo era de 499 y
-     cobraría lo que no es—: se dice qué pasa y a quién escribir. */
+     rastreador abriría una) y al comprador a NUESTRA página de compra, con su
+     número y la factura de Plisio, y desde ella paga. Hasta el 04-10-2026 iba
+     derecho a Plisio, y quien cerraba esa pestaña antes de que la red
+     confirmara se quedaba sin camino de vuelta: el correo de Plisio no lleva
+     nuestra página. Si el cobro no contesta, NO se manda a un botón de pago de
+     importe fijo —el viejo era de 499 y cobraría lo que no es—: se dice qué
+     pasa y a quién escribir. */
   let pidiendo = false;
   for (const boton of botones) {
     boton.addEventListener("click", async (e) => {
@@ -164,12 +168,19 @@
           method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(cuerpo),
         });
         const v = await r.json();
-        if (!v || !v.pagar) throw new Error(v && v.error ? v.error : "sin factura");
+        if (!v || !v.pagar || !v.pedido) throw new Error(v && v.error ? v.error : "sin factura");
         /* Plisio devuelve al comprador a /descarga/, que es la inglesa; esto
            le dice a esa página que la compra empezó en castellano. Sólo en
            esta pestaña y sólo hasta cerrarla. */
         try { sessionStorage.setItem("bfx-web-idioma", ES ? "es" : "en"); } catch { /* sin almacenamiento, inglés */ }
-        location.href = v.pagar;
+        /* La página de compra de ESTA lengua: la marca de la cabecera lleva a
+           su portada, y la de compra cuelga de ella. */
+        const marca = document.querySelector("a.marca");
+        const casa = new URL((marca && marca.getAttribute("href")) || "./", location.href);
+        const compra = new URL("descarga/", casa);
+        compra.searchParams.set("p", v.pedido);
+        compra.searchParams.set("pagar", v.pagar);
+        location.href = compra.toString();
       } catch (err) {
         console.warn("el cobro no ha contestado:", err);
         boton.textContent = dice;

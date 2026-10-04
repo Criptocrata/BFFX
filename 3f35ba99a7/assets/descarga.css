@@ -49,6 +49,19 @@
 }
 .pedido { font-family: var(--mono); font-size: 0.85rem; color: var(--apagado); }
 
+/* El número de pedido escrito a mano, y el enlace para guardar antes de pagar (04-10-2026). */
+.buscar-pedido { display: grid; gap: 8px; max-width: 520px; }
+.buscar-pedido label { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--apagado); }
+.buscar-pedido input {
+  font: inherit; font-family: var(--mono); font-size: 0.95rem; text-transform: uppercase;
+  background: var(--superficie-2); color: var(--texto); border: 1px solid var(--linea-fuerte); border-radius: 8px; padding: 12px 14px;
+}
+.buscar-pedido input:focus { outline: 2px solid var(--ambar); outline-offset: 1px; }
+.buscar-pedido button { justify-self: start; }
+.buscar-pedido p { margin: 0; }
+.enlace-y-copiar { display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; }
+.enlace-y-copiar .licencia { flex: 1 1 260px; }
+
 /* Dónde se le paga a quien recomienda (03-10-2026): lo deja una vez, aquí. */
 .cobro {
   display: grid; gap: 8px; margin-top: 6px; padding: 16px 18px;
