@@ -53,7 +53,7 @@
         precio: (x) => `${usdt(x)} USD`,
         vienesRecomendado: "Vienes recomendado: el descuento ya va en el precio.",
         confirmando: (moneda, n) => {
-          const tarda = moneda === "BTC" ? "con Bitcoin suele tardar entre 10 y 60 minutos"
+          const tarda = moneda === "BTC" ? "con Bitcoin suele llevar de 10 a 60 minutos, y con una comisión baja, horas; el pago no se pierde, y te escribiremos en cuanto se confirme"
             : moneda === "USDT_TRX" || moneda === "TRX" ? "con TRON es cosa de un minuto" : "suele tardar unos minutos";
           const lleva = typeof n === "number" && n > 0 ? ` Lleva ${n} ${n === 1 ? "confirmación" : "confirmaciones"}.` : "";
           return `La red lo está confirmando: ${tarda}.${lleva}`;
@@ -97,7 +97,7 @@
         precio: (x) => `$${usdt(x)}`,
         vienesRecomendado: "You were referred: the discount is already in the price.",
         confirmando: (moneda, n) => {
-          const tarda = moneda === "BTC" ? "with Bitcoin it usually takes 10 to 60 minutes"
+          const tarda = moneda === "BTC" ? "with Bitcoin it usually takes 10 to 60 minutes, and with a low fee, hours; the payment isn’t lost, and we’ll email you as soon as it confirms"
             : moneda === "USDT_TRX" || moneda === "TRX" ? "on TRON it takes about a minute" : "it usually takes a few minutes";
           const lleva = typeof n === "number" && n > 0 ? ` ${n} ${n === 1 ? "confirmation" : "confirmations"} so far.` : "";
           return `The network is confirming it: ${tarda}.${lleva}`;
@@ -216,6 +216,15 @@
       })
       .catch(() => { /* el precio sale en la factura igualmente */ });
     const formulario = document.getElementById("comprar-form");
+    /* Quien elige Bitcoin lee antes de pagar que puede tardar horas (04-10-2026):
+       la tercera compra de prueba pasó de la hora, y sin aviso eso parece un fallo. */
+    const avisoBtc = document.getElementById("aviso-btc");
+    const pintaAviso = () => {
+      const marcada = formulario.querySelector('input[name="moneda"]:checked');
+      if (avisoBtc) avisoBtc.hidden = !marcada || marcada.value !== "BTC";
+    };
+    formulario.addEventListener("change", pintaAviso);
+    pintaAviso();
     const casilla = document.getElementById("comprar-correo");
     const error = document.getElementById("comprar-error");
     const seguir = document.getElementById("comprar-seguir");

@@ -63,6 +63,9 @@
 /* Son opciones, no rótulos: sin la letra de máquina de «.buscar-pedido label». */
 .buscar-pedido .moneda { font-family: inherit; font-size: 0.95rem; letter-spacing: 0; color: var(--texto); }
 
+/* El aviso de Bitcoin: que puede tardar horas, dicho antes de pagar. */
+.aviso-lento { margin: 0; padding: 10px 12px; border: 1px solid var(--ambar-borde); border-radius: 8px; background: var(--ambar-suave); color: var(--texto); }
+
 /* Lo que se compra y su precio, antes de dejar el correo (04-10-2026). */
 .compra-producto { font-size: 1.1rem; margin: 0 0 4px; }
 .compra-producto span { font-family: var(--mono); }
