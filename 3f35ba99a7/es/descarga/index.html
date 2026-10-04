@@ -113,21 +113,22 @@
       <h2><span>1</span> El programa</h2>
       <p>Elige tu sistema. <span id="sugerido"></span></p>
       <div class="sistemas-botones">
-        <a class="boton boton-linea" data-sistema="windows" href="#">Windows 11 <small>instalador · x64</small></a>
+        <a class="boton boton-linea" data-sistema="windows" href="#">Windows 11 <small>zip · x64</small></a>
         <a class="boton boton-linea" data-sistema="macos-arm64" href="#">macOS <small>chip de Apple (M1–M4)</small></a>
         <a class="boton boton-linea" data-sistema="macos-x64" href="#">macOS <small>Intel</small></a>
-        <a class="boton boton-linea" data-sistema="linux" href="#">Linux <small>AppImage · x64</small></a>
+        <a class="boton boton-linea" data-sistema="linux" href="#">Linux <small>zip · x64</small></a>
       </div>
+      <p class="nota">Cada descarga es una caja: el programa y dos carpetas —<em>Castellano</em> y <em>English</em>— con el <em>Léeme primero</em>, el manual y los conectores de MetaTrader&nbsp;5 y JForex con sus manuales.</p>
       <p class="nota">Te quedan <b id="quedan-descargas">—</b> descargas de este enlace, de cualquiera de los sistemas. Si se acaban, escríbenos.</p>
       <details class="primera-vez">
         <summary>La primera vez que lo abras</summary>
-        <p>El programa todavía no va firmado —firmar exige certificados de Microsoft y de Apple que aún no hay—, así que cada sistema avisa la primera vez. Es lo esperado, y se pasa así:</p>
+        <p>El programa todavía no va firmado —firmar exige certificados de Microsoft y de Apple que aún no hay—, así que cada sistema avisa la primera vez. Es lo esperado, y se pasa así (el <em>Léeme primero</em> de la caja dice lo mismo):</p>
         <h3>Windows 11</h3>
-        <ol><li>Doble clic en el instalador. Windows dice <i>«Windows protegió su PC»</i>.</li><li>Pulsa <i>Más información</i> → <i>Ejecutar de todas formas</i>.</li><li>Elige dónde instalarlo, o acepta la carpeta que propone.</li></ol>
+        <ol><li>Botón derecho sobre el zip → <i>Extraer todo</i>, y doble clic en el instalador de dentro. Windows dice <i>«Windows protegió su PC»</i>.</li><li>Pulsa <i>Más información</i> → <i>Ejecutar de todas formas</i>.</li><li>Elige dónde instalarlo, o acepta la carpeta que propone.</li></ol>
         <h3>macOS</h3>
-        <ol><li>Doble clic en el zip: sale <code>BotFactoryFX.app</code>. Arrástrala a Aplicaciones.</li><li>Abre el Terminal (Aplicaciones → Utilidades) y pega, en una línea:<pre>xattr -cr /Applications/BotFactoryFX.app</pre>Quita la marca de «descargado de internet», que es la que hace que macOS diga que la aplicación está dañada.</li><li>Sólo en los Mac con chip de Apple, si aun así no abre, pega también:<pre>codesign --force --deep --sign - /Applications/BotFactoryFX.app</pre>La firma en local; no necesita cuenta ni certificado.</li><li>Si macOS insiste: Ajustes del Sistema → Privacidad y seguridad → <i>Abrir igualmente</i>.</li></ol>
+        <ol><li>Doble clic en el zip: sale una carpeta con <code>BotFactoryFX.app</code> y las carpetas <em>Castellano</em> y <em>English</em>. Arrastra la aplicación a Aplicaciones.</li><li>Abre el Terminal (Aplicaciones → Utilidades) y pega, en una línea:<pre>xattr -cr /Applications/BotFactoryFX.app</pre>Quita la marca de «descargado de internet», que es la que hace que macOS diga que la aplicación está dañada.</li><li>Sólo en los Mac con chip de Apple, si aun así no abre, pega también:<pre>codesign --force --deep --sign - /Applications/BotFactoryFX.app</pre>La firma en local; no necesita cuenta ni certificado.</li><li>Si macOS insiste: Ajustes del Sistema → Privacidad y seguridad → <i>Abrir igualmente</i>.</li></ol>
         <h3>Linux</h3>
-        <ol><li>Dale permiso de ejecución: botón derecho → Propiedades → <i>Permitir ejecutar como programa</i>, o <code>chmod +x</code> sobre el fichero.</li><li>Doble clic. No se instala nada.</li></ol>
+        <ol><li>Descomprime el zip: el AppImage ya sale listo para abrirse. Si no se abre, dale permiso de ejecución: botón derecho → Propiedades → <i>Permitir ejecutar como programa</i>, o <code>chmod +x</code> sobre el fichero.</li><li>Doble clic. No se instala nada.</li></ol>
         <p>Para BFQuarantine, lo mismo con su nombre.</p>
       </details>
     </div>
