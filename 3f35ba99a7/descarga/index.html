@@ -43,6 +43,12 @@
       <p class="compra-producto"><strong id="comprar-producto">BotFactoryFX</strong> · <span id="comprar-precio">…</span></p>
       <p class="nota" id="comprar-recomendado" hidden></p>
       <form id="comprar-form" class="buscar-pedido" novalidate>
+        <fieldset class="monedas">
+          <legend>How you pay</legend>
+          <label class="moneda"><input type="radio" name="moneda" value="USDT_TRX" checked> <span><b>USDT on TRON (TRC-20)</b> <small>confirms in about a minute</small></span></label>
+          <label class="moneda"><input type="radio" name="moneda" value="BTC"> <span><b>Bitcoin</b> <small>10 to 60 minutes to confirm</small></span></label>
+          <label class="moneda"><input type="radio" name="moneda" value=""> <span><b>Another coin</b> <small>you pick it at Plisio; how long it takes depends on its network</small></span></label>
+        </fieldset>
         <label for="comprar-correo">Your email</label>
         <input id="comprar-correo" name="correo" type="email" required autocomplete="email" placeholder="you@example.com" spellcheck="false">
         <p class="nota">As soon as the payment confirms, we email you your purchase page: the download and your licence. We don’t use it for anything else.</p>
@@ -82,6 +88,15 @@
   <section id="cargando">
     <h1>One moment.</h1>
     <p class="latido"><span class="punto"></span> Looking up your order…</p>
+  </section>
+
+  <section id="confirmando" hidden>
+    <h1>Payment received.</h1>
+    <div class="tarjeta">
+      <p class="latido"><span class="punto"></span> <span id="confirmando-texto">The network is confirming it…</span></p>
+      <p>You don’t need to stay here: this page turns into your download as soon as it confirms, and we’ll email you its link.</p>
+      <p class="pedido">Order <span class="num"></span></p>
+    </div>
   </section>
 
   <section id="esperando" hidden>

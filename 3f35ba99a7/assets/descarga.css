@@ -49,6 +49,20 @@
 }
 .pedido { font-family: var(--mono); font-size: 0.85rem; color: var(--apagado); }
 
+/* Cómo se paga: cada moneda con lo que tarda en confirmarse (04-10-2026). */
+.monedas { border: 0; padding: 0; margin: 0 0 6px; display: grid; gap: 8px; }
+.monedas legend { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--apagado); margin-bottom: 6px; padding: 0; }
+.moneda {
+  display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 10px 12px;
+  border: 1px solid var(--linea); border-radius: 8px; background: var(--superficie-2);
+}
+.moneda:has(input:checked) { border-color: var(--ambar-borde); background: var(--ambar-suave); }
+.moneda input { margin-top: 3px; accent-color: var(--ambar); }
+.moneda span { display: grid; gap: 2px; }
+.moneda small { color: var(--apagado); font-size: 0.82rem; }
+/* Son opciones, no rótulos: sin la letra de máquina de «.buscar-pedido label». */
+.buscar-pedido .moneda { font-family: inherit; font-size: 0.95rem; letter-spacing: 0; color: var(--texto); }
+
 /* Lo que se compra y su precio, antes de dejar el correo (04-10-2026). */
 .compra-producto { font-size: 1.1rem; margin: 0 0 4px; }
 .compra-producto span { font-family: var(--mono); }

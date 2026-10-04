@@ -52,6 +52,12 @@
         creando: "Creando tu factura…",
         precio: (x) => `${usdt(x)} USD`,
         vienesRecomendado: "Vienes recomendado: el descuento ya va en el precio.",
+        confirmando: (moneda, n) => {
+          const tarda = moneda === "BTC" ? "con Bitcoin suele tardar entre 10 y 60 minutos"
+            : moneda === "USDT_TRX" || moneda === "TRX" ? "con TRON es cosa de un minuto" : "suele tardar unos minutos";
+          const lleva = typeof n === "number" && n > 0 ? ` Lleva ${n} ${n === 1 ? "confirmación" : "confirmaciones"}.` : "";
+          return `La red lo está confirmando: ${tarda}.${lleva}`;
+        },
         teEscribiremos: (c) => `En cuanto se confirme el pago te escribimos a ${c} con el enlace de esta página.`,
         sinCobro: "El cobro no contesta ahora mismo. Inténtalo en un minuto, o escríbenos a botfactoryfx@proton.me y te mandamos la factura a mano.",
         mejoraUsada: "Este pedido ya se usó para pasarse a BotFactoryFX.",
@@ -90,6 +96,12 @@
         creando: "Creating your invoice…",
         precio: (x) => `$${usdt(x)}`,
         vienesRecomendado: "You were referred: the discount is already in the price.",
+        confirmando: (moneda, n) => {
+          const tarda = moneda === "BTC" ? "with Bitcoin it usually takes 10 to 60 minutes"
+            : moneda === "USDT_TRX" || moneda === "TRX" ? "on TRON it takes about a minute" : "it usually takes a few minutes";
+          const lleva = typeof n === "number" && n > 0 ? ` ${n} ${n === 1 ? "confirmation" : "confirmations"} so far.` : "";
+          return `The network is confirming it: ${tarda}.${lleva}`;
+        },
         teEscribiremos: (c) => `As soon as the payment confirms we email ${c} the link to this page.`,
         sinCobro: "Checkout isn’t answering right now. Try again in a minute, or write to botfactoryfx@proton.me and we’ll send you the invoice by hand.",
         mejoraUsada: "This order has already been used to move up to BotFactoryFX.",
@@ -149,7 +161,7 @@
     otro.addEventListener("click", () => { try { sessionStorage.setItem("bfx-web-idioma", ES ? "en" : "es"); } catch { /* nada */ } });
   }
   const ver = (id) => {
-    for (const s of ["comprar", "sin-pedido", "por-pagar", "cargando", "esperando", "listo", "revisar", "cerrado"]) {
+    for (const s of ["comprar", "sin-pedido", "por-pagar", "cargando", "confirmando", "esperando", "listo", "revisar", "cerrado"]) {
       const el = document.getElementById(s);
       if (el) el.hidden = s !== id;
     }
@@ -219,7 +231,9 @@
       seguir.disabled = true;
       seguir.textContent = T.creando;
       try {
-        const cuerpo = { producto, correo, lengua: ES ? "es" : "en" };
+        const marcada = formulario.querySelector('input[name="moneda"]:checked');
+        const elegida = marcada ? marcada.value : "";
+        const cuerpo = { producto, correo, lengua: ES ? "es" : "en", moneda: elegida };
         if (ref) cuerpo.ref = ref;
         const r = await fetch(`${API}/comprar`, {
           method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(cuerpo),
@@ -309,6 +323,18 @@
     if (v.estado === "revisar") { sinFactura(); ver("revisar"); return; }
     if (v.estado === "cerrado") { sinFactura(); ver("cerrado"); return; }
     if (v.estado === "desconocido") { sinPedido(T.noEsNuestro); return; }
+    /* Plisio ya vio el pago y la red lo confirma (04-10-2026): «pago recibido»,
+       con lo que suele tardar esa moneda y las confirmaciones que lleva, y se
+       mira más a menudo, que el cambio a la descarga está al caer. */
+    if (v.estado === "confirmando") {
+      const texto = document.getElementById("confirmando-texto");
+      if (texto) texto.textContent = T.confirmando(v.moneda, v.confirmaciones);
+      sinFactura();
+      ver("confirmando");
+      espera = Math.min(espera * 1.2, 20_000);
+      setTimeout(mirar, espera);
+      return;
+    }
     // Con la factura en la mano, el paso de pagar; sin ella, ya pagó y espera a la red.
     ver(pagar ? "por-pagar" : "esperando");
     espera = Math.min(espera * 1.4, 60_000);

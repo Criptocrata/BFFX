@@ -40,6 +40,12 @@
       <p class="compra-producto"><strong id="comprar-producto">BotFactoryFX</strong> · <span id="comprar-precio">…</span></p>
       <p class="nota" id="comprar-recomendado" hidden></p>
       <form id="comprar-form" class="buscar-pedido" novalidate>
+        <fieldset class="monedas">
+          <legend>Cómo pagas</legend>
+          <label class="moneda"><input type="radio" name="moneda" value="USDT_TRX" checked> <span><b>USDT en TRON (TRC-20)</b> <small>se confirma en un minuto</small></span></label>
+          <label class="moneda"><input type="radio" name="moneda" value="BTC"> <span><b>Bitcoin</b> <small>de 10 a 60 minutos en confirmarse</small></span></label>
+          <label class="moneda"><input type="radio" name="moneda" value=""> <span><b>Otra moneda</b> <small>la eliges en Plisio; lo que tarda depende de su red</small></span></label>
+        </fieldset>
         <label for="comprar-correo">Tu correo</label>
         <input id="comprar-correo" name="correo" type="email" required autocomplete="email" placeholder="tu@correo.com" spellcheck="false">
         <p class="nota">En cuanto se confirme el pago te mandamos ahí tu página de compra: la descarga y tu licencia. No lo usamos para nada más.</p>
@@ -79,6 +85,15 @@
   <section id="cargando">
     <h1>Un momento.</h1>
     <p class="latido"><span class="punto"></span> Consultando tu pedido…</p>
+  </section>
+
+  <section id="confirmando" hidden>
+    <h1>Pago recibido.</h1>
+    <div class="tarjeta">
+      <p class="latido"><span class="punto"></span> <span id="confirmando-texto">La red lo está confirmando…</span></p>
+      <p>No hace falta que te quedes aquí: esta página se convierte en tu descarga en cuanto se confirme, y te mandaremos su enlace por correo.</p>
+      <p class="pedido">Pedido <span class="num"></span></p>
+    </div>
   </section>
 
   <section id="esperando" hidden>
