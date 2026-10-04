@@ -49,14 +49,20 @@
 }
 .pedido { font-family: var(--mono); font-size: 0.85rem; color: var(--apagado); }
 
+/* Lo que se compra y su precio, antes de dejar el correo (04-10-2026). */
+.compra-producto { font-size: 1.1rem; margin: 0 0 4px; }
+.compra-producto span { font-family: var(--mono); }
+
 /* El número de pedido escrito a mano, y el enlace para guardar antes de pagar (04-10-2026). */
 .buscar-pedido { display: grid; gap: 8px; max-width: 520px; }
 .buscar-pedido label { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--apagado); }
 .buscar-pedido input {
-  font: inherit; font-family: var(--mono); font-size: 0.95rem; text-transform: uppercase;
+  font: inherit; font-family: var(--mono); font-size: 0.95rem;
   background: var(--superficie-2); color: var(--texto); border: 1px solid var(--linea-fuerte); border-radius: 8px; padding: 12px 14px;
 }
 .buscar-pedido input:focus { outline: 2px solid var(--ambar); outline-offset: 1px; }
+/* Sólo el número de pedido va en mayúsculas: un correo, tal cual se escribe. */
+.buscar-pedido #numero { text-transform: uppercase; }
 .buscar-pedido button { justify-self: start; }
 .buscar-pedido p { margin: 0; }
 .enlace-y-copiar { display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; }

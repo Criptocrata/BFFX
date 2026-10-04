@@ -34,6 +34,21 @@
 <main class="envoltura compra" data-api="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-sitio="https://botfactoryfx.com/3f35ba99a7/" data-lengua="es">
   <p class="ceja">Tu compra</p>
 
+  <section id="comprar" hidden>
+    <h1>Tu compra.</h1>
+    <div class="tarjeta">
+      <p class="compra-producto"><strong id="comprar-producto">BotFactoryFX</strong> · <span id="comprar-precio">…</span></p>
+      <p class="nota" id="comprar-recomendado" hidden></p>
+      <form id="comprar-form" class="buscar-pedido" novalidate>
+        <label for="comprar-correo">Tu correo</label>
+        <input id="comprar-correo" name="correo" type="email" required autocomplete="email" placeholder="tu@correo.com" spellcheck="false">
+        <p class="nota">En cuanto se confirme el pago te mandamos ahí tu página de compra: la descarga y tu licencia. No lo usamos para nada más.</p>
+        <button class="boton boton-ambar" id="comprar-seguir" type="submit">Seguir al pago</button>
+        <p id="comprar-error" class="nota malo" role="alert" hidden></p>
+      </form>
+    </div>
+  </section>
+
   <section id="sin-pedido" hidden>
     <h1>Esta página necesita tu número de pedido.</h1>
     <p>Es el que te enseñó esta página antes de pagar, y el correo de Plisio lo trae como número de pedido. Empieza por <code>BFX</code> o por <code>BFQ</code>, según lo que compraras: <code>BFX-XXXXXXXX-XXXXXXXX</code>.</p>
@@ -56,6 +71,7 @@
       </div>
       <p><a class="boton boton-ambar" id="pagar" href="#" target="_blank" rel="noopener">Pagar con Plisio</a></p>
       <p class="nota">Plisio se abre en otra pestaña. Cuando la red confirme tu pago, esta página se convierte sola en tu descarga: puedes cerrar la de Plisio.</p>
+      <p class="nota" id="por-pagar-correo" hidden></p>
       <p class="latido"><span class="punto"></span> Esperando tu pago…</p>
     </div>
   </section>

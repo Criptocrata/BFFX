@@ -15,7 +15,7 @@
   (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
   /* Quien empezó la compra en la página en castellano vuelve de Plisio aquí,
      a la dirección de siempre: se le lleva a la suya, con su número. */
-  (function () { try { if (sessionStorage.getItem("bfx-web-idioma") === "es") location.replace("../es/descarga/" + location.search); } catch (e) {} })();
+  (function () { try { if (new URLSearchParams(location.search).get("l") === "es" || sessionStorage.getItem("bfx-web-idioma") === "es") location.replace("../es/descarga/" + location.search); } catch (e) {} })();
 </script>
 <script src="../assets/web.js" defer></script>
 <script src="../assets/descarga.js" defer></script>
@@ -37,6 +37,21 @@
 
 <main class="envoltura compra" data-api="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-sitio="https://botfactoryfx.com/3f35ba99a7/" data-lengua="en">
   <p class="ceja">Your purchase</p>
+
+  <section id="comprar" hidden>
+    <h1>Your purchase.</h1>
+    <div class="tarjeta">
+      <p class="compra-producto"><strong id="comprar-producto">BotFactoryFX</strong> · <span id="comprar-precio">…</span></p>
+      <p class="nota" id="comprar-recomendado" hidden></p>
+      <form id="comprar-form" class="buscar-pedido" novalidate>
+        <label for="comprar-correo">Your email</label>
+        <input id="comprar-correo" name="correo" type="email" required autocomplete="email" placeholder="you@example.com" spellcheck="false">
+        <p class="nota">As soon as the payment confirms, we email you your purchase page: the download and your licence. We don’t use it for anything else.</p>
+        <button class="boton boton-ambar" id="comprar-seguir" type="submit">Continue to payment</button>
+        <p id="comprar-error" class="nota malo" role="alert" hidden></p>
+      </form>
+    </div>
+  </section>
 
   <section id="sin-pedido" hidden>
     <h1>This page needs your order number.</h1>
@@ -60,6 +75,7 @@
       </div>
       <p><a class="boton boton-ambar" id="pagar" href="#" target="_blank" rel="noopener">Pay with Plisio</a></p>
       <p class="nota">Plisio opens in a new tab. Once the network confirms your payment, this page turns into your download by itself: you can close the Plisio tab.</p>
+      <p class="nota" id="por-pagar-correo" hidden></p>
       <p class="latido"><span class="punto"></span> Waiting for your payment…</p>
     </div>
   </section>

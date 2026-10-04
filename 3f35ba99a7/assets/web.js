@@ -14,16 +14,12 @@
   const T = ES
     ? {
         tema: { system: "Tema del sistema", light: "Tema claro", dark: "Tema oscuro" },
-        creando: "Creando tu factura…",
-        sinCobro: "El cobro no contesta ahora mismo. Escríbenos a botfactoryfx@proton.me y te mandamos la factura a mano.",
         recomendado: (precio, lista) => `Vienes recomendado: pagas ${precio} USD en vez de ${lista}. El descuento va en la factura, sin pedirlo.`,
         comprar: (precio) => `Comprar licencia · ${precio} USD`,
         pausa: "Pausa", sigue: "Reanudar",
       }
     : {
         tema: { system: "System theme", light: "Light theme", dark: "Dark theme" },
-        creando: "Creating your invoice…",
-        sinCobro: "Checkout isn't answering right now. Write to botfactoryfx@proton.me and we'll send you the invoice by hand.",
         recomendado: (precio, lista) => `You were referred: you pay $${precio} instead of $${lista}. The discount is on the invoice, nothing to ask for.`,
         comprar: (precio) => `Buy a licence · $${precio}`,
         pausa: "Pause", sigue: "Play",
@@ -143,50 +139,24 @@
   }
 
   /* ── Comprar ─────────────────────────────────────────────────────────────
-     POST a /comprar (crear una factura no es leer nada: con un enlace, cada
-     rastreador abriría una) y al comprador a NUESTRA página de compra, con su
-     número y la factura de Plisio, y desde ella paga. Hasta el 04-10-2026 iba
-     derecho a Plisio, y quien cerraba esa pestaña antes de que la red
-     confirmara se quedaba sin camino de vuelta: el correo de Plisio no lleva
-     nuestra página. Si el cobro no contesta, NO se manda a un botón de pago de
-     importe fijo —el viejo era de 499 y cobraría lo que no es—: se dice qué
-     pasa y a quién escribir. */
-  let pidiendo = false;
+     A NUESTRA página de compra, con lo que se compra y el código de quien lo
+     recomendó, y allí el comprador deja el correo al que irá su enlace y se
+     crea la factura (04-10-2026). Hasta ese día el botón creaba la factura y
+     mandaba derecho a Plisio: quien cerraba esa pestaña antes de que la red
+     confirmara se quedaba sin su descarga, y nadie le escribía. Sin
+     JavaScript, el botón sigue siendo un enlace de correo que funciona. */
   for (const boton of botones) {
-    boton.addEventListener("click", async (e) => {
+    boton.addEventListener("click", (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
       e.preventDefault();
-      if (pidiendo) return;
-      pidiendo = true;
-      const dice = boton.textContent;
-      boton.textContent = T.creando;
-      try {
-        const cuerpo = {};
-        if (ref) cuerpo.ref = ref;
-        if (boton.dataset.producto) cuerpo.producto = boton.dataset.producto;
-        const r = await fetch(boton.dataset.cobro + "/comprar", {
-          method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(cuerpo),
-        });
-        const v = await r.json();
-        if (!v || !v.pagar || !v.pedido) throw new Error(v && v.error ? v.error : "sin factura");
-        /* Plisio devuelve al comprador a /descarga/, que es la inglesa; esto
-           le dice a esa página que la compra empezó en castellano. Sólo en
-           esta pestaña y sólo hasta cerrarla. */
-        try { sessionStorage.setItem("bfx-web-idioma", ES ? "es" : "en"); } catch { /* sin almacenamiento, inglés */ }
-        /* La página de compra de ESTA lengua: la marca de la cabecera lleva a
-           su portada, y la de compra cuelga de ella. */
-        const marca = document.querySelector("a.marca");
-        const casa = new URL((marca && marca.getAttribute("href")) || "./", location.href);
-        const compra = new URL("descarga/", casa);
-        compra.searchParams.set("p", v.pedido);
-        compra.searchParams.set("pagar", v.pagar);
-        location.href = compra.toString();
-      } catch (err) {
-        console.warn("el cobro no ha contestado:", err);
-        boton.textContent = dice;
-        pidiendo = false;
-        alert(T.sinCobro);
-      }
+      /* La página de compra de ESTA lengua: la marca de la cabecera lleva a
+         su portada, y la de compra cuelga de ella. */
+      const marca = document.querySelector("a.marca");
+      const casa = new URL((marca && marca.getAttribute("href")) || "./", location.href);
+      const compra = new URL("descarga/", casa);
+      compra.searchParams.set("comprar", boton.dataset.producto || "fx");
+      if (ref) compra.searchParams.set("ref", ref);
+      location.href = compra.toString();
     });
   }
 })();

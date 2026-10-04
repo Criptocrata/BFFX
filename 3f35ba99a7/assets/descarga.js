@@ -50,6 +50,10 @@
         noEmitida: "No ha podido emitirse. Escríbenos con tu número de pedido.",
         sinConexion: "No se ha podido conectar. Inténtalo otra vez en un minuto.",
         creando: "Creando tu factura…",
+        precio: (x) => `${usdt(x)} USD`,
+        vienesRecomendado: "Vienes recomendado: el descuento ya va en el precio.",
+        teEscribiremos: (c) => `En cuanto se confirme el pago te escribimos a ${c} con el enlace de esta página.`,
+        sinCobro: "El cobro no contesta ahora mismo. Inténtalo en un minuto, o escríbenos a botfactoryfx@proton.me y te mandamos la factura a mano.",
         mejoraUsada: "Este pedido ya se usó para pasarse a BotFactoryFX.",
         numeroMal: "Eso no parece un número de pedido: empieza por BFX o BFQ y lleva dos grupos de ocho letras y cifras.",
         noEsNuestro: "Ese número no es de ningún pedido nuestro. Revisa que esté entero, o escríbenos.",
@@ -84,6 +88,10 @@
         noEmitida: "It couldn’t be issued. Write to us with your order number.",
         sinConexion: "Couldn’t connect. Try again in a minute.",
         creando: "Creating your invoice…",
+        precio: (x) => `$${usdt(x)}`,
+        vienesRecomendado: "You were referred: the discount is already in the price.",
+        teEscribiremos: (c) => `As soon as the payment confirms we email ${c} the link to this page.`,
+        sinCobro: "Checkout isn’t answering right now. Try again in a minute, or write to botfactoryfx@proton.me and we’ll send you the invoice by hand.",
         mejoraUsada: "This order has already been used to move up to BotFactoryFX.",
         mejoraNoVale: "This order doesn’t carry the discount. Write to us with your order number and we’ll look into it.",
         ref: "",
@@ -113,6 +121,13 @@
   }
 
   const params = new URLSearchParams(location.search);
+  /* «l=es» lo pone la tienda en la vuelta de Plisio y en el correo al
+     comprador (04-10-2026): la página de la raíz ya hizo con él lo suyo —pasar
+     a la castellana—, y arrastrado haría que «EN» volviera aquí. */
+  if (params.has("l")) {
+    params.delete("l");
+    try { history.replaceState(null, "", location.pathname + (params.toString() ? `?${params}` : "") + location.hash); } catch { /* nada */ }
+  }
   const pedido = (params.get("p") || "").trim().toUpperCase();
   /* La factura de Plisio, cuando se llega aquí ANTES de pagar (04-10-2026): la
      web manda primero a esta página, con su número y su dirección para
@@ -134,7 +149,7 @@
     otro.addEventListener("click", () => { try { sessionStorage.setItem("bfx-web-idioma", ES ? "en" : "es"); } catch { /* nada */ } });
   }
   const ver = (id) => {
-    for (const s of ["sin-pedido", "por-pagar", "cargando", "esperando", "listo", "revisar", "cerrado"]) {
+    for (const s of ["comprar", "sin-pedido", "por-pagar", "cargando", "esperando", "listo", "revisar", "cerrado"]) {
       const el = document.getElementById(s);
       if (el) el.hidden = s !== id;
     }
@@ -161,6 +176,73 @@
     if (casilla && pedido) casilla.value = pedido;
     ver("sin-pedido");
   };
+  /* ── Comprar (04-10-2026) ────────────────────────────────────────────────
+     El botón de la web trae aquí lo que se compra. Se enseña con su precio
+     —el de verdad, con el descuento de quien recomendó si lo hay—, se pide el
+     correo al que irá el enlace de esta página cuando se confirme el pago, y
+     sólo entonces se crea la factura, con el correo ya puesto para que Plisio
+     no lo pida otra vez. */
+  const queCompra = params.get("comprar");
+  if (!pedido && (queCompra === "fx" || queCompra === "quarantine")) {
+    montarCompra(queCompra, (params.get("ref") || "").trim().toUpperCase());
+    return;
+  }
+  function montarCompra(producto, ref) {
+    const NOMBRES = { fx: "BotFactoryFX", quarantine: "BFQuarantine" };
+    document.getElementById("comprar-producto").textContent = NOMBRES[producto];
+    const q = new URLSearchParams({ producto });
+    if (ref) q.set("ref", ref);
+    fetch(`${API}/recomendacion?${q}`)
+      .then((r) => r.json())
+      .then((v) => {
+        if (v && v.precio) document.getElementById("comprar-precio").textContent = T.precio(v.precio);
+        if (v && v.vale) {
+          const nota = document.getElementById("comprar-recomendado");
+          nota.textContent = T.vienesRecomendado;
+          nota.hidden = false;
+        }
+      })
+      .catch(() => { /* el precio sale en la factura igualmente */ });
+    const formulario = document.getElementById("comprar-form");
+    const casilla = document.getElementById("comprar-correo");
+    const error = document.getElementById("comprar-error");
+    const seguir = document.getElementById("comprar-seguir");
+    formulario.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      error.hidden = true;
+      const correo = (casilla.value || "").trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) {
+        error.textContent = T.errores.correo; error.hidden = false; casilla.focus();
+        return;
+      }
+      const dice = seguir.textContent;
+      seguir.disabled = true;
+      seguir.textContent = T.creando;
+      try {
+        const cuerpo = { producto, correo, lengua: ES ? "es" : "en" };
+        if (ref) cuerpo.ref = ref;
+        const r = await fetch(`${API}/comprar`, {
+          method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(cuerpo),
+        });
+        const v = await r.json().catch(() => null);
+        if (v && v.error === "correo") throw new Error("correo");
+        if (!r.ok || !v || !v.pagar || !v.pedido) throw new Error("sin factura");
+        // Para decirle, en el paso de pagar, a dónde le escribiremos. Sólo en esta pestaña.
+        try { sessionStorage.setItem(`bfx-correo-${v.pedido}`, correo); } catch { /* nada */ }
+        const u = new URL(location.href); u.search = ""; u.hash = "";
+        u.searchParams.set("p", v.pedido);
+        u.searchParams.set("pagar", v.pagar);
+        location.replace(u.toString());
+      } catch (err) {
+        error.textContent = err && err.message === "correo" ? T.errores.correo : T.sinCobro;
+        error.hidden = false;
+        seguir.disabled = false;
+        seguir.textContent = dice;
+      }
+    });
+    ver("comprar");
+  }
+
   if (!/^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(pedido)) { sinPedido(pedido ? T.numeroMal : null); return; }
   for (const el of document.querySelectorAll(".num")) el.textContent = pedido;
 
@@ -169,6 +251,9 @@
   if (elEnlace) elEnlace.textContent = enlaceCompra;
   const botonPagar = document.getElementById("pagar");
   if (botonPagar && pagar) botonPagar.href = pagar;
+  const correoDeLaCompra = (() => { try { return sessionStorage.getItem(`bfx-correo-${pedido}`); } catch { return null; } })();
+  const avisoDeCorreo = document.getElementById("por-pagar-correo");
+  if (avisoDeCorreo && correoDeLaCompra) { avisoDeCorreo.textContent = T.teEscribiremos(correoDeLaCompra); avisoDeCorreo.hidden = false; }
   const copiar = document.getElementById("copiar-enlace");
   if (copiar) {
     copiar.addEventListener("click", async () => {
@@ -254,7 +339,7 @@
       try {
         const r = await fetch(`${API}/comprar`, {
           method: "POST", headers: { "content-type": "application/json" },
-          body: JSON.stringify({ producto: "fx", mejora: pedido }),
+          body: JSON.stringify({ producto: "fx", mejora: pedido, lengua: ES ? "es" : "en" }),
         });
         const v = await r.json();
         if (!v || !v.pagar || !v.pedido) throw new Error(v && v.motivo ? v.motivo : "sin factura");
