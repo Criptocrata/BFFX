@@ -149,24 +149,26 @@
 
     <div class="tarjeta paso" id="recomendar" hidden>
       <h2><span>3</span> Recomendarlo, si te sirve</h2>
-      <p>Quien compre BotFactoryFX con tu enlace se ahorra <strong>100 $</strong>, y tú cobras <strong>100 USDT</strong> por TRON por cada venta. Pagamos a medida que llegan las ventas: no tienes que escribirnos ni reclamar nada.</p>
+      <p>Quien compre BotFactoryFX con tu enlace se ahorra <strong>100 $</strong>, y tú cobras <strong>100 USDT</strong> por cada venta, en la moneda con que pague él: en USDT por TRON, o lo mismo en BTC si paga con Bitcoin. Pagamos a medida que llegan las ventas: no tienes que escribirnos ni reclamar nada.</p>
       <label for="enlace-ref">Tu enlace, para pegarlo donde quieras</label>
       <div class="licencia" id="enlace-ref"></div>
       <p class="nota">Tu código de recomendación es <code id="codigo-ref"></code>. No es tu número de pedido: ése es sólo tuyo, porque abre tus descargas y tu licencia.</p>
 
       <form id="cobro" class="cobro" novalidate hidden>
-        <h3>Dónde te mandamos los USDT</h3>
+        <h3>Dónde te pagamos</h3>
         <p class="nota" id="cobro-pendiente" hidden></p>
-        <label for="cobro-tron">Tu dirección de TRON (USDT en la red TRC-20)</label>
+        <label for="cobro-tron">Tu dirección de TRON, para cobrar en USDT (red TRC-20)</label>
         <input id="cobro-tron" name="tron" placeholder="T…" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" required>
+        <label for="cobro-btc">Tu dirección de Bitcoin, para cobrar en BTC</label>
+        <input id="cobro-btc" name="btc" placeholder="bc1…, 1… o 3…" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" required>
         <label for="cobro-correo">Tu correo, para avisarte cada vez que te paguemos</label>
         <input id="cobro-correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
-        <p class="nota">Te los pedimos una vez, sólo para pagarte y avisarte. No los compartimos ni los usamos para nada más.</p>
+        <p class="nota">Las dos, porque cobras en la moneda con que pague cada comprador, y eso no se sabe hasta que compra. Te las pedimos una vez, sólo para pagarte y avisarte. No las compartimos ni las usamos para nada más.</p>
         <p><button class="boton boton-ambar" id="cobro-guardar" type="submit">Guardar</button></p>
         <p id="cobro-error" class="nota malo" role="alert" hidden></p>
       </form>
       <div id="cobro-hecho" class="cobro-hecho" hidden>
-        <p>Te pagamos en <code id="cobro-hecho-tron"></code> y te avisamos en <b id="cobro-hecho-correo"></b>.</p>
+        <p>Te pagamos en USDT en <code id="cobro-hecho-tron"></code> y en BTC en <code id="cobro-hecho-btc"></code>, y te avisamos en <b id="cobro-hecho-correo"></b>.</p>
         <p class="nota"><button class="boton-texto" id="cobro-cambiar" type="button">Cambiarlo</button><span id="cobro-sin-cambios" hidden>Para cambiarlo otra vez, escribe a <a href="mailto:botfactoryfx@proton.me">botfactoryfx@proton.me</a>.</span></p>
       </div>
 

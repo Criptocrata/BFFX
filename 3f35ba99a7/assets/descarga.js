@@ -6,6 +6,8 @@
    tienda, NO el número de pedido —ése abre la compra y un banner lo
    publicaría—, y quien recomienda deja aquí, una vez, su dirección de TRON y
    un correo. Con eso se le paga cada venta sin que tenga que escribirnos.
+   Desde el 05-10-2026 también la de Bitcoin: cobra en la moneda con que paga
+   quien compra con su código, USDT o BTC.
 
    Lo que habla con el cobro es lo mismo que en web-v3/descarga.html, que es
    donde está explicado: /estado se pregunta con frenado (una pestaña olvidada
@@ -21,6 +23,15 @@
   const LOCALE = ES ? "es-ES" : "en-GB";
   /** Una cifra de USDT como se dice: «100», «150,5» o «150.5». */
   const usdt = (x) => Number(x).toLocaleString(LOCALE, { maximumFractionDigits: 2, useGrouping: false });
+  /** Con su moneda. La de BTC, con sus ocho decimales y punto: como la enseñan el monedero y el explorador. */
+  const cifra = (x, moneda) => (moneda === "BTC" ? `${Number(x).toFixed(8)} BTC` : `${usdt(x)} USDT`);
+  /** Lo que se le debe, en las monedas en que tiene algo: «100 USDT y 0.00161290 BTC»; o nada. */
+  const loPendiente = (r) => [
+    ...(Number(r.pendiente) > 0 ? [cifra(r.pendiente, "USDT")] : []),
+    ...(Number(r.pendienteBtc) > 0 ? [cifra(r.pendienteBtc, "BTC")] : []),
+  ].join(ES ? " y " : " and ");
+  /** ¿Están ya las dos direcciones? Las guardadas antes del 05-10-2026 sólo traen la de TRON. */
+  const completo = (r) => Boolean(r.cobro && r.cobro.btc);
   const fecha = (ms) => new Date(ms).toLocaleDateString(LOCALE, { day: "numeric", month: "short", year: "numeric" });
   const T = ES
     ? {
@@ -29,17 +40,17 @@
         sugeridoMac: "Parece que estás en un Mac. Los de finales de 2020 en adelante llevan chip de Apple (M1–M4); los anteriores, Intel.",
         ventas: (r) => {
           const quien = r.ventas === 1 ? "Ya ha comprado una persona con tu código." : `Ya han comprado ${r.ventas} personas con tu código.`;
-          const falta = Number(r.pendiente) > 0
-            ? (r.cobro ? ` Van de camino ${usdt(r.pendiente)} USDT.` : ` Te esperan ${usdt(r.pendiente)} USDT: dinos a dónde mandarlos.`)
-            : "";
+          const lo = loPendiente(r);
+          const falta = lo ? (completo(r) ? ` Van de camino ${lo}.` : ` Te esperan ${lo}: dinos a dónde mandarlos.`) : "";
           return quien + falta;
         },
-        pendienteSinDireccion: (x) => `Te esperan ${usdt(x)} USDT. Déjanos tu dirección y te los mandamos.`,
-        pago: (p) => `${usdt(p.importe)} USDT pagados el ${fecha(p.en)} · `,
+        pendienteSinDireccion: (r) => `Te esperan ${loPendiente(r)}. Déjanos tus direcciones y te los mandamos.`,
+        pago: (p) => `${cifra(p.importe, p.moneda)} pagados el ${fecha(p.en)} · `,
         verTx: "ver la transacción",
         guardar: "Guardar", guardando: "Guardando…",
         errores: {
-          direccion: "Eso no es una dirección de TRON. Comprueba que empiece por T y que no falte ni sobre ninguna letra. Una de Ethereum o de Bitcoin no vale: tiene que ser de TRON (TRC-20).",
+          direccion: "Eso no es una dirección de TRON. Comprueba que empiece por T y que no falte ni sobre ninguna letra. Una de Ethereum o de Bitcoin no vale en esta casilla: tiene que ser de TRON (TRC-20).",
+          "direccion-btc": "Eso no es una dirección de Bitcoin. Empieza por bc1, por 1 o por 3: comprueba que no falte ni sobre ninguna letra. Una de la red de pruebas (tb1…) o de otra moneda no vale.",
           correo: "Ese correo no parece un correo.",
           tope: "Ya lo has cambiado tres veces desde aquí. Para cambiarlo otra vez, escríbenos.",
           otro: "No se ha podido guardar. Inténtalo otra vez en un minuto.",
@@ -73,17 +84,17 @@
         sugeridoMac: "Looks like you’re on a Mac. Macs from late 2020 on have Apple silicon (M1–M4); older ones, Intel.",
         ventas: (r) => {
           const quien = r.ventas === 1 ? "One person has bought with your code." : `${r.ventas} people have bought with your code.`;
-          const falta = Number(r.pendiente) > 0
-            ? (r.cobro ? ` ${usdt(r.pendiente)} USDT are on their way to you.` : ` ${usdt(r.pendiente)} USDT are waiting for you: tell us where to send them.`)
-            : "";
+          const lo = loPendiente(r);
+          const falta = lo ? (completo(r) ? ` ${lo} are on their way to you.` : ` ${lo} are waiting for you: tell us where to send them.`) : "";
           return quien + falta;
         },
-        pendienteSinDireccion: (x) => `${usdt(x)} USDT are waiting for you. Leave your address and we’ll send them.`,
-        pago: (p) => `${usdt(p.importe)} USDT paid on ${fecha(p.en)} · `,
+        pendienteSinDireccion: (r) => `${loPendiente(r)} are waiting for you. Leave your addresses and we’ll send them.`,
+        pago: (p) => `${cifra(p.importe, p.moneda)} paid on ${fecha(p.en)} · `,
         verTx: "see the transaction",
         guardar: "Save", guardando: "Saving…",
         errores: {
-          direccion: "That isn’t a TRON address. Check that it starts with T and that no letter is missing or extra. An Ethereum or Bitcoin address won’t work: it has to be TRON (TRC-20).",
+          direccion: "That isn’t a TRON address. Check that it starts with T and that no letter is missing or extra. An Ethereum or Bitcoin address won’t work in this box: it has to be TRON (TRC-20).",
+          "direccion-btc": "That isn’t a Bitcoin address. It starts with bc1, 1 or 3: check that no letter is missing or extra. A testnet address (tb1…) or one for another coin won’t work.",
           correo: "That email doesn’t look right.",
           tope: "You’ve already changed it three times from here. To change it again, write to us.",
           otro: "It couldn’t be saved. Try again in a minute.",
@@ -412,20 +423,24 @@
 
     // Con dirección: se dice a dónde se paga, y se puede cambiar mientras
     // queden veces. Sin ella, o cambiándola: el formulario.
-    const conDireccion = Boolean(r.cobro) && !cambiando;
+    // Con las dos direcciones; a quien sólo dejó la de TRON, el formulario le
+    // pide la que falta.
+    const conDireccion = completo(r) && !cambiando;
     hecho.hidden = !conDireccion;
     formulario.hidden = conDireccion;
     if (r.cobro) {
       document.getElementById("cobro-hecho-tron").textContent = r.cobro.tron;
+      document.getElementById("cobro-hecho-btc").textContent = r.cobro.btc || "";
       document.getElementById("cobro-hecho-correo").textContent = r.cobro.correo;
       document.getElementById("cobro-tron").value = r.cobro.tron;
+      document.getElementById("cobro-btc").value = r.cobro.btc || "";
       document.getElementById("cobro-correo").value = r.cobro.correo;
     }
     document.getElementById("cobro-cambiar").hidden = r.cambiosRestantes === 0;
     document.getElementById("cobro-sin-cambios").hidden = r.cambiosRestantes !== 0;
     const espera = document.getElementById("cobro-pendiente");
-    espera.hidden = Boolean(r.cobro) || !(Number(r.pendiente) > 0);
-    if (!espera.hidden) espera.textContent = T.pendienteSinDireccion(r.pendiente);
+    espera.hidden = completo(r) || !loPendiente(r);
+    if (!espera.hidden) espera.textContent = T.pendienteSinDireccion(r);
 
     const ventas = document.getElementById("ya-recomendadas");
     ventas.hidden = !(r.ventas > 0);
@@ -437,7 +452,10 @@
       const li = document.createElement("li");
       li.append(T.pago(p));
       const a = document.createElement("a");
-      a.href = `https://tronscan.org/#/transaction/${encodeURIComponent(p.tx)}`;
+      // Cada pago, en el explorador de su cadena.
+      a.href = p.moneda === "BTC"
+        ? `https://mempool.space/tx/${encodeURIComponent(p.tx)}`
+        : `https://tronscan.org/#/transaction/${encodeURIComponent(p.tx)}`;
       a.rel = "noreferrer";
       a.textContent = T.verTx;
       li.append(a);
@@ -456,19 +474,25 @@
   formulario.addEventListener("submit", async (e) => {
     e.preventDefault();
     const tron = document.getElementById("cobro-tron").value.trim();
+    const btc = document.getElementById("cobro-btc").value.trim();
     const correo = document.getElementById("cobro-correo").value.trim();
     const falla = (texto) => { errorCobro.textContent = texto; errorCobro.hidden = false; };
     errorCobro.hidden = true;
     // Lo que se ve a simple vista se dice sin preguntar a nadie; la suma de
     // control de la dirección la comprueba la tienda.
     if (!/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(tron)) { falla(T.errores.direccion); return; }
+    // Bitcoin: bc1… —todo en minúsculas o todo en mayúsculas— o las de siempre, 1… y 3….
+    if (!/^(bc1[02-9ac-hj-np-z]{8,87}|BC1[02-9AC-HJ-NP-Z]{8,87}|[13][1-9A-HJ-NP-Za-km-z]{25,34})$/.test(btc)) {
+      falla(T.errores["direccion-btc"]);
+      return;
+    }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) { falla(T.errores.correo); return; }
     botonGuardar.disabled = true;
     botonGuardar.textContent = T.guardando;
     try {
       const r = await fetch(`${API}/cobro`, {
         method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ pedido, tron, correo, lengua: ES ? "es" : "en" }),
+        body: JSON.stringify({ pedido, tron, btc, correo, lengua: ES ? "es" : "en" }),
       });
       const v = await r.json();
       if (r.ok && v.recomendacion) {

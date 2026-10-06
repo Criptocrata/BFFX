@@ -152,24 +152,26 @@
 
     <div class="tarjeta paso" id="recomendar" hidden>
       <h2><span>3</span> Recommend it, if it’s useful to you</h2>
-      <p>Whoever buys BotFactoryFX with your link gets <strong>$100 off</strong>, and you get <strong>100 USDT</strong> on TRON for each sale. We pay as the sales come in: you don’t have to write to us or claim anything.</p>
+      <p>Whoever buys BotFactoryFX with your link gets <strong>$100 off</strong>, and you get <strong>100 USDT</strong> for each sale, in the currency they pay with: in USDT on TRON, or the same in BTC if they pay with Bitcoin. We pay as the sales come in: you don’t have to write to us or claim anything.</p>
       <label for="enlace-ref">Your link, to paste wherever you like</label>
       <div class="licencia" id="enlace-ref"></div>
       <p class="nota">Your referral code is <code id="codigo-ref"></code>. It isn’t your order number: that one stays private, because it opens your downloads and your licence.</p>
 
       <form id="cobro" class="cobro" novalidate hidden>
-        <h3>Where we send your USDT</h3>
+        <h3>Where we pay you</h3>
         <p class="nota" id="cobro-pendiente" hidden></p>
-        <label for="cobro-tron">Your TRON address (USDT on the TRC-20 network)</label>
+        <label for="cobro-tron">Your TRON address, to be paid in USDT (TRC-20 network)</label>
         <input id="cobro-tron" name="tron" placeholder="T…" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" required>
+        <label for="cobro-btc">Your Bitcoin address, to be paid in BTC</label>
+        <input id="cobro-btc" name="btc" placeholder="bc1…, 1… or 3…" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" required>
         <label for="cobro-correo">Your email, to tell you each time we pay</label>
         <input id="cobro-correo" name="correo" type="email" placeholder="you@example.com" autocomplete="email" required>
-        <p class="nota">We ask for these once, only to pay you and tell you so. We don’t share them or use them for anything else.</p>
+        <p class="nota">Both, because you’re paid in the currency each buyer pays with, and that isn’t known until they buy. We ask for these once, only to pay you and tell you so. We don’t share them or use them for anything else.</p>
         <p><button class="boton boton-ambar" id="cobro-guardar" type="submit">Save</button></p>
         <p id="cobro-error" class="nota malo" role="alert" hidden></p>
       </form>
       <div id="cobro-hecho" class="cobro-hecho" hidden>
-        <p>We pay you at <code id="cobro-hecho-tron"></code> and tell you at <b id="cobro-hecho-correo"></b>.</p>
+        <p>We pay you in USDT at <code id="cobro-hecho-tron"></code> and in BTC at <code id="cobro-hecho-btc"></code>, and tell you at <b id="cobro-hecho-correo"></b>.</p>
         <p class="nota"><button class="boton-texto" id="cobro-cambiar" type="button">Change it</button><span id="cobro-sin-cambios" hidden>To change it again, write to <a href="mailto:botfactoryfx@proton.me">botfactoryfx@proton.me</a>.</span></p>
       </div>
 
