@@ -70,7 +70,7 @@
           return `La red lo está confirmando: ${tarda}.${lleva}`;
         },
         teEscribiremos: (c) => `En cuanto se confirme el pago te escribimos a ${c} con el enlace de esta página.`,
-        sinCobro: "El cobro no contesta ahora mismo. Inténtalo en un minuto, o escríbenos a botfactoryfx@proton.me y te mandamos la factura a mano.",
+        sinCobro: "El cobro no contesta ahora mismo. Inténtalo en un minuto, o escríbenos a support@botfactoryfx.com y te mandamos la factura a mano.",
         mejoraUsada: "Este pedido ya se usó para pasarse a BotFactoryFX.",
         numeroMal: "Eso no parece un número de pedido: empieza por BFX o BFQ y lleva dos grupos de ocho letras y cifras.",
         noEsNuestro: "Ese número no es de ningún pedido nuestro. Revisa que esté entero, o escríbenos.",
@@ -114,7 +114,7 @@
           return `The network is confirming it: ${tarda}.${lleva}`;
         },
         teEscribiremos: (c) => `As soon as the payment confirms we email ${c} the link to this page.`,
-        sinCobro: "Checkout isn’t answering right now. Try again in a minute, or write to botfactoryfx@proton.me and we’ll send you the invoice by hand.",
+        sinCobro: "Checkout isn’t answering right now. Try again in a minute, or write to support@botfactoryfx.com and we’ll send you the invoice by hand.",
         mejoraUsada: "This order has already been used to move up to BotFactoryFX.",
         mejoraNoVale: "This order doesn’t carry the discount. Write to us with your order number and we’ll look into it.",
         ref: "",
