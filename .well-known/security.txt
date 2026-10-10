@@ -1,0 +1,7 @@
+# BotFactoryFX — how to report a security problem (RFC 9116)
+# If you have found a vulnerability in our website, store or programs,
+# please write to us before making it public. We answer in English or Spanish.
+Contact: mailto:support@botfactoryfx.com
+Expires: 2027-10-10T00:00:00.000Z
+Preferred-Languages: en, es
+Canonical: https://botfactoryfx.com/.well-known/security.txt
