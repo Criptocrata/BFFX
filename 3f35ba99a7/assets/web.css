@@ -198,7 +198,7 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--mono); font-weight: 600; text-wra
 .barra-enlaces { display: flex; gap: 4px; margin-left: 8px; }
 .barra-enlaces a {
   text-decoration: none; font-size: 0.9rem; color: var(--texto-2);
-  padding: 8px 10px; border-radius: 6px;
+  padding: 8px 10px; border-radius: 6px; white-space: nowrap;
 }
 .barra-enlaces a:hover, .barra-enlaces a[aria-current="page"] { color: var(--texto); background: var(--superficie-2); }
 .barra-acciones { margin-left: auto; display: flex; align-items: center; gap: 10px; }
@@ -234,7 +234,13 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--mono); font-weight: 600; text-wra
 .menu-movil nav a { text-decoration: none; padding: 10px 12px; border-radius: 6px; }
 .menu-movil nav a:hover { background: var(--superficie-2); }
 
-@media (max-width: 1080px) {
+/* El corte del menú: 1080 px hasta el 09-10-2026. Con la pestaña de Contacto
+   la barra en castellano pide ~1.061 px de contenido sin partir ningún texto
+   —medido: a 1.145 px de ventana se pasaba 11 px—, así que el menú de
+   escritorio sale desde 1.181, el ancho de la web (--ancho). Los enlaces no se
+   parten (nowrap): antes, «La factura» y «Cómo funciona» bajaban a dos líneas
+   en cuanto apretaba el sitio, y la barra crecía a 62 px. */
+@media (max-width: 1180px) {
   .barra-enlaces { display: none; }
   .menu-movil { display: block; }
 }
@@ -521,3 +527,40 @@ pre { font-family: var(--mono); font-size: 0.84rem; background: var(--superficie
   font-family: var(--mono); font-size: 0.8rem; color: var(--pierde);
   border: 1px dashed var(--pierde); border-radius: 6px; padding: 6px 10px;
 }
+
+/* ── Contacto (09-10-2026) ─────────────────────────────────────────────────
+   El dueño: «"contact" merecería más visibilidad… su pestaña en el menú», y
+   con los logos de YouTube y Telegram «para que el usuario lo identifique en
+   seguida». Los logos van DENTRO de la página, como SVG: esta web no carga
+   nada de fuera de su dominio. Sus colores son los de cada marca y no cambian
+   con el tema; el sobre del correo es el ámbar de la casa. */
+.canales .canal { display: flex; flex-direction: column; gap: 10px; }
+.canal-cabeza { display: flex; align-items: center; gap: 12px; }
+.logo-canal { height: 36px; width: auto; flex: none; }
+.logo-correo { color: var(--ambar-fondo); }
+.canal .direccion { font-family: var(--mono); font-size: 0.92rem; color: var(--texto); overflow-wrap: anywhere; }
+.canal .boton { margin-top: auto; align-self: flex-start; }
+/* En los pies, el logo en pequeño delante del nombre del canal. */
+.con-logo { display: inline-flex; align-items: center; gap: 6px; vertical-align: bottom; }
+.logo-chico { height: 1.05em; width: auto; flex: none; }
+
+/* Los manuales en PDF, en cada apartado de Descargas (09-10-2026). Los copia el
+   publicador desde los documentos de la caja, con su versión comprobada. */
+.manuales { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 0.92rem; color: var(--texto-2); }
+.manuales svg { width: 18px; height: 18px; color: var(--ambar); flex: none; }
+
+/* Pagar con cripto (10-10-2026): el camino de la tarjeta a la descarga, un
+   paso por fila con su número al lado —cinco pasos en la rejilla de tres de
+   Referidos dejaban dos colgando—. */
+.pasos-pago { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.pasos-pago li {
+  display: grid; grid-template-columns: 32px minmax(0, 1fr); column-gap: 16px; row-gap: 6px;
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: 12px; padding: 20px 22px;
+}
+.pasos-pago li > span {
+  grid-row: 1 / span 2; display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--ambar-suave); color: var(--ambar); border: 1px solid var(--ambar-borde); font-family: var(--mono);
+}
+.pasos-pago h3 { font-size: 1.1rem; align-self: center; }
+.pasos-pago p { color: var(--texto-2); font-size: 0.97rem; max-width: 72ch; }
+.avisos-pago { margin: 0; padding-left: 1.1rem; display: grid; gap: 10px; }
