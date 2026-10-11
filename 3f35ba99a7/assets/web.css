@@ -239,7 +239,9 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--mono); font-weight: 600; text-wra
    —medido: a 1.145 px de ventana se pasaba 11 px—, así que el menú de
    escritorio sale desde 1.181, el ancho de la web (--ancho). Los enlaces no se
    parten (nowrap): antes, «La factura» y «Cómo funciona» bajaban a dos líneas
-   en cuanto apretaba el sitio, y la barra crecía a 62 px. */
+   en cuanto apretaba el sitio, y la barra crecía a 62 px.
+   11-10-2026, con «Notas» / «Lab notes» en el menú: a 1.181 px de ventana
+   quedan 20 px entre el menú y los botones en castellano y 52 en inglés. */
 @media (max-width: 1180px) {
   .barra-enlaces { display: none; }
   .menu-movil { display: block; }
