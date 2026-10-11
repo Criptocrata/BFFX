@@ -78,6 +78,13 @@
   background: var(--superficie-2); color: var(--texto); border: 1px solid var(--linea-fuerte); border-radius: 8px; padding: 12px 14px;
 }
 .buscar-pedido input:focus { outline: 2px solid var(--ambar); outline-offset: 1px; }
+/* «¿Cómo nos conociste?» (11-10-2026): opcional, y con la letra del texto, no la de máquina. */
+.buscar-pedido select {
+  font: inherit; font-size: 0.95rem; background: var(--superficie-2); color: var(--texto);
+  border: 1px solid var(--linea-fuerte); border-radius: 8px; padding: 11px 12px; max-width: 100%;
+}
+.buscar-pedido select:focus { outline: 2px solid var(--ambar); outline-offset: 1px; }
+.buscar-pedido label .opcional { letter-spacing: 0; text-transform: none; }
 /* Sólo el número de pedido va en mayúsculas: un correo, tal cual se escribe. */
 .buscar-pedido #numero { text-transform: uppercase; }
 .buscar-pedido button { justify-self: start; }

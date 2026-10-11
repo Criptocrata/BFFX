@@ -56,6 +56,20 @@
         <label for="comprar-correo">Your email</label>
         <input id="comprar-correo" name="correo" type="email" required autocomplete="email" placeholder="you@example.com" spellcheck="false">
         <p class="nota">As soon as the payment confirms, we email you your purchase page: the download and your licence. We don’t use it for anything else.</p>
+        <label for="comprar-origen">How did you hear about us? <span class="opcional">(if you’d like to say)</span></label>
+        <select id="comprar-origen" name="origen">
+          <option value="" selected>Rather not say</option>
+          <option value="buscador">Searching the web</option>
+          <option value="youtube">YouTube</option>
+          <option value="telegram">Telegram</option>
+          <option value="hacker-news">Hacker News</option>
+          <option value="forex-factory">Forex Factory</option>
+          <option value="foro">Another forum or community</option>
+          <option value="ia">An AI assistant suggested it</option>
+          <option value="amigo">Someone recommended it</option>
+          <option value="otro">Some other way</option>
+        </select>
+        <p class="nota">It’s the only way we have of knowing what works: this site has no trackers.</p>
         <button class="boton boton-ambar" id="comprar-seguir" type="submit">Continue to payment</button>
         <p id="comprar-error" class="nota malo" role="alert" hidden></p>
       </form>

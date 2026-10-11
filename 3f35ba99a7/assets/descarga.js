@@ -255,6 +255,10 @@
         const elegida = marcada ? marcada.value : "";
         const cuerpo = { producto, correo, lengua: ES ? "es" : "en", moneda: elegida };
         if (ref) cuerpo.ref = ref;
+        /* Cómo nos conoció (11-10-2026): sólo si lo dijo. Es opcional, y la
+           tienda calla lo que no reconoce: nunca impide comprar. */
+        const origen = document.getElementById("comprar-origen");
+        if (origen && origen.value) cuerpo.origen = origen.value;
         const r = await fetch(`${API}/comprar`, {
           method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(cuerpo),
         });

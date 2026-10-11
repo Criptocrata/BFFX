@@ -52,6 +52,20 @@
         <label for="comprar-correo">Tu correo</label>
         <input id="comprar-correo" name="correo" type="email" required autocomplete="email" placeholder="tu@correo.com" spellcheck="false">
         <p class="nota">En cuanto se confirme el pago te mandamos ahí tu página de compra: la descarga y tu licencia. No lo usamos para nada más.</p>
+        <label for="comprar-origen">¿Cómo nos conociste? <span class="opcional">(si quieres decirlo)</span></label>
+        <select id="comprar-origen" name="origen">
+          <option value="" selected>Prefiero no decirlo</option>
+          <option value="buscador">Buscando en internet</option>
+          <option value="youtube">YouTube</option>
+          <option value="telegram">Telegram</option>
+          <option value="hacker-news">Hacker News</option>
+          <option value="forex-factory">Forex Factory</option>
+          <option value="foro">Otro foro o comunidad</option>
+          <option value="ia">Me lo sugirió un asistente de IA</option>
+          <option value="amigo">Me lo recomendó alguien</option>
+          <option value="otro">De otra manera</option>
+        </select>
+        <p class="nota">Es la única forma que tenemos de saber qué funciona: en esta web no hay rastreadores.</p>
         <button class="boton boton-ambar" id="comprar-seguir" type="submit">Seguir al pago</button>
         <p id="comprar-error" class="nota malo" role="alert" hidden></p>
       </form>
