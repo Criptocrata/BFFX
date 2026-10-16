@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three programs built to tell you no · BotFactoryFX</title>
+<meta name="description" content="BotFactoryFX, BFQuarantine and BFInspector: what each one does, how they were built, what they rest on and how they compare with the alternatives.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../../assets/logo-split.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="./">
+<link rel="alternate" hreflang="es" href="../../es/notas/la-familia-botfactoryfx/">
+<link rel="stylesheet" href="../../assets/fuentes.css">
+<link rel="stylesheet" href="../../assets/web.css">
+<script>
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="../../assets/web.js" defer></script>
+</head>
+<body>
+<a class="saltar" href="#contenido">Skip to content</a>
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="../../"><img src="../../assets/logo-split.svg" alt="" width="30" height="30"><span>BotFactory<b>FX</b></span></a>
+    <nav class="barra-enlaces" aria-label="Main">
+      <a href="../../#bill">The bill</a>
+      <a href="../../how-it-works/">How it works</a>
+      <a href="../../#programs">Programs</a>
+      <a href="../../downloads/">Downloads</a>
+      <a href="../../docs/">Docs</a>
+      <a href="../../notes/">Lab notes</a>
+      <a href="../../referrals/">Referrals</a>
+      <a href="../../contact/">Contact</a>
+    </nav>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Theme">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" href="../../es/notas/la-familia-botfactoryfx/" hreflang="es" lang="es">ES</a>
+      <a class="boton boton-ambar boton-chico boton-carrito" href="../../#programs" aria-label="Buy: start with the free one" title="Buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 12.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg></a>
+      <details class="menu-movil">
+        <summary>Menu</summary>
+        <nav aria-label="Main (mobile)">
+          <a href="../../#bill">The bill</a><a href="../../how-it-works/">How it works</a><a href="../../#programs">Programs</a>
+          <a href="../../downloads/">Downloads</a><a href="../../docs/">Docs</a><a href="../../notes/">Lab notes</a><a href="../../referrals/">Referrals</a><a href="../../contact/">Contact</a><a href="../../demo/?lang=en">Try it free</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+<section class="portada-interior">
+  <div class="envoltura">
+    <p class="ceja">Lab notes · 16 October 2026</p>
+    <h1>Three programs built to tell you no</h1>
+    <p class="entradilla">Generating trading strategies is easy. Knowing which ones are real is the hard part, and it is the part most software leaves to you. This is the family we built around that question: what each program does, how it was made and how it compares.</p>
+  </div>
+</section>
+<section class="seccion" style="border-top:0;padding-top:8px">
+  <div class="envoltura">
+    <article class="nota">
+      <h2>Every backtest looks good</h2>
+      <p>That is close to literally true. A search that tries thousands of rule sets on the same price history and keeps the best one will always find something with a rising equity curve, because among thousands of variations some fit the past by chance. The more you try, the better the winner looks, and the less the winner means.</p>
+      <p>The founder of BotFactoryFX has used StrategyQuant X every day for years. He has built strategies that pass Monte Carlo and a dozen other robustness tests, and he still had no robot that paid. Strategy generators are very good at generating. What you need before risking money is a verdict: is this result real, or is it the luckiest of a thousand coin flips? So we built the judge first, and the programs around it.</p>
+      <h2>One engine, three jobs</h2>
+      <p>The three programs share the same measuring engine, so a number means the same thing in each of them. All three run on your own computer, with no account and no cloud.</p>
+      <div class="tabla"><table>
+        <thead><tr><th>Program</th><th>When</th><th>What it does</th><th>Price</th></tr></thead>
+        <tbody>
+          <tr><td><b>BFInspector</b></td><td>Before you buy a robot</td><td>Reads its code and the backtest you were shown, finds the known traps and replays its trades with your money. For manual traders: position sizing, losing streaks and a trading journal.</td><td>Free</td></tr>
+          <tr><td><b>BFQuarantine</b></td><td>After you bought one</td><td>Sets the trades it really closed, in the account where it runs, against the backtest it was sold with. It never runs the robot and never places an order.</td><td>99 USD, once</td></tr>
+          <tr><td><b>BotFactoryFX</b></td><td>To build and judge your own</td><td>Genetic search, the Reality Check, quarantine on live candles, portfolios, live monitoring of your robots, an AI assistant and native code for five platforms.</td><td>999 USD, once</td></tr>
+        </tbody>
+      </table></div>
+      <h2>BotFactoryFX: build thousands, keep the ones that hold</h2>
+      <p>BotFactoryFX is an algorithmic trading lab. It builds strategies by the thousand and then spends most of its effort trying to prove that each one is worthless. What survives is written out as code you can run on your platform. The menu follows the order of the work: data, build, judge, library, quarantine, portfolio, live.</p>
+      <figure class="captura"><img src="../../capturas/en/piloto.webp" alt="The BotFactoryFX autopilot: a conversation asking for a breakout system for EURUSD on H1, and the pipeline of search, measure, select, judge, save and combine" width="1280" height="800" loading="lazy"><figcaption>The autopilot. One sentence, “Build me a breakout system for EURUSD on H1, I can stand a 15% drawdown”, and it searches, measures, selects, judges, saves and combines. Before it starts, it shows everything it decided for you.</figcaption></figure>
+      <p><b>Data first.</b> Price history comes from your broker's CSV, Dukascopy (1,615 instruments), Binance (more than 500 pairs), MetaTrader 5, JForex or a web3 wallet. Every series is audited before it is used, because bad data produces very convincing strategies. Two of the things we found that way: Dukascopy's free feed makes up candles for the closed weekend, and one broker's EURUSD H1 history carried the day's high or low inside its midnight candle, which a search exploits at once.</p>
+      <p><b>Search.</b> The genetic search, Evolve, tries thousands of rule sets per run across seven families: trend, breakout, mean reversion, price action, momentum, volatility and divergence, and mixes them when that pays. You can also write rules by hand, or describe an idea in plain words and let the assistant write it with the program's own indicators. The autopilot can test the procedure itself, repeating the whole search on five windows of the history and trading what each one found on the stretch that came next.</p>
+      <figure class="captura"><img src="../../capturas/en/como/evolve.webp" alt="The Evolve screen: a genetic search at generation 13 of 20, its fitness curve and the best strategy so far with its equity curve and entry rules" width="1280" height="800" loading="lazy"><figcaption>Evolve. The search shows its best candidate as it goes, with its rules in words and its curve. The curve is the least important thing on this screen.</figcaption></figure>
+      <h2>The Reality Check</h2>
+      <p>This is the center of the program. The judge does not ask whether a strategy made money. It asks whether the result is real. It runs thirteen checks, nine of them on the last stretch of history, the one the search never saw: out of sample, better than chance, walk-forward, parameter sensitivity, Monte Carlo, other instruments, other timeframes, sample size, period consistency, perturbation, bar resolution, cost tolerance and drawdown.</p>
+      <p>Two things make it more than a checklist. <b>It knows how hard the search looked:</b> the best of 9,000 rule sets has to show more evidence than a strategy you wrote by hand, so the judge raises its bar with the size of the tournament, and from the search's own records it computes the deflated Sharpe ratio (Bailey and López de Prado, 2014) and the probability of backtest overfitting (Bailey, Borwein, López de Prado and Zhu, 2014). Even the name has a pedigree: Halbert White called his test for data snooping “a reality check” in 2000. And <b>it was calibrated on noise:</b> we fed it thousands of strategies fitted to random price paths, which have no edge by construction, and counted how many it approved.</p>
+      <figure class="grafica"><svg class="g" viewBox="0 0 760 136" role="img" aria-labelledby="g-ruido-t g-ruido-d" preserveAspectRatio="xMidYMid meet"><title id="g-ruido-t">How many noise-fitted strategies the Reality Check approved, before and after its recalibration</title><desc id="g-ruido-d">Before 7 September 2026 the judge approved 94% of strategies fitted to random price paths; after that day&#x27;s recalibration, 6%.</desc><text class="g-t" x="288" y="53.0" text-anchor="end">Before 7 September 2026</text><rect class="g-barra" x="300" y="34" width="376.0" height="30" rx="3"><title>Before 7 September 2026: 94%</title></rect><text class="g-tf" x="684.0" y="54.0">94%</text><text class="g-t" x="288" y="99.0" text-anchor="end">After that day&#x27;s recalibration</text><rect class="g-barra-ojo" x="300" y="80" width="24.0" height="30" rx="3"><title>After that day&#x27;s recalibration: 6%</title></rect><text class="g-tf" x="332.0" y="100.0">6%</text><text class="g-t" x="300" y="22">Share of strategies fitted to pure noise that the judge approved</text></svg><figcaption>A random price path has no edge by construction, so every approval of a strategy fitted to one is a false positive.</figcaption></figure>
+      <p>That is why its four verdict words, Solid, Fragile, Weak and Not credible, mean something: we measured how often noise earns each one.</p>
+      <figure class="captura"><img src="../../capturas/en/juez.webp" alt="A Reality Check report scoring 28 out of 100, Not credible, with each check and its number" width="2000" height="1739" loading="lazy"><figcaption>The verdict. 28 out of 100, Not credible: “This is almost certainly curve fitting.” Each check says what it measured, on which history and why it scored what it did.</figcaption></figure>
+      <p>A real case from our home page. One sentence to the autopilot; 9,963 rule sets tried; five strategies kept, the best of them winning 77% of its trades in the backtest. Its profit factor was 1.68 on the history it was built on and 1.00 on the history it never saw. The judge passed none of the five. That is its job: the money you do not lose in a live account.</p>
+      <p><b>Quarantine, live and export.</b> A strategy that survives the judge still has to survive time. The Quarantine runs it on the candles that arrive from your account, through MetaTrader 5 or JForex, or from Hyperliquid without an account, with simulated orders, and compares what happens with what the backtest promised. Nothing has to stay switched on: it catches up when you open it, and it never sends an order. When a strategy has earned it, BotFactoryFX writes it in native code for MQL4, MQL5, Java for JForex, Pine Script and Python for Hyperliquid, compiled with each platform's own compiler and with an account kill switch, trading hours and a Friday close inside. Live then reads your robots in MetaTrader 5 and JForex and shows how far each one drifts from its backtest.</p>
+      <figure class="captura"><img src="../../capturas/en/como/cuarentena.webp" alt="The Quarantine screen: a strategy from the library watched on live BTC H1 candles from Hyperliquid, with live bars, live trades and the backtest's figures side by side" width="1440" height="900" loading="lazy"><figcaption>Quarantine. A strategy on live candles. No trades yet is information too: one that traded weekly in the backtest and stays silent for three weeks is already telling you something.</figcaption></figure>
+      <p><b>Dr. Quant</b> is the assistant inside. It runs on your own AI key, with OpenAI or any compatible service, Anthropic, Google Gemini or OpenRouter, or on a model on your own machine, and every answer shows what it cost. It knows how the judge works and what the Help says, and it explains any concept you ask about. It does not trade and it does not touch your library.</p>
+      <h2>BFQuarantine: is it still the robot you bought?</h2>
+      <p>You bought a robot, and its backtest said 71% winning trades. BFQuarantine reads the trades it really closed in the account where it runs, on MetaTrader 5, MetaTrader 4, JForex or a web3 wallet, draws them on the candles they were made on and sets them against the backtest it was sold with. It never runs the robot's code and never places an order: its bridge to the platform only reads.</p>
+      <figure class="captura"><img src="../../capturas/notas/familia/bfq-live-vs-backtest.webp" alt="BFQuarantine watching a robot: 59 live trades with a 37% hit rate against the 71% its backtest claimed, every real trade marked on the chart" width="1920" height="840" loading="lazy"><figcaption>Live against promised: 37% winners on the account against 71% in the backtest. The hit rate falls outside what these trades can support. Example robot and account, made up.</figcaption></figure>
+      <p>If the live results fall outside what the backtest can support, the verdict says so: either the edge was never there, or this venue is not the one it was measured on. If they are still inside, it says that too, and adds that this is not proof it works, only the absence of evidence that it broke. The report is made to keep.</p>
+      <figure class="captura"><img src="../../capturas/notas/familia/bfq-report.webp" alt="The BFQuarantine report: what the account did, and what the robot promised against what it did" width="1310" height="710" loading="lazy"><figcaption>The report: what it promised, what it did.</figcaption></figure>
+      <h2>BFInspector: before you pay</h2>
+      <p>Someone wants to sell you a robot whose backtest shows 93.7% winning trades and +32% in a year. BFInspector reads three files: its code, the backtest you were shown and your own price history. It writes down in plain words what the robot does, looks for seven known traps in the code, from doubling up after a loss to orders without a stop or rules that read the current candle before it has closed, and runs six checks on the report, such as prices that never existed or entries too good to be chance.</p>
+      <figure class="captura"><img src="../../capturas/notas/familia/bfi-traps.webp" alt="BFInspector reading a robot's code: 'The robot has 2 serious things inside', with each finding quoting its lines of code" width="1440" height="900" loading="lazy"><figcaption>Seven traps in the code, each found by reading the lines, with their line numbers. Example files, made up.</figcaption></figure>
+      <p>Then it replays the robot's own trades with your capital, your lot size and your costs, and again at the costs of other kinds of broker account. For manual traders it adds a position calculator that always rounds the lot down, a losing-streak simulator that tells you how many losses in a row your plan will make you sit through, and a journal that gives your own trades the same report a robot gets. It is free, needs no sign-up and nothing leaves your computer.</p>
+      <figure class="captura"><img src="../../capturas/notas/familia/bfi-streaks.webp" alt="The Streaks screen: a plan that makes 0.17% per trade and still goes through a streak of 6 losses or more twice in 200 trades" width="1440" height="900" loading="lazy"><figcaption>Streaks: a plan that makes money and still hands you six losses in a row, twice.</figcaption></figure>
+      <h2>How it was built</h2>
+      <p>Development started in August 2026 with one priority: the judge before everything else. A few rules have held since. Every number on screen comes from the program. A message to the user is a claim about a cause, so it has to be true. When a measurement kills one of our own ideas, we say so and change course. Some milestones, mistakes included:</p>
+      <div class="tabla"><table>
+        <thead><tr><th>When</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td>August 2026</td><td>A desktop program that runs locally, with the Reality Check as its spine instead of a cheaper toolbox.</td></tr>
+          <tr><td>7 September</td><td>The judge recalibrated on noise: from approving 94% of noise-fitted strategies to 6%.</td></tr>
+          <tr><td>17 September</td><td>We started compiling every export with each platform's own compiler and found that the JForex export had never compiled. Every version is checked that way since.</td></tr>
+          <tr><td>18–20 September</td><td>Three adversarial reviews of the judge and the engine. Among other things, a rule reading a slower timeframe could see that bar before it had closed. Fixed.</td></tr>
+          <tr><td>29 September</td><td>The deflated Sharpe ratio and the probability of backtest overfitting join the judge, and the data audit learns to spot a candle that carries the future.</td></tr>
+          <tr><td>October</td><td>The procedure test; BFQuarantine and BFInspector as separate programs; BFInspector's calculator and journal; every program in English and Spanish.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Behind it there are some 1,270 commits and more than 8,000 automated tests, run in full before any change is kept.</p>
+      <h2>The tool has to work in our hands first</h2>
+      <p>Before selling it we set ourselves a rule: no launch until BotFactoryFX found, in our own hands, a strategy its judge rates Solid. This is what our searches looked like, with the autopilot's procedure and the strictest standard, Solid on the instrument and Solid again with its closest sibling market as the subject:</p>
+      <div class="tabla"><table>
+        <thead><tr><th>Market and its sibling</th><th>Searches</th><th>Searches that found one passing both</th></tr></thead>
+        <tbody>
+          <tr><td>S&amp;P 500 with the Dow, daily</td><td>30</td><td>3</td></tr>
+          <tr><td>Bitcoin with Ethereum, daily and H4</td><td>600</td><td>0</td></tr>
+          <tr><td>EURUSD with GBPUSD, daily and H4</td><td>100</td><td>0</td></tr>
+          <tr><td>GBPUSD with EURUSD, daily and H4</td><td>100</td><td>0</td></tr>
+          <tr><td>Gold with silver, daily and H4</td><td>100</td><td>0</td></tr>
+          <tr><td>Apple with Microsoft, daily and H4</td><td>100</td><td>0</td></tr>
+          <tr><td>Russell 2000 ETF with SPY, daily and H4</td><td>100</td><td>0</td></tr>
+        </tbody>
+      </table></div>
+      <p>That table is the product working. A tool that finds an edge in every market would be finding noise. One of the S&amp;P 500 strategies is now running in quarantine, where time will judge it again.</p>
+      <h2>A verdict, not a bigger toolbox</h2>
+      <p>The best-known tool in this space is StrategyQuant X, and it is excellent. On its website it was listed at 1,290 USD (Starter) and 1,490 USD (Professional, the edition with its robustness tests), both with one year of updates and 300 USD a year after that, and 2,900 USD for Ultimate with lifetime updates. It offers more building blocks and more export targets than BotFactoryFX, and some traders will need exactly that. BotFactoryFX makes a different bet: instead of the largest toolbox, the clearest answer to one question. 999 USD once, lifetime updates, no subscription, up to three of your machines; all thirteen checks included; one sentence to the autopilot; quarantine without risking money; and you can run the program in your browser before paying.</p>
+      <h2>What it does not do</h2>
+      <ul>
+        <li><b>It does not promise a profitable robot.</b> No program can. What it can do is tell you early which ones are not, and watch the rest without risking money.</li>
+        <li>The engine holds one position at a time, so grids and stacked entries are out of scope.</li>
+        <li>It has fewer indicators and export targets than the largest tools: no NinjaTrader or TradeStation.</li>
+        <li>The Windows and macOS builds are not code-signed yet, so your system asks for confirmation the first time.</li>
+        <li>For now it is paid in crypto, USDT or BTC.</li>
+      </ul>
+      <p>The quickest way to judge all this is to try it: start with BFInspector, which is free, or run BotFactoryFX in your browser before paying.</p>
+      <div class="aviso"><h3>Where the numbers come from</h3><p>From the programs and our own measurements: the judge's recalibration on noise of 7 September 2026; the autopilot run on our home page; and the searches of 13 to 16 October 2026, run with the autopilot's procedure in our own harness. StrategyQuant X prices as listed on its website on 2 October 2026. The screenshots of BFQuarantine and BFInspector use example files made up for them.</p></div>
+      <p class="nota-fin"><a href="../">← All lab notes</a> <a class="boton boton-ambar" href="../../demo/?lang=en">Try it free</a></p>
+    </article>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura">
+    <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
+      <p><strong>Trading can cost you all your capital.</strong> BotFactoryFX is analysis software: it gives no investment advice and does not trade for you. These notes report what we measured; they are not investment advice.</p>
+      <p>No cookies, no trackers, nothing loaded from outside this domain. <a href="../../">Back to the home page</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
