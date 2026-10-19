@@ -38,6 +38,8 @@ interface RealityCheckCommon {
   subjectSymbol?: string;
   /** Contrastes de la biblioteca cuyo fichero no se pudo leer. */
   contrastesIlegibles?: string[];
+  /** Y los que no cupieron en el presupuesto de velas. Ver RealityCheckOptions. */
+  contrastesQueNoCaben?: RealityCheckOptions["contrastesQueNoCaben"];
   /** Las otras temporalidades elegidas, en minutos. Ver RealityCheckOptions. */
   temporalidades?: number[];
   /** La moneda de la cuenta y su serie de cambio (28-09-2026): columnas, clonables. */
@@ -96,7 +98,7 @@ export type RealityCheckWorkerMessage =
 const ctx = self as unknown as DedicatedWorkerGlobalScope;
 
 ctx.addEventListener("message", (event: MessageEvent<RealityCheckWorkerRequest>) => {
-  const { strategy, candlesBuffer, nativeBuffer, otherBuffers, referenceBuffers, costs, instrument, seed, candidatesTried, procedenciaDeLaCuenta, pesos, trainSplit, judgeFromBar, windows, resamples, shuffles, subjectSymbol, contrastesIlegibles, temporalidades, cuenta, pbo, reloj } = event.data;
+  const { strategy, candlesBuffer, nativeBuffer, otherBuffers, referenceBuffers, costs, instrument, seed, candidatesTried, procedenciaDeLaCuenta, pesos, trainSplit, judgeFromBar, windows, resamples, shuffles, subjectSymbol, contrastesIlegibles, contrastesQueNoCaben, temporalidades, cuenta, pbo, reloj } = event.data;
   const candles = seriesFromBuffer(candlesBuffer);
   const nativeSeries = nativeBuffer ? seriesFromBuffer(nativeBuffer) : undefined;
   // Laying a Series over a transferred buffer allocates nothing, so this is
@@ -130,6 +132,7 @@ ctx.addEventListener("message", (event: MessageEvent<RealityCheckWorkerRequest>)
       shuffles,
       subjectSymbol,
       contrastesIlegibles,
+      contrastesQueNoCaben,
       temporalidades,
       cuenta,
       pbo,
