@@ -133,7 +133,7 @@
       <h2><span>1</span> The program</h2>
       <p>Pick your system. <span id="sugerido"></span></p>
       <div class="sistemas-botones">
-        <a class="boton boton-linea" data-sistema="windows" href="#">Windows 11 <small>zip · x64</small></a>
+        <a class="boton boton-linea" data-sistema="windows" href="#">Windows <small>zip · x64</small></a>
         <a class="boton boton-linea" data-sistema="macos-arm64" href="#">macOS <small>Apple Silicon (M1–M4)</small></a>
         <a class="boton boton-linea" data-sistema="macos-x64" href="#">macOS <small>Intel</small></a>
         <a class="boton boton-linea" data-sistema="linux" href="#">Linux <small>zip · x64</small></a>
@@ -143,7 +143,7 @@
       <details class="primera-vez">
         <summary>The first time you open it</summary>
         <p>The program is not signed yet — signing needs Microsoft and Apple certificates we don’t have yet — so each system warns you the first time. That is expected, and you get past it like this (the <em>Read me first</em> in the box says the same):</p>
-        <h3>Windows 11</h3>
+        <h3>Windows</h3>
         <ol><li>Right-click the zip → <i>Extract All</i>, and double-click the installer inside. Windows says <i>“Windows protected your PC”</i>.</li><li>Click <i>More info</i> → <i>Run anyway</i>.</li><li>Choose where to install it, or accept the folder it suggests.</li></ol>
         <h3>macOS</h3>
         <ol><li>Double-click the zip: you get a folder with <code>BotFactoryFX.app</code> and the <em>English</em> and <em>Castellano</em> folders. Drag the app to Applications.</li><li>Open Terminal (Applications → Utilities) and paste, on one line:<pre>xattr -cr /Applications/BotFactoryFX.app</pre>That removes the “downloaded from the internet” mark that makes macOS say the app is damaged.</li><li>On Apple Silicon only, if it still won’t open, also paste:<pre>codesign --force --deep --sign - /Applications/BotFactoryFX.app</pre>It signs it locally; no account or certificate needed.</li><li>If macOS still insists: System Settings → Privacy &amp; Security → <i>Open Anyway</i>.</li></ol>
