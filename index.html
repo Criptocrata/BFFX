@@ -1,66 +1,272 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>BotFactoryFX</title>
-<meta name="description" content="An algorithmic strategy lab. Not finished yet.">
-
+<meta name="bfx-cuenta-atras" content="2026-10-31T09:00:00Z">
+<title>BotFactoryFX · 31 October</title>
+<meta name="description" content="BotFactoryFX opens on Saturday 31 October 2026 at 10:00 Madrid time. We don't promise you'll win. We save you from losing.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="/tipografias/tipografias.css">
+<script>
+  // El tema que el visitante eligió en la web, si ya la vio: la misma clave y los mismos tres estados.
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
 <style>
-  /* Deliberately quiet. Whoever lands here was not invited, and a countdown
-     saying "something big is coming" is the front page of every shitcoin
-     launch there has ever been — the exact impression the real site spends
-     nine sections dismantling. So: what it is, that it is not ready, and
-     nothing else. No timer, no promise, no date to miss. */
+  /* La cuenta atrás hasta la inauguración (22-10-2026).
+     ─────────────────────────────────────────────────────────────────────────
+     Sustituye a la página de espera «callada», que decía «no timer, no
+     promise, no date to miss»: el dueño quiere la fecha a la vista, y ya hay
+     fecha. Lo que la separa de la portada de cualquier lanzamiento de humo es
+     lo que dice: una hora exacta, el porqué de ese día y el lema, que promete
+     lo contrario de ganar. Nada de «algo grande se acerca».
+
+     El día lo decidió el dueño: sábado 31-10-2026 a las 10:00 de Madrid, por
+     la mañana porque la tienda (Cloudflare) cae en España con los partidos de
+     LaLiga. El 25-10 Madrid vuelve a UTC+1, así que son las 09:00 UTC. A
+     cero, la página no se cambia sola por la web: lo hacemos el dueño y yo,
+     y mientras tanto ésta pregunta cada veinte segundos si la raíz ya es
+     otra, y en cuanto lo es se recarga.
+
+     Los colores y las letras son los de la web (web-v5/assets/web.css), claro
+     por defecto. Las letras se sirven desde /tipografias/: nada sale del
+     dominio. */
   :root {
-    --paper: #f1f4f7;
-    --ink:   #0f141a;
-    --muted: #5b6775;
-    --accent: #1d4ed8;
-    --line:  #dbe2ea;
+    --fondo: #eeedea;
+    --superficie: #ffffff;
+    --linea: #d6d3cc;
+    --texto: #1b1d20;
+    --texto-2: #3f4349;
+    --apagado: #5b6169;
+    --ambar: #a9690c;
+    --ambar-suave: rgba(184, 115, 15, 0.1);
+    --ambar-borde: rgba(184, 115, 15, 0.45);
+    --sombra: 0 1px 2px rgba(27, 29, 32, 0.06), 0 10px 28px rgba(27, 29, 32, 0.09);
+    color-scheme: light;
   }
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme="system"] {
+      --fondo: #0e1013;
+      --superficie: #171a1f;
+      --linea: #2c323a;
+      --texto: #eceae6;
+      --texto-2: #c3c6cb;
+      --apagado: #9ca3ac;
+      --ambar: #e9962e;
+      --ambar-suave: rgba(224, 138, 30, 0.12);
+      --ambar-borde: rgba(224, 138, 30, 0.5);
+      --sombra: 0 1px 2px rgba(0, 0, 0, 0.45), 0 14px 36px rgba(0, 0, 0, 0.38);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --fondo: #0e1013;
+    --superficie: #171a1f;
+    --linea: #2c323a;
+    --texto: #eceae6;
+    --texto-2: #c3c6cb;
+    --apagado: #9ca3ac;
+    --ambar: #e9962e;
+    --ambar-suave: rgba(224, 138, 30, 0.12);
+    --ambar-borde: rgba(224, 138, 30, 0.5);
+    --sombra: 0 1px 2px rgba(0, 0, 0, 0.45), 0 14px 36px rgba(0, 0, 0, 0.38);
+    color-scheme: dark;
+  }
+
   * { box-sizing: border-box; }
-  html, body { height: 100%; }
   body {
     margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
     font-size: 17px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     display: grid;
     place-items: center;
-    padding: 2rem;
+    padding: 48px 16px;
   }
-  main { max-width: 30rem; display: flex; flex-direction: column; gap: 1.1rem; }
-  .brand {
-    font-weight: 800; letter-spacing: -0.045em; font-size: 1.4rem;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  main { width: 100%; max-width: 40rem; display: flex; flex-direction: column; gap: 28px; }
+  .marca { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 1.15rem; letter-spacing: -0.01em; }
+  .marca b { color: var(--ambar); font-weight: 600; }
+  .ceja {
+    margin: 0;
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ambar);
   }
-  .brand em { font-style: normal; color: var(--accent); }
-  h1 { font-size: 1.05rem; font-weight: 600; margin: 0; letter-spacing: -0.015em; }
-  p { margin: 0; color: var(--muted); font-size: 0.96rem; }
-  hr { border: 0; border-top: 1px solid var(--line); margin: 0.4rem 0; }
-  a { color: var(--accent); text-underline-offset: 3px; }
-  .fine { font-size: 0.82rem; }
-</style>
+  h1 {
+    margin: -14px 0 0;
+    font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.08; font-weight: 600; letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  h1 span { display: block; color: var(--ambar); }
+  .entradilla { margin: 0; color: var(--texto-2); max-width: 34rem; }
 
+  .cuenta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0; }
+  .cuenta div {
+    background: var(--superficie); border: 1px solid var(--linea); border-radius: 12px; box-shadow: var(--sombra);
+    padding: 16px 8px 12px; text-align: center;
+  }
+  .cuenta dd {
+    margin: 0; order: -1;
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: clamp(1.9rem, 7vw, 2.9rem); font-weight: 500; line-height: 1;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  }
+  .cuenta dt { margin: 8px 0 0; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--apagado); }
+  .cuenta div { display: flex; flex-direction: column; }
+  .abierto {
+    margin: 0; padding: 18px 20px; border-radius: 12px;
+    background: var(--ambar-suave); border: 1px solid var(--ambar-borde);
+    font-weight: 600;
+  }
+  .tu-hora { margin: -14px 0 0; font-size: 0.9rem; color: var(--apagado); }
+
+  .porque { margin: 0; padding-top: 22px; border-top: 1px solid var(--linea); color: var(--texto-2); }
+  .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+  .boton {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 18px; border-radius: 10px; border: 1px solid var(--ambar-borde);
+    color: var(--ambar); background: transparent; font-weight: 600; text-decoration: none;
+  }
+  .boton:hover { background: var(--ambar-suave); }
+  .boton:focus-visible, a:focus-visible { outline: 2px solid var(--ambar); outline-offset: 3px; }
+  .acciones small { color: var(--apagado); font-size: 0.85rem; }
+  .letra-chica { margin: 0; font-size: 0.8rem; color: var(--apagado); }
+  .letra-chica a { color: inherit; text-underline-offset: 3px; }
+
+  @media (max-width: 420px) {
+    .cuenta { gap: 6px; }
+    .cuenta div { padding: 12px 4px 10px; border-radius: 10px; }
+    .cuenta dt { font-size: 0.66rem; letter-spacing: 0.03em; }
+  }
+</style>
+</head>
+<body>
 <main>
-  <span class="brand">BotFactory<em>FX</em></span>
-  <h1>An algorithmic strategy lab. Not finished yet.</h1>
-  <p>
-    It searches for trading strategies and then spends most of its effort trying to prove the ones
-    it found are worthless. It works. It is not ready to be sold to anyone.
-  </p>
-  <hr>
-  <p class="fine">
-    If you have got this far, you have got here early. Nothing is being collected, there is no list
-    to join, and there will be no announcement email — when it is ready, this page becomes the
-    product. Until then, <a href="mailto:botfactoryfx@proton.me">write to me</a> if you are curious.
-  </p>
+  <div class="marca">
+    <svg viewBox="0 0 64 64" width="34" height="34" aria-hidden="true">
+      <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#e08a1e" stroke-width="2.5" opacity="0.28"/>
+      <line x1="32" y1="11" x2="32" y2="53" stroke="#e08a1e" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+      <rect x="23" y="17" width="18" height="15" rx="2" fill="#e08a1e"/>
+      <rect x="23" y="37" width="18" height="11" rx="2" fill="#e08a1e" opacity="0.38"/>
+      <line x1="17" y1="34.5" x2="47" y2="34.5" stroke="#e08a1e" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+    </svg>
+    <span>BotFactory<b>FX</b></span>
+  </div>
+
+  <p class="ceja" data-t="ceja">Saturday 31 October 2026 · 10:00 in Madrid</p>
+  <h1 data-t="lema">We don’t promise you’ll win. <span>We save you from losing.</span></h1>
+  <p class="entradilla" data-t="entradilla">BotFactoryFX builds trading strategies by the thousand, then spends most of its effort trying to prove each one is worth nothing. It opens in:</p>
+
+  <dl class="cuenta" id="cuenta" aria-live="off">
+    <div><dt data-t="dias">days</dt><dd id="dias">–</dd></div>
+    <div><dt data-t="horas">hours</dt><dd id="horas">–</dd></div>
+    <div><dt data-t="minutos">minutes</dt><dd id="minutos">–</dd></div>
+    <div><dt data-t="segundos">seconds</dt><dd id="segundos">–</dd></div>
+  </dl>
+  <p class="abierto" id="abierto" role="status" hidden data-t="abierto">It’s open. Loading the site…</p>
+  <p class="tu-hora" id="tu-hora" hidden></p>
+
+  <p class="porque" data-t="porque">Why that day? On 31 October 2008, Satoshi Nakamoto published the Bitcoin white paper. Eighteen years later, to the day, we open.</p>
+
+  <div class="acciones">
+    <a class="boton" href="https://t.me/+TswN4WbmH59hY2I0" rel="noopener" data-t="telegram">Join the Telegram channel</a>
+    <small data-t="telegram-nota">to hear it the moment it opens</small>
+  </div>
+
+  <p class="letra-chica" data-t="letra-chica">Algorithmic trading software for Linux, Windows and macOS. Trading can cost you all your capital. <a href="mailto:support@botfactoryfx.com">support@botfactoryfx.com</a></p>
 </main>
 
 <script>
+  (function () {
+    var OBJETIVO = Date.parse(document.querySelector('meta[name="bfx-cuenta-atras"]').content);
+
+    /* La lengua: la que pida el enlace (?lang=es|en) o la del navegador, como la web. */
+    var pedida = new URLSearchParams(location.search).get("lang");
+    var nav = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+    var ES = pedida ? pedida === "es" : /^es\b/i.test(nav);
+    var T = ES ? {
+      titulo: "BotFactoryFX · 31 de octubre",
+      ceja: "Sábado 31 de octubre de 2026 · 10:00 en Madrid",
+      lema: "No te prometemos ganar. <span>Te ahorramos perder.</span>",
+      entradilla: "BotFactoryFX construye estrategias de trading por miles y luego dedica casi todo su esfuerzo a demostrar que cada una no vale nada. Abre dentro de:",
+      dias: ["día", "días"], horas: ["hora", "horas"], minutos: ["minuto", "minutos"], segundos: ["segundo", "segundos"],
+      abierto: "Ya está abierto. Cargando la web…",
+      tuHora: function (h) { return "En tu hora: " + h + "."; },
+      porque: "¿Por qué ese día? El 31 de octubre de 2008 Satoshi Nakamoto publicó el libro blanco de Bitcoin. Dieciocho años después, el mismo día, abrimos.",
+      telegram: "Únete al canal de Telegram",
+      "telegram-nota": "para enterarte en cuanto abra (en inglés)",
+      "letra-chica": "Software de trading algorítmico para Linux, Windows y macOS. El trading puede costarte todo tu capital. <a href=\"mailto:support@botfactoryfx.com\">support@botfactoryfx.com</a>",
+      lengua: "es-ES",
+    } : {
+      titulo: document.title,
+      dias: ["day", "days"], horas: ["hour", "hours"], minutos: ["minute", "minutes"], segundos: ["second", "seconds"],
+      tuHora: function (h) { return "That’s " + h + " where you are."; },
+      lengua: "en-GB",
+    };
+    if (ES) {
+      document.documentElement.lang = "es";
+      document.title = T.titulo;
+      var textos = document.querySelectorAll("[data-t]");
+      for (var i = 0; i < textos.length; i++) {
+        var v = T[textos[i].getAttribute("data-t")];
+        if (typeof v === "string") textos[i].innerHTML = v;
+      }
+    }
+
+    /* La hora del visitante, sólo si no es la de Madrid: «10:00 en Madrid» ya lo dice. */
+    try {
+      var hm = { hour: "2-digit", minute: "2-digit", hour12: false };
+      var aqui = new Intl.DateTimeFormat(T.lengua, hm).format(OBJETIVO);
+      var madrid = new Intl.DateTimeFormat(T.lengua, Object.assign({ timeZone: "Europe/Madrid" }, hm)).format(OBJETIVO);
+      if (aqui !== madrid) {
+        var largo = new Intl.DateTimeFormat(T.lengua, { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", hour12: false, timeZoneName: "short" }).format(OBJETIVO);
+        var tu = document.getElementById("tu-hora");
+        tu.textContent = T.tuHora(largo);
+        tu.hidden = false;
+      }
+    } catch (e) {}
+
+    var dd = { dias: document.getElementById("dias"), horas: document.getElementById("horas"), minutos: document.getElementById("minutos"), segundos: document.getElementById("segundos") };
+    var dos = function (n) { return (n < 10 ? "0" : "") + n; };
+    var pon = function (clave, n) {
+      dd[clave].textContent = dos(n);
+      dd[clave].previousElementSibling.textContent = T[clave][n === 1 ? 0 : 1];
+    };
+
+    /* A cero: la web la ponemos a mano, así que se pregunta a la raíz hasta que deja de ser esta página. */
+    var mirando = false;
+    var mirar = function () {
+      fetch("/", { cache: "reload" })
+        .then(function (r) { return r.text(); })
+        .then(function (html) { if (html.indexOf('name="bfx-cuenta-atras"') === -1) location.reload(); })
+        .catch(function () {})
+        .then(function () { setTimeout(mirar, 20000); });
+    };
+
+    var tic = function () {
+      var falta = Math.max(0, OBJETIVO - Date.now());
+      if (falta === 0) {
+        document.getElementById("cuenta").hidden = true;
+        document.getElementById("abierto").hidden = false;
+        if (!mirando) { mirando = true; mirar(); }
+        return;
+      }
+      var s = Math.floor(falta / 1000);
+      pon("dias", Math.floor(s / 86400));
+      pon("horas", Math.floor(s / 3600) % 24);
+      pon("minutos", Math.floor(s / 60) % 60);
+      pon("segundos", s % 60);
+      setTimeout(tic, 1000 - (Date.now() % 1000) + 5);
+    };
+    tic();
+  })();
+
   // A shortcut, not a lock.
   //
   // Typing the word below jumps to the staging build. It is written here in
@@ -82,3 +288,5 @@
     });
   })();
 </script>
+</body>
+</html>
