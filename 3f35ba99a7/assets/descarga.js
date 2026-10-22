@@ -336,8 +336,8 @@
       for (const a of document.querySelectorAll("[data-sistema]")) {
         a.setAttribute("aria-label", `${nombre} · ${a.textContent.trim()}`);
       }
-      // Sólo lo que entra en el programa trae código: BFQuarantine no (con 100 +
-      // 100 sobre 99 se vendería a pérdida), y la tarjeta no se enseña.
+      // Los dos traen código desde el 22-10-2026, y vale para cualquiera de
+      // los dos: un 10 % de descuento y un 10 % de comisión en cada uno.
       pintaRecomendacion(v.recomendacion);
       pintaPasarse(v.mejora);
       sinFactura();

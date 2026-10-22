@@ -120,22 +120,30 @@
   /* ── La recomendación: ?ref=BFR-… ────────────────────────────────────────
      Se pregunta al cobro si el código vale y a cuánto sale ANTES de enseñar
      un precio: prometer uno que el botón no va a cobrar es peor que no decir
-     nada. Sólo BotFactoryFX entra en el programa. El código es BFR-, no un
-     número de pedido (03-10-2026): ése abre la compra y no se publica. */
+     nada. El código es BFR-, no un número de pedido (03-10-2026): ése abre la
+     compra y no se publica. Vale para los dos programas desde el 22-10-2026,
+     así que cada botón pregunta por el suyo; la caja grande, sólo por
+     BotFactoryFX. */
   const ref = (new URLSearchParams(location.search).get("ref") || "").trim().toUpperCase();
   const botones = [...document.querySelectorAll("a[data-cobro]")];
   const grandes = botones.filter((b) => !b.dataset.producto);
+  const deBfq = botones.filter((b) => b.dataset.producto === "quarantine");
   const caja = document.getElementById("recomendado");
-  if (ref && /^BFR-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref) && grandes.length && grandes[0].dataset.cobro) {
-    fetch(grandes[0].dataset.cobro + "/recomendacion?ref=" + encodeURIComponent(ref))
+  const pedirPrecio = (producto, suyos, conCaja) => {
+    if (!suyos.length || !suyos[0].dataset.cobro) return;
+    fetch(suyos[0].dataset.cobro + "/recomendacion?" + new URLSearchParams({ producto, ref }))
       .then((r) => r.json())
       .then((v) => {
         if (!v || !v.vale) return;
         const precio = String(Number(v.precio));
-        if (caja) { caja.textContent = T.recomendado(precio, grandes[0].dataset.lista || "999"); caja.hidden = false; }
-        for (const b of grandes) if (b.dataset.conPrecio !== undefined) b.textContent = T.comprar(precio);
+        if (conCaja && caja) { caja.textContent = T.recomendado(precio, suyos[0].dataset.lista || "999"); caja.hidden = false; }
+        for (const b of suyos) if (b.dataset.conPrecio !== undefined) b.textContent = T.comprar(precio);
       })
       .catch(() => {});
+  };
+  if (ref && /^BFR-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref)) {
+    pedirPrecio("fx", grandes, true);
+    pedirPrecio("quarantine", deBfq, false);
   }
 
   /* ── Comprar ─────────────────────────────────────────────────────────────
