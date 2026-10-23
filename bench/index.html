@@ -1,10 +1,34 @@
-<!doctype html>
-<html lang="es"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta http-equiv="refresh" content="0; url=/inspector/">
-<link rel="canonical" href="/inspector/">
-<title>BotFactoryBench ahora es BotFactoryIR</title>
-</head><body style="font:15px/1.6 system-ui;max-width:34rem;margin:12vh auto;padding:0 1.5rem">
-<p><b>BotFactoryBench ahora se llama BotFactoryIR.</b></p>
-<p>Si no te lleva solo, <a href="/inspector/">continúa aquí</a>.</p>
-</body></html>
+<title>BFInspector</title>
+<!--
+  Las direcciones viejas que se repartieron a mano (23-10-2026): /inspector/ y
+  /inspector/probar/ enseñaban BotFactoryIR, y /bench/ y /bench/probar/ venían
+  de antes, de BotFactoryBench. Los tres nombres son hoy BFInspector, que se
+  descarga de la web. Llevan a su sección de Descargas en la lengua del
+  navegador; sin JavaScript, a la castellana, que era la de esas páginas.
+  Las escribe scripts/publicar-portada-de-espera.mjs.
+-->
+<meta http-equiv="refresh" content="0; url=/3f35ba99a7/es/descargas/#inspector">
+<link rel="canonical" href="/3f35ba99a7/downloads/#inspector">
+<script>
+  location.replace("/3f35ba99a7/" + (/^es\b/i.test(navigator.language || "") ? "es/descargas/" : "downloads/") + "#inspector");
+</script>
+<style>
+  body { margin: 0; background: #eeedea; color: #1b1d20; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Arial, sans-serif; }
+  main { max-width: 34rem; margin: 12vh auto; padding: 0 16px; }
+  a { color: #a9690c; }
+  @media (prefers-color-scheme: dark) { body { background: #0e1013; color: #eceae6; } a { color: #e9962e; } }
+</style>
+</head>
+<body>
+<main>
+  <p><b>Esta página se ha mudado: el programa se llama ahora BFInspector.</b> <a href="/3f35ba99a7/es/descargas/#inspector">Sigue aquí</a>.</p>
+  <p lang="en"><b>This page has moved: the program is now called BFInspector.</b> <a href="/3f35ba99a7/downloads/#inspector">Continue here</a>.</p>
+</main>
+</body>
+</html>
