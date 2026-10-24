@@ -85,6 +85,29 @@
     </div>
   </section>
 
+  <section id="lista" hidden>
+    <h1>Las licencias se abren en unas semanas.</h1>
+    <div class="tarjeta">
+      <p class="compra-producto"><strong id="lista-producto">BotFactoryFX</strong></p>
+      <p>Estamos terminando los papeles para venderlo como es debido, y hasta entonces no le cobramos a nadie. Déjanos tu correo y te escribiremos el día que se abran las licencias, antes de anunciarlo en ningún otro sitio.</p>
+      <form id="lista-form" class="buscar-pedido" novalidate>
+        <label for="lista-correo">Tu correo</label>
+        <input id="lista-correo" name="correo" type="email" required autocomplete="email" placeholder="tu@correo.com" spellcheck="false">
+        <label class="acepto"><input type="checkbox" id="lista-acepto" name="acepto"> <span>Guardad mi correo para avisarme cuando se abran las licencias, y para nada más. Puedo salir de la lista cuando quiera. <a href="../legal/#privacidad" target="_blank" rel="noopener">Política de privacidad</a>.</span></label>
+        <button class="boton boton-ambar" id="lista-seguir" type="submit">Apuntarme</button>
+        <p id="lista-error" class="nota malo" role="alert" hidden></p>
+      </form>
+      <p class="nota">Mientras tanto, gratis: <a href="../descargas/#inspector">BFInspector</a>, <a href="../../demo/?lang=es">la demo en tu navegador</a> y <a href="../duelo-en-directo/">el duelo en directo</a>.</p>
+    </div>
+  </section>
+
+  <section id="lista-hecha" hidden>
+    <h1>Mira tu correo.</h1>
+    <div class="tarjeta">
+      <p>Te hemos mandado a <strong id="lista-a">tu correo</strong> un enlace para confirmar. Hasta que lo pulses, no estás en la lista. Si no llega en unos minutos, mira en el correo no deseado.</p>
+    </div>
+  </section>
+
   <section id="sin-pedido" hidden>
     <h1>Esta página necesita tu número de pedido.</h1>
     <p>Es el que te enseñó esta página antes de pagar, y el correo de Plisio lo trae como número de pedido. Empieza por <code>BFX</code> o por <code>BFQ</code>, según lo que compraras: <code>BFX-XXXXXXXX-XXXXXXXX</code>.</p>
@@ -203,7 +226,7 @@
 
       <p class="nota" id="ya-recomendadas" hidden></p>
       <ul class="pagos" id="pagos" hidden></ul>
-      <p><a href="../referidos/">Cómo funciona</a></p>
+      <p><a href="../referidos/" data-referidos>Cómo funciona</a></p>
     </div>
 
     <div class="tarjeta paso" id="pasarse" hidden>

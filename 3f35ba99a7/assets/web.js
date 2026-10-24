@@ -16,12 +16,14 @@
         tema: { system: "Tema del sistema", light: "Tema claro", dark: "Tema oscuro" },
         recomendado: (precio, lista) => `Vienes recomendado: pagas ${precio} USD en vez de ${lista}. El descuento va en la factura, sin pedirlo.`,
         comprar: (precio) => `Comprar licencia · ${precio} USD`,
+        apuntarse: "Apúntate a la lista",
         pausa: "Pausa", sigue: "Reanudar",
       }
     : {
         tema: { system: "System theme", light: "Light theme", dark: "Dark theme" },
         recomendado: (precio, lista) => `You were referred: you pay $${precio} instead of $${lista}. The discount is on the invoice, nothing to ask for.`,
         comprar: (precio) => `Buy a licence · $${precio}`,
+        apuntarse: "Join the list",
         pausa: "Pause", sigue: "Play",
       };
 
@@ -134,13 +136,21 @@
     fetch(suyos[0].dataset.cobro + "/recomendacion?" + new URLSearchParams({ producto, ref }))
       .then((r) => r.json())
       .then((v) => {
-        if (!v || !v.vale) return;
+        if (!v || !v.vale || v.venta === "cerrada") return;
         const precio = String(Number(v.precio));
         if (conCaja && caja) { caja.textContent = T.recomendado(precio, suyos[0].dataset.lista || "999"); caja.hidden = false; }
         for (const b of suyos) if (b.dataset.conPrecio !== undefined) b.textContent = T.comprar(precio);
       })
       .catch(() => {});
   };
+  /* La venta cerrada (24-10-2026): la tienda lo dice en /recomendacion, y los botones de comprar pasan a la lista de
+     espera; llevan a la misma página de compra, que enseña la lista. Reabrir no pide republicar la web. */
+  if (botones.length && botones[0].dataset.cobro) {
+    fetch(botones[0].dataset.cobro + "/recomendacion?producto=fx")
+      .then((r) => r.json())
+      .then((v) => { if (v && v.venta === "cerrada") for (const b of botones) b.textContent = T.apuntarse; })
+      .catch(() => {});
+  }
   if (ref && /^BFR-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref)) {
     pedirPrecio("fx", grandes, true);
     pedirPrecio("quarantine", deBfq, false);

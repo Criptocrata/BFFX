@@ -88,6 +88,29 @@
     </div>
   </section>
 
+  <section id="lista" hidden>
+    <h1>Licences open in a few weeks.</h1>
+    <div class="tarjeta">
+      <p class="compra-producto"><strong id="lista-producto">BotFactoryFX</strong></p>
+      <p>We’re finishing the paperwork to sell it properly, and until then we don’t charge anyone. Leave your email and we’ll write to you the day licences open, before announcing it anywhere else.</p>
+      <form id="lista-form" class="buscar-pedido" novalidate>
+        <label for="lista-correo">Your email</label>
+        <input id="lista-correo" name="correo" type="email" required autocomplete="email" placeholder="you@example.com" spellcheck="false">
+        <label class="acepto"><input type="checkbox" id="lista-acepto" name="acepto"> <span>Keep my email to tell me when licences open, and for nothing else. I can leave the list whenever I like. <a href="../legal/#privacy" target="_blank" rel="noopener">Privacy policy</a>.</span></label>
+        <button class="boton boton-ambar" id="lista-seguir" type="submit">Join the list</button>
+        <p id="lista-error" class="nota malo" role="alert" hidden></p>
+      </form>
+      <p class="nota">Meanwhile, free: <a href="../downloads/#inspector">BFInspector</a>, <a href="../demo/?lang=en">the demo in your browser</a> and <a href="../live-duel/">the live duel</a>.</p>
+    </div>
+  </section>
+
+  <section id="lista-hecha" hidden>
+    <h1>Check your inbox.</h1>
+    <div class="tarjeta">
+      <p>We’ve sent <strong id="lista-a">you</strong> a link to confirm. Until you click it, you’re not on the list. If it doesn’t arrive in a few minutes, look in your spam folder.</p>
+    </div>
+  </section>
+
   <section id="sin-pedido" hidden>
     <h1>This page needs your order number.</h1>
     <p>It is the one this page showed you before paying, and Plisio’s email carries it as the order number. It starts with <code>BFX</code> or <code>BFQ</code>, depending on what you bought: <code>BFX-XXXXXXXX-XXXXXXXX</code>.</p>
@@ -206,7 +229,7 @@
 
       <p class="nota" id="ya-recomendadas" hidden></p>
       <ul class="pagos" id="pagos" hidden></ul>
-      <p><a href="../referrals/">How it works</a></p>
+      <p><a href="../referrals/" data-referidos>How it works</a></p>
     </div>
 
     <div class="tarjeta paso" id="pasarse" hidden>

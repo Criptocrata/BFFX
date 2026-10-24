@@ -669,3 +669,7 @@ article.nota td:first-child { white-space: nowrap; }
 /* «Coming soon / Próximamente» (24-10-2026): el móvil y la tableta, sin fecha. */
 .pronto { font-size: 0.93rem; color: var(--texto-2); }
 .pronto-etiqueta { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ambar); background: var(--ambar-suave); border: 1px solid var(--ambar-borde); vertical-align: 1px; }
+
+/* Los referidos, OCULTOS mientras la venta está cerrada (24-10-2026): ver scripts/referidos-ocultos.py. Reabrir el
+   programa es BORRAR esta regla (y el aviso de arriba de las páginas de referidos). */
+[data-referidos] { display: none !important; }

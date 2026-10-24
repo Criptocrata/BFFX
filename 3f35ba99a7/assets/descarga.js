@@ -17,6 +17,8 @@
   "use strict";
   /* La versión del texto de la casilla del desistimiento que se acepta al comprar (24-10-2026). */
   const ACEPTA = "desistimiento-2026-10";
+  /* Y la del consentimiento de la lista de espera (24-10-2026): servidor/src/lista-de-espera.ts, ACEPTA_LISTA. */
+  const ACEPTA_LISTA = "lista-2026-10";
   const main = document.querySelector("main[data-api]");
   if (!main) return;
   const API = main.dataset.api;
@@ -55,6 +57,7 @@
           "direccion-btc": "Eso no es una dirección de Bitcoin. Empieza por bc1, por 1 o por 3: comprueba que no falte ni sobre ninguna letra. Una de la red de pruebas (tb1…) o de otra moneda no vale.",
           correo: "Ese correo no parece un correo.",
           acepto: "Marca la casilla de la descarga y el desistimiento: sin ella no podemos empezar la compra.",
+          aceptoLista: "Marca la casilla: sin ella no podemos guardar tu correo.",
           tope: "Ya lo has cambiado tres veces desde aquí. Para cambiarlo otra vez, escríbenos.",
           otro: "No se ha podido guardar. Inténtalo otra vez en un minuto.",
         },
@@ -64,6 +67,8 @@
         noEmitida: "No ha podido emitirse. Escríbenos con tu número de pedido.",
         sinConexion: "No se ha podido conectar. Inténtalo otra vez en un minuto.",
         creando: "Creando tu factura…",
+        apuntando: "Apuntando…",
+        listaFallo: "No se ha podido apuntar. Inténtalo otra vez en un minuto.",
         precio: (x) => `${usdt(x)} USD`,
         vienesRecomendado: "Vienes recomendado: el descuento ya va en el precio.",
         confirmando: (moneda, n) => {
@@ -100,6 +105,7 @@
           "direccion-btc": "That isn’t a Bitcoin address. It starts with bc1, 1 or 3: check that no letter is missing or extra. A testnet address (tb1…) or one for another coin won’t work.",
           correo: "That email doesn’t look right.",
           acepto: "Tick the box about the download and withdrawal: we can’t start the purchase without it.",
+          aceptoLista: "Tick the box: we can’t keep your email without it.",
           tope: "You’ve already changed it three times from here. To change it again, write to us.",
           otro: "It couldn’t be saved. Try again in a minute.",
         },
@@ -109,6 +115,8 @@
         noEmitida: "It couldn’t be issued. Write to us with your order number.",
         sinConexion: "Couldn’t connect. Try again in a minute.",
         creando: "Creating your invoice…",
+        apuntando: "Signing you up…",
+        listaFallo: "It couldn’t be done. Try again in a minute.",
         precio: (x) => `$${usdt(x)}`,
         vienesRecomendado: "You were referred: the discount is already in the price.",
         confirmando: (moneda, n) => {
@@ -176,7 +184,7 @@
     otro.addEventListener("click", () => { try { sessionStorage.setItem("bfx-web-idioma", ES ? "en" : "es"); } catch { /* nada */ } });
   }
   const ver = (id) => {
-    for (const s of ["comprar", "sin-pedido", "por-pagar", "cargando", "confirmando", "esperando", "listo", "revisar", "cerrado"]) {
+    for (const s of ["comprar", "lista", "lista-hecha", "sin-pedido", "por-pagar", "cargando", "confirmando", "esperando", "listo", "revisar", "cerrado"]) {
       const el = document.getElementById(s);
       if (el) el.hidden = s !== id;
     }
@@ -219,17 +227,21 @@
     document.getElementById("comprar-producto").textContent = NOMBRES[producto];
     const q = new URLSearchParams({ producto });
     if (ref) q.set("ref", ref);
+    /* La venta cerrada (24-10-2026): si la tienda lo dice, la lista de espera en vez de la compra. Hasta saberlo
+       se queda «Un momento»; sin respuesta, la compra, como siempre. Ver servidor/src/lista-de-espera.ts. */
     fetch(`${API}/recomendacion?${q}`)
       .then((r) => r.json())
       .then((v) => {
+        if (v && v.venta === "cerrada") { montarLista(producto); return; }
         if (v && v.precio) document.getElementById("comprar-precio").textContent = T.precio(v.precio);
         if (v && v.vale) {
           const nota = document.getElementById("comprar-recomendado");
           nota.textContent = T.vienesRecomendado;
           nota.hidden = false;
         }
+        ver("comprar");
       })
-      .catch(() => { /* el precio sale en la factura igualmente */ });
+      .catch(() => { ver("comprar"); /* el precio sale en la factura igualmente */ });
     const formulario = document.getElementById("comprar-form");
     /* Quien elige Bitcoin lee antes de pagar que puede tardar horas (04-10-2026):
        la tercera compra de prueba pasó de la hora, y sin aviso eso parece un fallo. */
@@ -290,7 +302,51 @@
         seguir.textContent = dice;
       }
     });
-    ver("comprar");
+  }
+
+  /* ── La lista de espera (24-10-2026) ──────────────────────────────────────
+     Con la venta cerrada: el correo, el consentimiento, y la tienda le escribe
+     para confirmar. Sin confirmar no está en la lista. */
+  function montarLista(producto) {
+    const NOMBRES = { fx: "BotFactoryFX", quarantine: "BFQuarantine" };
+    document.getElementById("lista-producto").textContent = NOMBRES[producto];
+    const form = document.getElementById("lista-form");
+    const correoL = document.getElementById("lista-correo");
+    const aceptoL = document.getElementById("lista-acepto");
+    const errorL = document.getElementById("lista-error");
+    const boton = document.getElementById("lista-seguir");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorL.hidden = true;
+      const correo = (correoL.value || "").trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) {
+        errorL.textContent = T.errores.correo; errorL.hidden = false; correoL.focus();
+        return;
+      }
+      if (!aceptoL.checked) {
+        errorL.textContent = T.errores.aceptoLista; errorL.hidden = false; aceptoL.focus();
+        return;
+      }
+      const dice = boton.textContent;
+      boton.disabled = true;
+      boton.textContent = T.apuntando;
+      try {
+        const r = await fetch(`${API}/lista`, {
+          method: "POST", headers: { "content-type": "application/json" },
+          body: JSON.stringify({ correo, producto, lengua: ES ? "es" : "en", acepta: ACEPTA_LISTA }),
+        });
+        const v = await r.json().catch(() => null);
+        if (!r.ok || !v || !v.ok) throw new Error(v && v.error === "correo" ? "correo" : "otro");
+        document.getElementById("lista-a").textContent = correo;
+        ver("lista-hecha");
+      } catch (err) {
+        errorL.textContent = err && err.message === "correo" ? T.errores.correo : T.listaFallo;
+        errorL.hidden = false;
+        boton.disabled = false;
+        boton.textContent = dice;
+      }
+    });
+    ver("lista");
   }
 
   if (!/^BF[XQ]-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(pedido)) { sinPedido(pedido ? T.numeroMal : null); return; }
