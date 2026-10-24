@@ -15,6 +15,8 @@
    /descarga entrega el fichero de ESTE producto y de ESTE sistema. */
 (function () {
   "use strict";
+  /* La versión del texto de la casilla del desistimiento que se acepta al comprar (24-10-2026). */
+  const ACEPTA = "desistimiento-2026-10";
   const main = document.querySelector("main[data-api]");
   if (!main) return;
   const API = main.dataset.api;
@@ -52,6 +54,7 @@
           direccion: "Eso no es una dirección de TRON. Comprueba que empiece por T y que no falte ni sobre ninguna letra. Una de Ethereum o de Bitcoin no vale en esta casilla: tiene que ser de TRON (TRC-20).",
           "direccion-btc": "Eso no es una dirección de Bitcoin. Empieza por bc1, por 1 o por 3: comprueba que no falte ni sobre ninguna letra. Una de la red de pruebas (tb1…) o de otra moneda no vale.",
           correo: "Ese correo no parece un correo.",
+          acepto: "Marca la casilla de la descarga y el desistimiento: sin ella no podemos empezar la compra.",
           tope: "Ya lo has cambiado tres veces desde aquí. Para cambiarlo otra vez, escríbenos.",
           otro: "No se ha podido guardar. Inténtalo otra vez en un minuto.",
         },
@@ -96,6 +99,7 @@
           direccion: "That isn’t a TRON address. Check that it starts with T and that no letter is missing or extra. An Ethereum or Bitcoin address won’t work in this box: it has to be TRON (TRC-20).",
           "direccion-btc": "That isn’t a Bitcoin address. It starts with bc1, 1 or 3: check that no letter is missing or extra. A testnet address (tb1…) or one for another coin won’t work.",
           correo: "That email doesn’t look right.",
+          acepto: "Tick the box about the download and withdrawal: we can’t start the purchase without it.",
           tope: "You’ve already changed it three times from here. To change it again, write to us.",
           otro: "It couldn’t be saved. Try again in a minute.",
         },
@@ -247,6 +251,13 @@
         error.textContent = T.errores.correo; error.hidden = false; casilla.focus();
         return;
       }
+      /* La casilla del desistimiento (24-10-2026): sin marcar no se compra, y la
+         tienda guarda qué texto se aceptó y cuándo (ACEPTA). Ver legal/. */
+      const acepto = document.getElementById("comprar-acepto");
+      if (acepto && !acepto.checked) {
+        error.textContent = T.errores.acepto; error.hidden = false; acepto.focus();
+        return;
+      }
       const dice = seguir.textContent;
       seguir.disabled = true;
       seguir.textContent = T.creando;
@@ -259,6 +270,7 @@
            tienda calla lo que no reconoce: nunca impide comprar. */
         const origen = document.getElementById("comprar-origen");
         if (origen && origen.value) cuerpo.origen = origen.value;
+        if (acepto && acepto.checked) cuerpo.acepta = ACEPTA;
         const r = await fetch(`${API}/comprar`, {
           method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(cuerpo),
         });

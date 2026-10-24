@@ -123,3 +123,8 @@
 .primera-vez ol { margin: 0; padding-left: 20px; color: var(--texto-2); display: grid; gap: 6px; }
 .primera-vez p { color: var(--texto-2); margin-top: 10px; }
 .primera-vez pre { margin: 8px 0; white-space: pre-wrap; }
+
+/* La casilla del desistimiento (24-10-2026): sin marcar, la compra no empieza. Ver legal/ y descarga.js. */
+.buscar-pedido label.acepto { display: flex; gap: 12px; align-items: flex-start; margin: 18px 0 8px; max-width: 34rem; font-family: var(--sans); font-size: 0.93rem; letter-spacing: 0; line-height: 1.5; color: var(--texto-2); cursor: pointer; }
+.acepto input { flex: none; width: 18px; height: 18px; margin-top: 3px; accent-color: var(--ambar-fondo); }
+.acepto b { color: var(--texto); font-weight: 600; }
