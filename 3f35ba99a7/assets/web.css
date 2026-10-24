@@ -665,3 +665,7 @@ article.nota td:first-child { white-space: nowrap; }
 .tarjeta.duelo-lado-bfx .duelo-cifra { color: var(--ambar); }
 .tarjeta.duelo-lado-sqx .duelo-cifra { color: var(--traza); }
 .tarjeta .duelo-que { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--apagado); margin-top: -4px; }
+
+/* «Coming soon / Próximamente» (24-10-2026): el móvil y la tableta, sin fecha. */
+.pronto { font-size: 0.93rem; color: var(--texto-2); }
+.pronto-etiqueta { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ambar); background: var(--ambar-suave); border: 1px solid var(--ambar-borde); vertical-align: 1px; }
