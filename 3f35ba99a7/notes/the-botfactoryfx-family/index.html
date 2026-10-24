@@ -17,6 +17,16 @@
   (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
 </script>
 <script src="../../assets/web.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BotFactoryFX">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="Three programs built to tell you no · BotFactoryFX">
+<meta property="og:description" content="BotFactoryFX, BFQuarantine and BFInspector: what each one does, how they were built, what they rest on and how they compare with the alternatives.">
+<meta property="og:url" content="https://botfactoryfx.com/3f35ba99a7/notes/the-botfactoryfx-family/">
+<meta property="og:image" content="https://botfactoryfx.com/3f35ba99a7/banners/en/bfx-1200x628.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <a class="saltar" href="#contenido">Skip to content</a>
@@ -30,6 +40,7 @@
       <a href="../../downloads/">Downloads</a>
       <a href="../../docs/">Docs</a>
       <a href="../../notes/">Lab notes</a>
+      <a href="../../live-duel/">Live duel</a>
       <a href="../../referrals/">Referrals</a>
       <a href="../../contact/">Contact</a>
     </nav>
@@ -45,7 +56,8 @@
         <summary>Menu</summary>
         <nav aria-label="Main (mobile)">
           <a href="../../#bill">The bill</a><a href="../../how-it-works/">How it works</a><a href="../../#programs">Programs</a>
-          <a href="../../downloads/">Downloads</a><a href="../../docs/">Docs</a><a href="../../notes/">Lab notes</a><a href="../../referrals/">Referrals</a><a href="../../contact/">Contact</a><a href="../../demo/?lang=en">Try it free</a>
+          <a href="../../downloads/">Downloads</a><a href="../../docs/">Docs</a><a href="../../notes/">Lab notes</a>
+      <a href="../../live-duel/">Live duel</a><a href="../../referrals/">Referrals</a><a href="../../contact/">Contact</a><a href="../../demo/?lang=en">Try it free</a>
         </nav>
       </details>
     </div>
@@ -73,7 +85,7 @@
         <tbody>
           <tr><td><b>BFInspector</b></td><td>Before you buy a robot</td><td>Reads its code and the backtest you were shown, finds the known traps and replays its trades with your money. For manual traders: position sizing, losing streaks and a trading journal.</td><td>Free</td></tr>
           <tr><td><b>BFQuarantine</b></td><td>After you bought one</td><td>Sets the trades it really closed, in the account where it runs, against the backtest it was sold with. It never runs the robot and never places an order.</td><td>199 USD, once</td></tr>
-          <tr><td><b>BotFactoryFX</b></td><td>To build and judge your own</td><td>Genetic search, the Reality Check, quarantine on live candles, portfolios, live monitoring of your robots, an AI assistant and native code for five platforms.</td><td>999 USD, once</td></tr>
+          <tr><td><b>BotFactoryFX</b></td><td>To build and judge your own</td><td>Genetic search, the Reality Check, quarantine on live candles, portfolios, live monitoring of your robots, an AI assistant and native code for six platforms.</td><td>999 USD, once</td></tr>
         </tbody>
       </table></div>
       <h2>BotFactoryFX: build thousands, keep the ones that hold</h2>
@@ -88,8 +100,8 @@
       <figure class="grafica"><svg class="g" viewBox="0 0 760 136" role="img" aria-labelledby="g-ruido-t g-ruido-d" preserveAspectRatio="xMidYMid meet"><title id="g-ruido-t">How many noise-fitted strategies the Reality Check approved, before and after its recalibration</title><desc id="g-ruido-d">Before 7 September 2026 the judge approved 94% of strategies fitted to random price paths; after that day&#x27;s recalibration, 6%.</desc><text class="g-t" x="288" y="53.0" text-anchor="end">Before 7 September 2026</text><rect class="g-barra" x="300" y="34" width="376.0" height="30" rx="3"><title>Before 7 September 2026: 94%</title></rect><text class="g-tf" x="684.0" y="54.0">94%</text><text class="g-t" x="288" y="99.0" text-anchor="end">After that day&#x27;s recalibration</text><rect class="g-barra-ojo" x="300" y="80" width="24.0" height="30" rx="3"><title>After that day&#x27;s recalibration: 6%</title></rect><text class="g-tf" x="332.0" y="100.0">6%</text><text class="g-t" x="300" y="22">Share of strategies fitted to pure noise that the judge approved</text></svg><figcaption>A random price path has no edge by construction, so every approval of a strategy fitted to one is a false positive.</figcaption></figure>
       <p>That is why its four verdict words, Solid, Fragile, Weak and Not credible, mean something: we measured how often noise earns each one.</p>
       <figure class="captura"><img src="../../capturas/en/juez.webp" alt="A Reality Check report scoring 28 out of 100, Not credible, with each check and its number" width="2000" height="1739" loading="lazy"><figcaption>The verdict. 28 out of 100, Not credible: “This is almost certainly curve fitting.” Each check says what it measured, on which history and why it scored what it did.</figcaption></figure>
-      <p>A real case from our home page. One sentence to the autopilot; 9,963 rule sets tried; five strategies kept, the best of them winning 77% of its trades in the backtest. Its profit factor was 1.68 on the history it was built on and 1.00 on the history it never saw. The judge passed none of the five. That is its job: the money you do not lose in a live account.</p>
-      <p><b>Quarantine, live and export.</b> A strategy that survives the judge still has to survive time. The Quarantine runs it on the candles that arrive from your account, through MetaTrader 5 or JForex, or from Hyperliquid without an account, with simulated orders, and compares what happens with what the backtest promised. Nothing has to stay switched on: it catches up when you open it, and it never sends an order. When a strategy has earned it, BotFactoryFX writes it in native code for MQL4, MQL5, Java for JForex, Pine Script and Python for Hyperliquid, compiled with each platform's own compiler and with an account kill switch, trading hours and a Friday close inside. Live then reads your robots in MetaTrader 5 and JForex and shows how far each one drifts from its backtest.</p>
+      <p>A real case, filmed for our Spanish home page. One sentence to the autopilot; 9,963 rule sets tried; five strategies kept, the best of them winning 77% of its trades in the backtest. Its profit factor was 1.68 on the history it was built on and 1.00 on the history it never saw. The judge passed none of the five. That is its job: the money you do not lose in a live account.</p>
+      <p><b>Quarantine, live and export.</b> A strategy that survives the judge still has to survive time. The Quarantine runs it on the candles that arrive from your account, through MetaTrader 5 or JForex, or without an account from Hyperliquid, Binance or Dukascopy, with simulated orders, and compares what happens with what the backtest promised. Nothing has to stay switched on: it catches up when you open it, and it never sends an order. When a strategy has earned it, BotFactoryFX writes it in native code for MQL4, MQL5, Java for JForex, C# for cTrader, Pine Script and Python for Hyperliquid, compiled with each platform's own compiler and with an account kill switch, trading hours and a Friday close inside. Live then reads your robots in MetaTrader 5 and JForex and shows how far each one drifts from its backtest.</p>
       <figure class="captura"><img src="../../capturas/en/como/cuarentena.webp" alt="The Quarantine screen: a strategy from the library watched on live BTC H1 candles from Hyperliquid, with live bars, live trades and the backtest's figures side by side" width="1440" height="900" loading="lazy"><figcaption>Quarantine. A strategy on live candles. No trades yet is information too: one that traded weekly in the backtest and stays silent for three weeks is already telling you something.</figcaption></figure>
       <p><b>Dr. Quant</b> is the assistant inside. It runs on your own AI key, with OpenAI or any compatible service, Anthropic, Google Gemini or OpenRouter, or on a model on your own machine, and every answer shows what it cost. It knows how the judge works and what the Help says, and it explains any concept you ask about. It does not trade and it does not touch your library.</p>
       <h2>BFQuarantine: is it still the robot you bought?</h2>

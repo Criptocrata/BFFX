@@ -17,6 +17,16 @@
   (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
 </script>
 <script src="../../assets/web.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BotFactoryFX">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Preguntas antes de comprar · BotFactoryFX">
+<meta property="og:description" content="Respuestas cortas a lo que se pregunta antes de comprar BotFactoryFX: qué hace y qué no promete, probarlo gratis, plataformas, licencia, pago en cripto, devoluciones y soporte.">
+<meta property="og:url" content="https://botfactoryfx.com/3f35ba99a7/es/preguntas/">
+<meta property="og:image" content="https://botfactoryfx.com/3f35ba99a7/banners/es/bfx-1200x628.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <a class="saltar" href="#contenido">Saltar al contenido</a>
@@ -30,6 +40,7 @@
       <a href="../descargas/">Descargas</a>
       <a href="../documentacion/">Documentación</a>
       <a href="../notas/">Notas</a>
+      <a href="../duelo-en-directo/">Duelo en directo</a>
       <a href="../referidos/">Referidos</a>
       <a href="../contacto/">Contacto</a>
     </nav>
@@ -45,7 +56,8 @@
         <summary>Menú</summary>
         <nav aria-label="Principal (móvil)">
           <a href="../#factura">La factura</a><a href="../como-funciona/">Cómo funciona</a><a href="../#programas">Programas</a>
-          <a href="../descargas/">Descargas</a><a href="../documentacion/">Documentación</a><a href="../notas/">Notas</a><a href="../referidos/">Referidos</a><a href="../contacto/">Contacto</a><a href="../../demo/?lang=es">Probar gratis</a>
+          <a href="../descargas/">Descargas</a><a href="../documentacion/">Documentación</a><a href="../notas/">Notas</a>
+      <a href="../duelo-en-directo/">Duelo en directo</a><a href="../referidos/">Referidos</a><a href="../contacto/">Contacto</a><a href="../../demo/?lang=es">Probar gratis</a>
         </nav>
       </details>
     </div>
@@ -64,7 +76,7 @@
 <section class="seccion" style="border-top:0;padding-top:8px">
   <div class="envoltura preguntas">
     <h2>Qué es</h2>
-    <details class="pregunta"><summary>¿Qué hace BotFactoryFX?</summary><p>Construye estrategias de trading por miles con una búsqueda genética, y luego dedica casi todo su esfuerzo a intentar demostrar que cada una no vale nada: 13 comprobaciones, nueve de ellas sobre historia que la búsqueda nunca vio. Lo que sobrevive se puede vigilar en la Cuarentena antes de arriesgar dinero, y exportar como código nativo para MetaTrader 4 y 5, JForex, TradingView (Pine Script) y Python. <a href="../como-funciona/">Cómo funciona</a></p></details>
+    <details class="pregunta"><summary>¿Qué hace BotFactoryFX?</summary><p>Construye estrategias de trading por miles con una búsqueda genética, y luego dedica casi todo su esfuerzo a intentar demostrar que cada una no vale nada: 13 comprobaciones, nueve de ellas sobre historia que la búsqueda nunca vio. Lo que sobrevive se puede vigilar en la Cuarentena antes de arriesgar dinero, y exportar como código nativo para MetaTrader 4 y 5, JForex, cTrader, TradingView (Pine Script) y Python. <a href="../como-funciona/">Cómo funciona</a></p></details>
     <details class="pregunta"><summary>¿Me hará ganar dinero?</summary><p>Nadie puede prometer eso, y nosotros no lo hacemos. Lo que hace es decirte cuándo una estrategia no vale nada, con el número delante, para que lo descubras en el backtest y no en tu cuenta. No da señales ni consejo de inversión, y no opera por ti.</p></details>
     <details class="pregunta"><summary>Estoy empezando. ¿Es para mí?</summary><p>Sí, si quieres aprender probando. En el constructor manual escribes tus propias reglas y las pruebas sobre años de velas sin arriesgar un céntimo; un recorrido te enseña cada pantalla; y Dr. Quant —con tu propia clave de IA, o un modelo en tu ordenador— te explica cualquier concepto de trading. No te enseñará a operar por sí solo, pero cada vez que una estrategia falla te enseña por qué.</p></details>
     <details class="pregunta"><summary>¿BotFactoryFX, BFQuarantine o BFInspector?</summary><p><b>BFInspector</b> (gratis) inspecciona el robot que te quieren vender y ayuda a quien opera a mano. <b>BFQuarantine</b> (199 USD, una vez) vigila un robot que ya compraste, en la cuenta donde corre, frente al backtest con el que te lo vendieron. <b>BotFactoryFX</b> (999 USD, una vez) lo hace todo: construye y juzga tus propias estrategias, y además cuarentena, cartera, tus cuentas en una pantalla, Dr. Quant y exportación a seis plataformas. <a href="../#programas">Los tres programas</a></p></details>
@@ -75,7 +87,7 @@
     <h2>Plataformas y datos</h2>
     <details class="pregunta"><summary>¿En qué sistemas funciona?</summary><p>Linux, Windows y macOS (Apple Silicon e Intel). En Windows necesita la versión 10 o la 11: en la 7 y la 8 no arranca. Funciona en el ordenador que ya tienes; uno más potente sólo hace que la búsqueda pruebe más conjuntos de reglas en el mismo tiempo.</p></details>
     <details class="pregunta"><summary>Windows o macOS me avisan al abrirlo. ¿Es normal?</summary><p>Sí. Los programas aún no están firmados —para eso hacen falta certificados de Microsoft y de Apple que todavía no tenemos—, así que el sistema avisa una vez. El <i>Léeme primero</i> de cada descarga dice cómo pasar ese aviso, y el sha256 de cada fichero está en la página de <a href="../descargas/">Descargas</a>.</p></details>
-    <details class="pregunta"><summary>¿Funciona con mi bróker?</summary><p>Lee históricos del CSV de tu bróker, de tu terminal de MetaTrader 5 o JForex, de Dukascopy (1.615 instrumentos), de Binance y de monederos web3. Las estrategias que exporta corren donde corran MetaTrader 4 o 5, JForex, TradingView o Python.</p></details>
+    <details class="pregunta"><summary>¿Funciona con mi bróker?</summary><p>Lee históricos del CSV de tu bróker, de tu terminal de MetaTrader 5 o JForex, de Dukascopy (1.615 instrumentos), de Binance y de monederos web3. Las estrategias que exporta corren donde corran MetaTrader 4 o 5, JForex, cTrader, TradingView o Python.</p></details>
     <details class="pregunta"><summary>¿Opera por mí?</summary><p>No. Construye, juzga y vigila. Sus conectores sólo leen tu plataforma y nunca mandan una orden; los robots que exporta operan sólo si tú los pones a trabajar en tu plataforma, bajo tu control.</p></details>
     <h2>Licencia y actualizaciones</h2>
     <details class="pregunta"><summary>¿En cuántos ordenadores puedo usarlo?</summary><p>En hasta tres. Cada uno recibe su propia clave de licencia, atada a ese ordenador. Pedirla otra vez desde un ordenador que ya la tiene no gasta ninguna de las tres.</p></details>

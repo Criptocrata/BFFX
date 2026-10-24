@@ -637,3 +637,31 @@ article.nota td:first-child { white-space: nowrap; }
 .semaforo li::before { position: absolute; left: 0; top: 0; width: 20px; text-align: center; font-weight: 700; }
 .semaforo li.bien::before { content: "✓"; color: var(--gana); }
 .semaforo li.mal::before { content: "✕"; color: var(--pierde); }
+
+/* El duelo en directo (24-10-2026): BotFactoryFX en ámbar, StrategyQuant X en el azul de las trazas, el S&P de puntos. */
+.g-linea { fill: none; stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.g-linea-bfx { stroke: var(--ambar); }
+.g-linea-sqx { stroke: var(--traza); }
+.g-linea-mercado { stroke: var(--apagado); stroke-width: 1.6; stroke-dasharray: 2 5; }
+.g-punto { stroke: var(--superficie); stroke-width: 1.5; }
+.g-punto-bfx { fill: var(--ambar); }
+.g-punto-sqx { fill: var(--traza); }
+.g-punto-mercado { fill: var(--apagado); }
+.g-fin-bfx { fill: var(--ambar); }
+.g-fin-sqx { fill: var(--traza); }
+.g-muestra-bfx { background: var(--ambar); }
+.g-muestra-sqx { background: var(--traza); }
+.g-muestra-mercado { height: 3px; background: repeating-linear-gradient(90deg, var(--apagado) 0 2px, transparent 2px 5px); }
+.duelo-directo h2 { margin-top: 40px; }
+.duelo-directo h2:first-child { margin-top: 0; }
+.duelo-directo ul { padding-left: 20px; }
+.duelo-directo li { margin: 10px 0; color: var(--texto-2); }
+.duelo-directo .aviso, .duelo-directo .grafica, .duelo-directo .datos { margin-top: 18px; }
+.duelo-directo .datos .tabla { overflow-x: auto; }
+/* En el móvil el gráfico no encoge hasta dejar las letras ilegibles: se desliza dentro de su marco. */
+.duelo-directo .grafica { overflow-x: auto; }
+.duelo-directo .grafica svg { min-width: 620px; }
+.tarjeta .duelo-cifra { font-family: var(--mono); font-size: 2.6rem; font-weight: 700; line-height: 1; color: var(--texto); }
+.tarjeta.duelo-lado-bfx .duelo-cifra { color: var(--ambar); }
+.tarjeta.duelo-lado-sqx .duelo-cifra { color: var(--traza); }
+.tarjeta .duelo-que { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--apagado); margin-top: -4px; }
