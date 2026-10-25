@@ -17,8 +17,9 @@
   "use strict";
   /* La versión del texto de la casilla del desistimiento que se acepta al comprar (24-10-2026). */
   const ACEPTA = "desistimiento-2026-10";
-  /* Y la del consentimiento de la lista de espera (24-10-2026): servidor/src/lista-de-espera.ts, ACEPTA_LISTA. */
-  const ACEPTA_LISTA = "lista-2026-10";
+  /* Y la del consentimiento de la lista de espera: servidor/src/lista-de-espera.ts, ACEPTA_LISTA. La de 25-10-2026
+     añade el 10 % de descuento a lo que se guarda el correo. */
+  const ACEPTA_LISTA = "lista-descuento-2026-10";
   const main = document.querySelector("main[data-api]");
   if (!main) return;
   const API = main.dataset.api;

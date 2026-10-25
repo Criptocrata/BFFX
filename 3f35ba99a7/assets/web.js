@@ -16,14 +16,14 @@
         tema: { system: "Tema del sistema", light: "Tema claro", dark: "Tema oscuro" },
         recomendado: (precio, lista) => `Vienes recomendado: pagas ${precio} USD en vez de ${lista}. El descuento va en la factura, sin pedirlo.`,
         comprar: (precio) => `Comprar licencia · ${precio} USD`,
-        apuntarse: "Apúntate a la lista",
+        apuntarse: "Apúntate · 10 % de descuento",
         pausa: "Pausa", sigue: "Reanudar",
       }
     : {
         tema: { system: "System theme", light: "Light theme", dark: "Dark theme" },
         recomendado: (precio, lista) => `You were referred: you pay $${precio} instead of $${lista}. The discount is on the invoice, nothing to ask for.`,
         comprar: (precio) => `Buy a licence · $${precio}`,
-        apuntarse: "Join the list",
+        apuntarse: "Join the list · 10% off",
         pausa: "Pause", sigue: "Play",
       };
 

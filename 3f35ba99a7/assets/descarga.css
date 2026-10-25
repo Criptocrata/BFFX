@@ -64,6 +64,10 @@
 .buscar-pedido .moneda { font-family: inherit; font-size: 0.95rem; letter-spacing: 0; color: var(--texto); }
 
 /* El aviso de Bitcoin: que puede tardar horas, dicho antes de pagar. */
+/* El 10 % de la lista de espera (25-10-2026): lo primero que se lee al apuntarse. «.tarjeta p» (web.css) pesa más
+   que una clase sola: por eso va con .tarjeta delante. */
+.tarjeta .lista-descuento { margin: 4px 0 10px; padding: 10px 12px; border: 1px solid var(--ambar-borde); border-radius: 8px; background: var(--ambar-suave); color: var(--texto); }
+.tarjeta .lista-descuento strong { color: var(--ambar); }
 .aviso-lento { margin: 0; padding: 10px 12px; border: 1px solid var(--ambar-borde); border-radius: 8px; background: var(--ambar-suave); color: var(--texto); }
 
 /* Lo que se compra y su precio, antes de dejar el correo (04-10-2026). */
