@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-LYfSgqKCi36RTsz9IlmRdfPJsX3KwhsYpGPfmhlCYV0=' 'sha256-SmLivEoHmygHI43qrNjdtQoHEjISAWVohFCw6uX2lcA='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-LYfSgqKCi36RTsz9IlmRdfPJsX3KwhsYpGPfmhlCYV0=' 'sha256-siWX1xmKMq+MDq5qox4Y+DHSKYgtLFUgeBITQ8fZIwc='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="bfx-cuenta-atras" content="2026-10-31T09:00:00Z">
@@ -76,6 +76,8 @@
   }
 
   * { box-sizing: border-box; }
+  /* «hidden» manda sobre los display de abajo (la cuenta a cero, la lista ya apuntada). */
+  [hidden] { display: none !important; }
   body {
     margin: 0;
     min-height: 100vh;
@@ -137,6 +139,35 @@
   .boton:hover { background: var(--ambar-suave); }
   .boton:focus-visible, a:focus-visible { outline: 2px solid var(--ambar); outline-offset: 3px; }
   .acciones small { color: var(--apagado); font-size: 0.85rem; }
+  /* La lista de espera con su 10 % (25-10-2026): el dueño, «Sí, añádelo a la cuenta atrás». La misma lista, la misma
+     casilla y la misma tienda que la página de compra de la web (web-v5/assets/descarga.js). */
+  .lista {
+    background: var(--superficie); border: 1px solid var(--ambar-borde); border-radius: 12px; box-shadow: var(--sombra);
+    padding: 20px 20px 18px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .lista h2 { margin: 0; font-size: 1.2rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+  .lista h2 b { color: var(--ambar); font-weight: 600; }
+  .lista p { margin: 0; color: var(--texto-2); font-size: 0.95rem; }
+  .lista form { display: flex; flex-direction: column; gap: 10px; margin: 0; }
+  .lista .fila { display: flex; flex-wrap: wrap; gap: 10px; }
+  .lista label[for] {
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--apagado); margin-bottom: -4px;
+  }
+  .lista input[type="email"] {
+    flex: 1 1 15rem; min-width: 0; font: inherit; font-size: 0.95rem; color: var(--texto);
+    background: var(--fondo); border: 1px solid var(--linea); border-radius: 10px; padding: 11px 14px;
+  }
+  .lista input[type="email"]:focus { outline: 2px solid var(--ambar); outline-offset: 1px; }
+  .lista .lleno { background: var(--ambar); border-color: var(--ambar); color: var(--superficie); cursor: pointer; font: inherit; font-weight: 600; }
+  .lista .lleno:hover { background: var(--ambar); filter: brightness(1.08); }
+  .lista .lleno:disabled { opacity: 0.6; cursor: wait; }
+  .lista .acepto { display: flex; gap: 10px; align-items: flex-start; font-size: 0.85rem; color: var(--texto-2); line-height: 1.5; }
+  .lista .acepto input { margin-top: 4px; accent-color: var(--ambar); flex: none; }
+  .lista a { color: inherit; text-underline-offset: 3px; }
+  .lista .error { color: #b3362e; font-size: 0.88rem; }
+  :root[data-theme="dark"] .lista .error { color: #f08a80; }
+  .lista .hecha { padding: 12px 14px; border-radius: 10px; background: var(--ambar-suave); color: var(--texto); }
   .letra-chica { margin: 0; font-size: 0.8rem; color: var(--apagado); }
   .letra-chica a { color: inherit; text-underline-offset: 3px; }
 
@@ -183,6 +214,21 @@
   <p class="abierto" id="abierto" role="status" hidden data-t="abierto">It’s open. Loading the site…</p>
   <p class="tu-hora" id="tu-hora" hidden></p>
 
+  <section class="lista" id="lista" aria-labelledby="lista-titulo">
+    <h2 id="lista-titulo" data-t="lista-titulo">Join the list: <b>10% off</b> when we open</h2>
+    <p data-t="lista-texto">Confirm your email before licences open and you get 10% off everything you buy with it during the first 99 days, on top of any other discount. We’ll write to you on opening day, before announcing it anywhere else.</p>
+    <form id="lista-form" novalidate>
+      <label for="lista-correo" data-t="lista-correo">Your email</label>
+      <div class="fila">
+        <input id="lista-correo" name="correo" type="email" required autocomplete="email" placeholder="you@example.com" spellcheck="false">
+        <button class="boton lleno" id="lista-seguir" type="submit" data-t="lista-boton">Join the list</button>
+      </div>
+      <label class="acepto"><input type="checkbox" id="lista-acepto" name="acepto"> <span data-t="lista-acepto">Keep my email to tell me when licences open and to apply my 10% discount, and for nothing else. I can leave the list whenever I like. <a href="/3f35ba99a7/legal/#privacy">Privacy</a> · <a href="/3f35ba99a7/legal/#waitlist">Conditions of the discount</a></span></label>
+      <p class="error" id="lista-error" role="alert" hidden></p>
+    </form>
+    <p class="hecha" id="lista-hecha" role="status" hidden></p>
+  </section>
+
   <p class="porque" data-t="porque">Why that day? On 31 October 2008, Satoshi Nakamoto published the Bitcoin white paper. Eighteen years later, to the day, we open.</p>
 
   <div class="acciones">
@@ -212,12 +258,28 @@
       porque: "¿Por qué ese día? El 31 de octubre de 2008 Satoshi Nakamoto publicó el libro blanco de Bitcoin. Dieciocho años después, el mismo día, abrimos.",
       telegram: "Únete al canal de Telegram",
       "telegram-nota": "para enterarte en cuanto abra (en inglés)",
+      "lista-titulo": "Apúntate a la lista: <b>10&nbsp;% de descuento</b> al abrir",
+      "lista-texto": "Confirma tu correo antes de que se abran las licencias y tendrás un 10&nbsp;% de descuento en todo lo que compres con él durante los 99 primeros días, sumado a cualquier otro descuento. Te escribiremos el día de la apertura, antes de anunciarlo en ningún otro sitio.",
+      "lista-correo": "Tu correo",
+      "lista-boton": "Apuntarme",
+      "lista-acepto": "Guardad mi correo para avisarme cuando se abran las licencias y aplicarme el 10&nbsp;% de descuento, y para nada más. Puedo salir de la lista cuando quiera. <a href=\"/3f35ba99a7/es/legal/#privacidad\">Privacidad</a> · <a href=\"/3f35ba99a7/es/legal/#lista\">Condiciones del descuento</a>",
+      listaEjemplo: "tu@correo.com",
+      listaHecha: function (c) { return "Mira tu correo: te hemos mandado a " + c + " un enlace para confirmar. Hasta que lo pulses, no estás en la lista ni tienes guardado tu 10\u00a0%. Si no llega en unos minutos, mira en el correo no deseado."; },
+      listaCorreo: "Ese correo no parece un correo.",
+      listaCasilla: "Marca la casilla: sin ella no podemos guardar tu correo.",
+      listaFallo: "No se ha podido apuntar. Inténtalo otra vez en un minuto.",
+      listaApuntando: "Apuntando…",
       "letra-chica": "Software de trading algorítmico para Linux, Windows y macOS. El trading puede costarte todo tu capital. <a href=\"mailto:support@botfactoryfx.com\">support@botfactoryfx.com</a>",
       lengua: "es-ES",
     } : {
       titulo: document.title,
       dias: ["day", "days"], horas: ["hour", "hours"], minutos: ["minute", "minutes"], segundos: ["second", "seconds"],
       tuHora: function (h) { return "That’s " + h + " where you are."; },
+      listaHecha: function (c) { return "Check your inbox: we’ve sent " + c + " a link to confirm. Until you click it, you’re not on the list and your 10% isn’t saved. If it doesn’t arrive in a few minutes, look in your spam folder."; },
+      listaCorreo: "That email doesn’t look right.",
+      listaCasilla: "Tick the box: we can’t keep your email without it.",
+      listaFallo: "It couldn’t be done. Try again in a minute.",
+      listaApuntando: "Joining…",
       lengua: "en-GB",
     };
     if (ES) {
@@ -228,7 +290,47 @@
         var v = T[textos[i].getAttribute("data-t")];
         if (typeof v === "string") textos[i].innerHTML = v;
       }
+      document.getElementById("lista-correo").placeholder = T.listaEjemplo;
     }
+
+    /* La lista de espera: la misma petición que la página de compra (web-v5/assets/descarga.js) a la misma tienda,
+       con la casilla de hoy (servidor/src/lista-de-espera.ts, ACEPTA_LISTA). La contestación es siempre la misma:
+       no dice si el correo ya estaba. */
+    var TIENDA = "https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev";
+    var ACEPTA_LISTA = "lista-descuento-2026-10";
+    var formLista = document.getElementById("lista-form");
+    formLista.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var correoL = document.getElementById("lista-correo");
+      var aceptoL = document.getElementById("lista-acepto");
+      var errorL = document.getElementById("lista-error");
+      var boton = document.getElementById("lista-seguir");
+      var correo = (correoL.value || "").trim();
+      var mal = function (texto, foco) { errorL.textContent = texto; errorL.hidden = false; if (foco) foco.focus(); };
+      errorL.hidden = true;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) return mal(T.listaCorreo, correoL);
+      if (!aceptoL.checked) return mal(T.listaCasilla, aceptoL);
+      var dice = boton.textContent;
+      boton.disabled = true;
+      boton.textContent = T.listaApuntando;
+      fetch(TIENDA + "/lista", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ correo: correo, producto: "fx", lengua: ES ? "es" : "en", acepta: ACEPTA_LISTA }),
+      })
+        .then(function (r) { return r.json().catch(function () { return null; }).then(function (v) { return { r: r, v: v }; }); })
+        .then(function (x) {
+          if (!x.r.ok || !x.v || !x.v.ok) throw new Error(x.v && x.v.error === "correo" ? "correo" : "otro");
+          formLista.hidden = true;
+          var hecha = document.getElementById("lista-hecha");
+          hecha.textContent = T.listaHecha(correo);
+          hecha.hidden = false;
+        })
+        .catch(function (err) {
+          mal(err && err.message === "correo" ? T.listaCorreo : T.listaFallo);
+          boton.disabled = false;
+          boton.textContent = dice;
+        });
+    });
 
     /* La hora del visitante, sólo si no es la de Madrid: «10:00 en Madrid» ya lo dice. */
     try {
@@ -264,6 +366,7 @@
       var falta = Math.max(0, OBJETIVO - Date.now());
       if (falta === 0) {
         document.getElementById("cuenta").hidden = true;
+        document.getElementById("lista").hidden = true;
         document.getElementById("abierto").hidden = false;
         if (!mirando) { mirando = true; mirar(); }
         return;
