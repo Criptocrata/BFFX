@@ -668,6 +668,31 @@ article.nota td:first-child { white-space: nowrap; }
 
 /* «Coming soon / Próximamente» (24-10-2026): el móvil y la tableta, sin fecha. */
 .pronto { font-size: 0.93rem; color: var(--texto-2); }
+/* «Nuevo» (26-10-2026): la misma pastilla que «Próximamente», en verde, para lo que ya está. */
+.nuevo-etiqueta { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #1f7a4d; background: rgba(31, 122, 77, 0.1); border: 1px solid rgba(31, 122, 77, 0.45); vertical-align: 1px; }
+@media (prefers-color-scheme: dark) { :root[data-theme="system"] .nuevo-etiqueta { color: #4cc38a; background: rgba(76, 195, 138, 0.12); border-color: rgba(76, 195, 138, 0.5); } }
+:root[data-theme="dark"] .nuevo-etiqueta { color: #4cc38a; background: rgba(76, 195, 138, 0.12); border-color: rgba(76, 195, 138, 0.5); }
+
+/* Las apps del móvil en la portada (26-10-2026): cada una, su teléfono al lado; en un móvil, debajo. */
+.movil-apps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: clamp(36px, 5vw, 56px); }
+.movil-app { display: grid; grid-template-columns: minmax(0, 200px) minmax(0, 1fr); gap: 22px; align-items: start; padding: 22px; background: var(--superficie); border: 1px solid var(--linea); border-radius: 12px; }
+.movil-app .telefono { margin: 0; border-radius: 22px; overflow: hidden; border: 6px solid #0e1013; box-shadow: var(--sombra); background: #0e1013; }
+.movil-app .telefono img { display: block; width: 100%; height: auto; }
+.movil-texto { display: grid; gap: 12px; align-content: start; }
+.movil-texto .etiqueta { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--apagado); }
+.movil-texto h3 { font-size: 1.3rem; }
+.movil-texto p, .movil-garantias { color: var(--texto-2); font-size: 0.98rem; }
+.movil-garantias { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+/* Lo que gana quien tiene el escritorio (26-10-2026): el dueño quiere que se vea claro. */
+.movil-con-escritorio { padding: 12px 14px; border-radius: 10px; background: var(--ambar-suave); border: 1px solid var(--ambar-borde); }
+.movil-con-escritorio p { color: var(--texto); }
+.movil-con-escritorio strong { color: var(--ambar); }
+.movil-texto .boton { justify-self: start; }
+.movil-texto .direccion { font-family: var(--mono); font-size: 0.8rem; color: var(--apagado); }
+.movil-instalar { text-align: center; font-size: 0.9rem; color: var(--apagado); margin-top: 22px; }
+@media (max-width: 980px) { .movil-apps { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .movil-app { grid-template-columns: minmax(0, 1fr); } .movil-app .telefono { max-width: 240px; justify-self: center; } }
+
 .pronto-etiqueta { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ambar); background: var(--ambar-suave); border: 1px solid var(--ambar-borde); vertical-align: 1px; }
 
 /* Los referidos, OCULTOS mientras la venta está cerrada (24-10-2026): ver scripts/referidos-ocultos.py. Reabrir el
