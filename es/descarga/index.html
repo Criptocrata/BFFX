@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ZhoHEDiyVetny61emVu2UOiKRnXe0jJF1QOOS3GT80k='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Tu descarga · BotFactoryFX</title>
+<meta name="description" content="Compra BotFactoryFX o BFQuarantine, paga en cripto y descárgalo: un solo pago, una licencia para siempre.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../../assets/logo-split.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/fuentes.css">
+<link rel="stylesheet" href="../../assets/web.css">
+<link rel="stylesheet" href="../../assets/descarga.css">
+<script>
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="../../assets/web.js" defer></script>
+<script src="../../assets/descarga.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BotFactoryFX">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Tu descarga · BotFactoryFX">
+<meta property="og:description" content="Compra BotFactoryFX o BFQuarantine, paga en cripto y descárgalo: un solo pago, una licencia para siempre.">
+<meta property="og:url" content="https://botfactoryfx.com/es/descarga/">
+<meta property="og:image" content="https://botfactoryfx.com/banners/es/bfx-1200x628.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="../"><img src="../../assets/logo-split.svg" alt="" width="30" height="30"><span>BotFactory<b>FX</b></span></a>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Tema">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" id="otro-idioma" href="../../descarga/" hreflang="en" lang="en">EN</a>
+    </div>
+  </div>
+</header>
+
+<main class="envoltura compra" data-api="https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev" data-sitio="https://botfactoryfx.com/" data-lengua="es">
+  <p class="ceja">Tu compra</p>
+
+  <section id="comprar" hidden>
+    <h1>Tu compra.</h1>
+    <div class="tarjeta">
+      <p class="compra-producto"><strong id="comprar-producto">BotFactoryFX</strong> · <span id="comprar-precio">…</span></p>
+      <p class="nota" id="comprar-recomendado" hidden></p>
+      <form id="comprar-form" class="buscar-pedido" novalidate>
+        <fieldset class="monedas">
+          <legend>Cómo pagas</legend>
+          <label class="moneda"><input type="radio" name="moneda" value="USDT_TRX" checked> <span><b>USDT en TRON (TRC-20)</b> <small>se confirma en un minuto</small></span></label>
+          <label class="moneda"><input type="radio" name="moneda" value="BTC"> <span><b>Bitcoin</b> <small>de minutos a varias horas a veces</small></span></label>
+          <label class="moneda"><input type="radio" name="moneda" value=""> <span><b>Otra moneda</b> <small>la eliges en Plisio; lo que tarda depende de su red</small></span></label>
+        </fieldset>
+        <p class="nota" id="sin-cripto">¿No tienes cripto? <a href="../pagar-con-cripto/" target="_blank" rel="noopener">Se compra con tu tarjeta: así se paga, paso a paso</a>.</p>
+        <p class="nota aviso-lento" id="aviso-btc" role="status" hidden>Con Bitcoin, la confirmación depende de lo cargada que esté la red y de la comisión que pongas en tu monedero: suele llevar de 10 a 60 minutos, pero con una comisión baja puede llevar horas. El pago no se pierde: te escribimos en cuanto llegue. ¿Tienes prisa? Elige USDT en TRON.</p>
+        <label for="comprar-correo">Tu correo</label>
+        <input id="comprar-correo" name="correo" type="email" required autocomplete="email" placeholder="tu@correo.com" spellcheck="false">
+        <p class="nota">En cuanto se confirme el pago te mandamos ahí tu página de compra: la descarga y tu licencia. No lo usamos para nada más.</p>
+        <label for="comprar-origen">¿Cómo nos conociste? <span class="opcional">(si quieres decirlo)</span></label>
+        <select id="comprar-origen" name="origen">
+          <option value="" selected>Prefiero no decirlo</option>
+          <option value="buscador">Buscando en internet</option>
+          <option value="youtube">YouTube</option>
+          <option value="telegram">Telegram</option>
+          <option value="hacker-news">Hacker News</option>
+          <option value="forex-factory">Forex Factory</option>
+          <option value="foro">Otro foro o comunidad</option>
+          <option value="ia">Me lo sugirió un asistente de IA</option>
+          <option value="amigo">Me lo recomendó alguien</option>
+          <option value="otro">De otra manera</option>
+        </select>
+        <p class="nota">Es la única forma que tenemos de saber qué funciona: en esta web no hay rastreadores.</p>
+        <label class="acepto"><input type="checkbox" id="comprar-acepto" name="acepto"> <span>Quiero poder descargarlo en cuanto se confirme el pago. <b>Sé que, al empezar la descarga, pierdo el derecho a desistir en 14 días.</b> He leído las <a href="../legal/#condiciones" target="_blank" rel="noopener">condiciones de venta</a> y la <a href="../legal/#privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
+        <button class="boton boton-ambar" id="comprar-seguir" type="submit">Seguir al pago</button>
+        <p id="comprar-error" class="nota malo" role="alert" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="lista" hidden>
+    <h1>Las licencias se abren en unas semanas.</h1>
+    <div class="tarjeta">
+      <p class="compra-producto"><strong id="lista-producto">BotFactoryFX</strong></p>
+      <p class="lista-descuento"><strong>Un 10 % de descuento al abrir.</strong> Confirma tu correo antes de que se abran las licencias y tendrás un 10 % de descuento en todo lo que compres con él durante los 99 primeros días. Se suma a cualquier otro descuento. <a href="../legal/#lista">Condiciones</a>.</p>
+      <p>Estamos terminando los papeles para venderlo como es debido, y hasta entonces no le cobramos a nadie. Déjanos tu correo y te escribiremos el día que se abran las licencias, antes de anunciarlo en ningún otro sitio.</p>
+      <form id="lista-form" class="buscar-pedido" novalidate>
+        <label for="lista-correo">Tu correo</label>
+        <input id="lista-correo" name="correo" type="email" required autocomplete="email" placeholder="tu@correo.com" spellcheck="false">
+        <label class="acepto"><input type="checkbox" id="lista-acepto" name="acepto"> <span>Guardad mi correo para avisarme cuando se abran las licencias y aplicarme el 10 % de descuento, y para nada más. Puedo salir de la lista cuando quiera. <a href="../legal/#privacidad" target="_blank" rel="noopener">Política de privacidad</a>.</span></label>
+        <button class="boton boton-ambar" id="lista-seguir" type="submit">Apuntarme</button>
+        <p id="lista-error" class="nota malo" role="alert" hidden></p>
+      </form>
+      <p class="nota">Mientras tanto, gratis: <a href="../descargas/#inspector">BFInspector</a>, <a href="../../demo/?lang=es">la demo en tu navegador</a> y <a href="../duelo-en-directo/">el duelo en directo</a>.</p>
+    </div>
+  </section>
+
+  <section id="lista-hecha" hidden>
+    <h1>Mira tu correo.</h1>
+    <div class="tarjeta">
+      <p>Te hemos mandado a <strong id="lista-a">tu correo</strong> un enlace para confirmar. Hasta que lo pulses, no estás en la lista ni tienes guardado tu 10 %. Si no llega en unos minutos, mira en el correo no deseado.</p>
+    </div>
+  </section>
+
+  <section id="sin-pedido" hidden>
+    <h1>Esta página necesita tu número de pedido.</h1>
+    <p>Es el que te enseñó esta página antes de pagar, y el correo de Plisio lo trae como número de pedido. Empieza por <code>BFX</code> o por <code>BFQ</code>, según lo que compraras: <code>BFX-XXXXXXXX-XXXXXXXX</code>.</p>
+    <form id="buscar-pedido" class="buscar-pedido" novalidate>
+      <label for="numero">Tu número de pedido</label>
+      <input id="numero" placeholder="BFX-XXXXXXXX-XXXXXXXX" spellcheck="false" autocapitalize="characters" autocorrect="off" autocomplete="off">
+      <button class="boton boton-ambar" type="submit">Abrir mi compra</button>
+      <p id="numero-error" class="nota malo" role="alert" hidden></p>
+    </form>
+    <p>Si lo has perdido, escribe a <a href="mailto:support@botfactoryfx.com">support@botfactoryfx.com</a> desde la dirección con la que pagaste y te lo devolvemos.</p>
+  </section>
+
+  <section id="por-pagar" hidden>
+    <h1>Tu pedido, listo para pagar.</h1>
+    <div class="tarjeta">
+      <p>Tu número de pedido es <strong class="num"></strong>. <strong>Guarda la dirección de esta página</strong> —en tus marcadores, o cópiala—: es el camino de vuelta a tu descarga y a tu licencia, cuando quieras.</p>
+      <div class="enlace-y-copiar">
+        <div class="licencia" id="enlace-compra"></div>
+        <button class="boton boton-linea" id="copiar-enlace" type="button">Copiar</button>
+      </div>
+      <p><a class="boton boton-ambar" id="pagar" href="#" target="_blank" rel="noopener">Pagar con Plisio</a></p>
+      <p class="nota">Plisio se abre en otra pestaña. Cuando la red confirme tu pago, esta página se convierte sola en tu descarga: puedes cerrar la de Plisio.</p>
+      <p class="nota" id="por-pagar-correo" hidden></p>
+      <p class="latido"><span class="punto"></span> Esperando tu pago…</p>
+    </div>
+  </section>
+
+  <section id="cargando">
+    <h1>Un momento.</h1>
+    <p class="latido"><span class="punto"></span> Consultando tu pedido…</p>
+  </section>
+
+  <section id="confirmando" hidden>
+    <h1>Pago recibido.</h1>
+    <div class="tarjeta">
+      <p class="latido"><span class="punto"></span> <span id="confirmando-texto">La red lo está confirmando…</span></p>
+      <p>No hace falta que te quedes aquí: esta página se convierte en tu descarga en cuanto se confirme, y te mandaremos su enlace por correo.</p>
+      <p class="pedido">Pedido <span class="num"></span></p>
+    </div>
+  </section>
+
+  <section id="esperando" hidden>
+    <h1>Tu pago está en camino.</h1>
+    <div class="tarjeta">
+      <p class="latido"><span class="punto"></span> Esperando a que la red confirme la transacción…</p>
+      <p>Esto no depende de nosotros: lo que tarda es la red de la moneda que elegiste. Suelen ser minutos, y con la red congestionada puede irse a un par de horas. <strong>No hace falta que te quedes aquí</strong>: esta página se actualiza sola, y puedes volver a ella cuando quieras.</p>
+      <p><strong>Guarda esta dirección.</strong> Es la forma de volver a tu descarga.</p>
+    </div>
+  </section>
+
+  <section id="listo" hidden>
+    <h1>Ya es tuyo.</h1>
+
+    <div class="tarjeta paso">
+      <h2><span>1</span> El programa</h2>
+      <p>Elige tu sistema. <span id="sugerido"></span></p>
+      <div class="sistemas-botones">
+        <a class="boton boton-linea" data-sistema="windows" href="#">Windows <small>zip · x64</small></a>
+        <a class="boton boton-linea" data-sistema="macos-arm64" href="#">macOS <small>chip de Apple (M1–M4)</small></a>
+        <a class="boton boton-linea" data-sistema="macos-x64" href="#">macOS <small>Intel</small></a>
+        <a class="boton boton-linea" data-sistema="linux" href="#">Linux <small>zip · x64</small></a>
+      </div>
+      <p class="nota">Cada descarga es una caja: el programa y dos carpetas —<em>Castellano</em> y <em>English</em>— con el <em>Léeme primero</em>, el manual y los conectores de MetaTrader&nbsp;5, MetaTrader&nbsp;4 y JForex con sus manuales.</p>
+      <p class="nota">Te quedan <b id="quedan-descargas">—</b> descargas de este enlace hoy, de cualquiera de los sistemas. No hay tope total: sólo un freno de 12 al día, y mañana vuelven.</p>
+      <details class="primera-vez">
+        <summary>La primera vez que lo abras</summary>
+        <p>El programa todavía no va firmado —firmar exige certificados de Microsoft y de Apple que aún no hay—, así que cada sistema avisa la primera vez. Es lo esperado, y se pasa así (el <em>Léeme primero</em> de la caja dice lo mismo):</p>
+        <h3>Windows</h3>
+        <ol><li>Botón derecho sobre el zip → <i>Extraer todo</i>, y doble clic en el instalador de dentro. Windows dice <i>«Windows protegió su PC»</i>.</li><li>Pulsa <i>Más información</i> → <i>Ejecutar de todas formas</i>.</li><li>Elige dónde instalarlo, o acepta la carpeta que propone.</li></ol>
+        <h3>macOS</h3>
+        <ol><li>Doble clic en el zip: sale una carpeta con <code>BotFactoryFX.app</code> y las carpetas <em>Castellano</em> y <em>English</em>. Arrastra la aplicación a Aplicaciones.</li><li>Abre el Terminal (Aplicaciones → Utilidades) y pega, en una línea:<pre>xattr -cr /Applications/BotFactoryFX.app</pre>Quita la marca de «descargado de internet», que es la que hace que macOS diga que la aplicación está dañada.</li><li>Sólo en los Mac con chip de Apple, si aun así no abre, pega también:<pre>codesign --force --deep --sign - /Applications/BotFactoryFX.app</pre>La firma en local; no necesita cuenta ni certificado.</li><li>Si macOS insiste: Ajustes del Sistema → Privacidad y seguridad → <i>Abrir igualmente</i>.</li></ol>
+        <h3>Linux</h3>
+        <ol><li>Descomprime el zip: el AppImage ya sale listo para abrirse. Si no se abre, dale permiso de ejecución: botón derecho → Propiedades → <i>Permitir ejecutar como programa</i>, o <code>chmod +x</code> sobre el fichero.</li><li>Doble clic. No se instala nada.</li></ol>
+        <p>Para BFQuarantine, lo mismo con su nombre.</p>
+      </details>
+    </div>
+
+    <div class="tarjeta paso">
+      <h2><span>2</span> Tu licencia</h2>
+      <p>Abre el programa. Te enseñará <strong>la huella de tu ordenador</strong>: pégala aquí y te devolvemos tu licencia al momento. Cada máquina tiene la suya: la licencia de tu Linux no abre el programa en tu Mac.</p>
+      <label for="huella">La huella que te enseña el programa</label>
+      <input id="huella" placeholder="XXXX-XXXX-XXXX-XXXX" spellcheck="false" autocapitalize="off" autocorrect="off">
+      <p><button class="boton boton-ambar" id="pedir" type="button">Dame mi licencia</button></p>
+      <p id="error-licencia" class="nota malo" role="alert" hidden></p>
+      <div id="salida" hidden>
+        <label for="clave">Tu licencia: cópiala en el programa</label>
+        <div class="licencia" id="clave"></div>
+        <p class="nota">Guárdala. No caduca nunca, pero es de <b>este</b> ordenador. Puedes tenerla en hasta tres máquinas: te quedan <b id="quedan-huellas">—</b>.</p>
+      </div>
+    </div>
+
+    <div class="tarjeta paso" id="recomendar" hidden>
+      <h2><span>3</span> Recomendarlo, si te sirve</h2>
+      <p>Quien compre BotFactoryFX con tu enlace se ahorra <strong>100 $</strong>, y tú cobras <strong>100 USDT</strong>; quien compre BFQuarantine, <strong>20 $</strong> menos y <strong>20 USDT</strong> para ti. Cada venta se paga en la moneda con que pague él: en USDT por TRON, o lo mismo en BTC si paga con Bitcoin. Pagamos a medida que llegan las ventas: no tienes que escribirnos ni reclamar nada.</p>
+      <label for="enlace-ref">Tu enlace, para pegarlo donde quieras</label>
+      <div class="licencia" id="enlace-ref"></div>
+      <p class="nota">Tu código de recomendación es <code id="codigo-ref"></code>. No es tu número de pedido: ése es sólo tuyo, porque abre tus descargas y tu licencia.</p>
+
+      <form id="cobro" class="cobro" novalidate hidden>
+        <h3>Dónde te pagamos</h3>
+        <p class="nota" id="cobro-pendiente" hidden></p>
+        <label for="cobro-tron">Tu dirección de TRON, para cobrar en USDT (red TRC-20)</label>
+        <input id="cobro-tron" name="tron" placeholder="T…" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" required>
+        <label for="cobro-btc">Tu dirección de Bitcoin, para cobrar en BTC</label>
+        <input id="cobro-btc" name="btc" placeholder="bc1…, 1… o 3…" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" required>
+        <label for="cobro-correo">Tu correo, para avisarte cada vez que te paguemos</label>
+        <input id="cobro-correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
+        <p class="nota">Las dos, porque cobras en la moneda con que pague cada comprador, y eso no se sabe hasta que compra. Te las pedimos una vez, sólo para pagarte y avisarte. No las compartimos ni las usamos para nada más.</p>
+        <p><button class="boton boton-ambar" id="cobro-guardar" type="submit">Guardar</button></p>
+        <p id="cobro-error" class="nota malo" role="alert" hidden></p>
+      </form>
+      <div id="cobro-hecho" class="cobro-hecho" hidden>
+        <p>Te pagamos en USDT en <code id="cobro-hecho-tron"></code> y en BTC en <code id="cobro-hecho-btc"></code>, y te avisamos en <b id="cobro-hecho-correo"></b>.</p>
+        <p class="nota"><button class="boton-texto" id="cobro-cambiar" type="button">Cambiarlo</button><span id="cobro-sin-cambios" hidden>Para cambiarlo otra vez, escribe a <a href="mailto:support@botfactoryfx.com">support@botfactoryfx.com</a>.</span></p>
+      </div>
+
+      <p class="nota" id="ya-recomendadas" hidden></p>
+      <ul class="pagos" id="pagos" hidden></ul>
+      <p><a href="../referidos/" data-referidos>Cómo funciona</a></p>
+    </div>
+
+    <div class="tarjeta paso" id="pasarse" hidden>
+      <h2><span>3</span> Cuando quieras más que vigilar</h2>
+      <p>BotFactoryFX construye estrategias, las juzga con el Reality Check y las exporta a seis plataformas, y su Cuarentena hace todo lo que hace BFQuarantine. Como ya tienes BFQuarantine, te cuesta <strong><span class="precio">799</span> USD</strong> en vez de 999. Tu licencia de BFQuarantine sigue siendo tuya.</p>
+      <p><button class="boton boton-ambar" id="pasarse-boton" type="button">Pasarme a BotFactoryFX · <span class="precio">799</span> USD</button></p>
+      <p class="nota" id="pasarse-usada" hidden>Ya te pasaste a BotFactoryFX con este pedido.</p>
+      <p id="pasarse-error" class="nota malo" role="alert" hidden></p>
+    </div>
+
+    <p class="pedido">Pedido <span class="num"></span></p>
+  </section>
+
+  <section id="revisar" hidden>
+    <h1>Hay algo que mirar a mano.</h1>
+    <div class="tarjeta">
+      <p>Tu pago ha llegado, pero antes de entregar hay que comprobarlo a mano. Pasa cuando la cantidad que llegó no cuadra con la facturada —algunas redes se quedan una comisión por el camino— o cuando la pasarela de pago no ha podido confirmar la factura sola.</p>
+      <p>Escribe a <a href="mailto:support@botfactoryfx.com">support@botfactoryfx.com</a> con tu número de pedido y se soluciona el mismo día. <strong>Tu dinero está registrado</strong>; no se ha perdido nada.</p>
+    </div>
+    <p class="pedido">Pedido <span class="num"></span></p>
+  </section>
+
+  <section id="cerrado" hidden>
+    <h1>Este pedido no llegó a completarse.</h1>
+    <div class="tarjeta">
+      <p>La factura caducó o se canceló antes de recibir el pago. Si crees que pagaste, escribe a <a href="mailto:support@botfactoryfx.com">support@botfactoryfx.com</a> con tu número de pedido y la referencia de la transacción.</p>
+      <p><a href="../#precio">Volver a empezar</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura">
+    <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
+      <p><strong>Operar puede costarte todo tu capital.</strong> BotFactoryFX es software de análisis: no da consejo de inversión y no opera por ti.</p>
+      <p class="pie-legal"><a href="../legal/">Condiciones de venta y privacidad</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
