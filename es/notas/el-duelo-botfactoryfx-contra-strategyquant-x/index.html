@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ZhoHEDiyVetny61emVu2UOiKRnXe0jJF1QOOS3GT80k='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El duelo: BotFactoryFX contra StrategyQuant X · BotFactoryFX</title>
+<meta name="description" content="Ocho mercados, cuatro años que ninguno de los dos programas vio y la misma vara para los dos: qué aprobó cada uno, cuánto de eso batió a las entradas al azar y lo que costó.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../../../assets/logo-split.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="../../../notes/the-duel-botfactoryfx-vs-strategyquant-x/">
+<link rel="alternate" hreflang="es" href="./">
+<link rel="stylesheet" href="../../../assets/fuentes.css">
+<link rel="stylesheet" href="../../../assets/web.css">
+<script>
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="../../../assets/web.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BotFactoryFX">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="El duelo: BotFactoryFX contra StrategyQuant X · BotFactoryFX">
+<meta property="og:description" content="Ocho mercados, cuatro años que ninguno de los dos programas vio y la misma vara para los dos: qué aprobó cada uno, cuánto de eso batió a las entradas al azar y lo que costó.">
+<meta property="og:url" content="https://botfactoryfx.com/es/notas/el-duelo-botfactoryfx-contra-strategyquant-x/">
+<meta property="og:image" content="https://botfactoryfx.com/banners/es/bfx-1200x628.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="../../"><img src="../../../assets/logo-split.svg" alt="" width="30" height="30"><span>BotFactory<b>FX</b></span></a>
+    <nav class="barra-enlaces" aria-label="Principal">
+      <a href="../../#factura">La factura</a>
+      <a href="../../como-funciona/">Cómo funciona</a>
+      <a href="../../#programas">Programas</a>
+      <a href="../../descargas/">Descargas</a>
+      <a href="../../documentacion/">Documentación</a>
+      <a href="../../notas/">Notas</a>
+      <a href="../../duelo-en-directo/">Duelo en directo</a>
+      <a href="../../referidos/" data-referidos>Referidos</a>
+      <a href="../../contacto/">Contacto</a>
+    </nav>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Tema">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" href="../../../notes/the-duel-botfactoryfx-vs-strategyquant-x/" hreflang="en" lang="en">EN</a>
+      <a class="boton boton-ambar boton-chico boton-carrito" href="../../#programas" aria-label="Comprar: empieza por el gratuito" title="Comprar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 12.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg></a>
+      <details class="menu-movil">
+        <summary>Menú</summary>
+        <nav aria-label="Principal (móvil)">
+          <a href="../../#factura">La factura</a><a href="../../como-funciona/">Cómo funciona</a><a href="../../#programas">Programas</a>
+          <a href="../../descargas/">Descargas</a><a href="../../documentacion/">Documentación</a><a href="../../notas/">Notas</a>
+      <a href="../../duelo-en-directo/">Duelo en directo</a><a href="../../referidos/" data-referidos>Referidos</a><a href="../../contacto/">Contacto</a><a href="../../../demo/?lang=es">Probar gratis</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+<section class="portada-interior">
+  <div class="envoltura">
+    <p class="ceja">Notas del laboratorio · 31 de octubre de 2026</p>
+    <h1>El duelo: BotFactoryFX contra StrategyQuant X</h1>
+    <p class="entradilla">StrategyQuant X es el generador de estrategias más conocido que hay, y el fundador de BotFactoryFX lo usa a diario desde hace años. Así que montamos un duelo justo: esconder cuatro años de precios a los dos, dejar que cada uno eligiera estrategias a su manera y ver qué hicieron en los años que ninguno de los dos vio.</p>
+  </div>
+</section>
+<section class="seccion" style="border-top:0;padding-top:8px">
+  <div class="envoltura">
+    <article class="nota">
+      <figure class="captura"><a href="https://youtu.be/BVDXk4oXd0Y" rel="noopener"><img src="../../../capturas/notas/duelo/video.webp" alt="Vídeo: el duelo, BotFactoryFX contra StrategyQuant X. El mismo examen, cuatro años escondidos: ¿qué elegidas baten al azar?" width="1280" height="720" loading="lazy"></a><figcaption>El duelo en dos minutos. Míralo en YouTube (en inglés).</figcaption></figure>
+      <h2>Las reglas</h2>
+      <p>Ocho mercados, todos en velas diarias: el Nasdaq 100 (dos veces, con fechas de corte distintas), el S&amp;P 500, el Dow, el DAX, el oro, el EURUSD y el GBPJPY. Para cada uno elegimos una fecha de corte, el 26 de septiembre de 2022 en casi todos. Los dos programas sólo podían usar los precios de antes. Todo lo de después, hasta julio de 2026, quedó escondido: casi cuatro años que ninguno de los dos vio.</p>
+      <p>Cada uno trabajó a su manera. StrategyQuant X usó las plantillas del propio fundador: media hora construyendo en cada mercado y después su cadena de pruebas de robustez. BotFactoryFX usó su piloto automático: veinte búsquedas por mercado, unas 48.000 candidatas, y cada finalista puntuada sobre 100 por su juez. Los dos pagaron los mismos costes por operación.</p>
+      <h2>¿Cómo se sabe si una elegida valía algo?</h2>
+      <p>«Ganó dinero» no basta. El Nasdaq se dobló en esos cuatro años, y casi cualquier cosa que comprara ganó dinero. Así que usamos una vara más dura: el azar.</p>
+      <p>Para cada estrategia tomamos sus operaciones reales en los años escondidos y construimos 500 gemelas al azar: el mismo número de operaciones, la misma dirección y la misma duración, pero entrando en días al azar. Si la estrategia lo hizo mejor que la mayoría de sus gemelas, <b>batió al azar</b>. Quien opera tirando una moneda bate al azar más o menos la mitad de las veces, así que el 50 % es la raya que hay que pasar.</p>
+      <h2>Primer resultado: cero a cero</h2>
+      <p>Con cada programa usando su método completo, ninguno aprobó ni una estrategia en ninguno de los ocho mercados. StrategyQuant X construyó entre 16.000 y 38.500 estrategias por mercado, y cada paso de su cadena dejaba pasar menos hasta que no quedó nada. El veredicto más exigente de BotFactoryFX, 75 o más sobre 100 y aguantar otra vez en un mercado hermano, como el S&amp;P para el Nasdaq, tampoco dejó pasar nada.</p>
+      <p>Un cero a cero dice que los dos listones están altos. No dice cuál de los dos programas elige mejor. Así que le dimos la vuelta al duelo.</p>
+      <h2>El mismo examen para los dos</h2>
+      <p>Le pusimos a StrategyQuant X el examen que pone el juez de BotFactoryFX, prueba por prueba, hecho con las herramientas del propio StrategyQuant X. ¿Sigue ganando en los años sobre los que no se construyó? ¿En un mercado parecido? ¿En velas de 4 horas? ¿Pagando más por operación? ¿Con sus operaciones barajadas, con los precios movidos un poco, con sus parámetros movidos un poco? Y su propio walk-forward. Después, fuera del programa, las comprobaciones que no tiene: mejor que el azar, operaciones suficientes y regularidad de un periodo a otro.</p>
+      <p>Ahora sí aprobó estrategias: 36 en los ocho mercados. Del lado de BotFactoryFX miramos más allá de su veredicto más exigente: todas las estrategias a las que su juez puso 45 o más. Ésas no están aprobadas. BotFactoryFX las llama <b>cerca del listón</b> y las manda a cuarentena, a correr con precios nuevos antes de que nadie arriesgue dinero en ellas.</p>
+      <figure class="grafica"><svg class="g" viewBox="0 0 760 248" role="img" aria-labelledby="g-duelo-azar-t g-duelo-azar-d" preserveAspectRatio="xMidYMid meet"><title id="g-duelo-azar-t">Cuántas veces batió al azar lo que eligió cada programa en los años ocultos</title><desc id="g-duelo-azar-d">StrategyQuant X: el 53 % de todo lo que guardó al construir y el 56 % de lo que aprobó (20 de 36). BotFactoryFX: el 53 % de todas sus finalistas, el 65 % de las que sacaron 45 o más (91 de 140) y el 80 % de esas mismas con stops que siguen la volatilidad (112 de 140).</desc><text class="g-t" x="0" y="18">Parte que batió a las entradas al azar en los años que ninguno vio</text><text class="g-t" x="318" y="61.0" text-anchor="end">StrategyQuant X: todo lo que guardó</text><rect class="g-barra" x="330" y="44" width="190.3" height="26" rx="3"><title>StrategyQuant X: todo lo que guardó: 53 % (10.161 de 19.227)</title></rect><text class="g-tf" x="528.3" y="61.0">53 %</text><text class="g-t" x="318" y="99.0" text-anchor="end">StrategyQuant X: lo que aprobó</text><rect class="g-barra" x="330" y="82" width="200.0" height="26" rx="3"><title>StrategyQuant X: lo que aprobó: 56 % (20 de 36)</title></rect><text class="g-tf" x="538.0" y="99.0">56 %</text><text class="g-t" x="318" y="137.0" text-anchor="end">BotFactoryFX: todas sus finalistas</text><rect class="g-barra" x="330" y="120" width="192.0" height="26" rx="3"><title>BotFactoryFX: todas sus finalistas: 53 % (682 de 1.279)</title></rect><text class="g-tf" x="530.0" y="137.0">53 %</text><text class="g-t" x="318" y="175.0" text-anchor="end">BotFactoryFX: con 45 o más</text><rect class="g-barra-ojo" x="330" y="158" width="234.0" height="26" rx="3"><title>BotFactoryFX: con 45 o más: 65 % (91 de 140)</title></rect><text class="g-tf" x="572.0" y="175.0">65 %</text><text class="g-t" x="318" y="213.0" text-anchor="end">… con stops que siguen la volatilidad</text><rect class="g-barra-ojo" x="330" y="196" width="288.0" height="26" rx="3"><title>… con stops que siguen la volatilidad: 80 % (112 de 140)</title></rect><text class="g-tf" x="626.0" y="213.0">80 %</text><line class="g-guia-neutra" x1="510.0" x2="510.0" y1="36" y2="242"/><text class="g-t" x="516.0" y="34">50 % = cara o cruz</text></svg><figcaption>Ocho mercados, velas diarias, desde cada fecha de corte hasta julio de 2026. Una estrategia bate al azar cuando sus operaciones reales lo hicieron mejor que la mayoría de 500 gemelas al azar con las mismas operaciones, la misma dirección y la misma duración.</figcaption></figure>
+      <p>Lo que aprobó StrategyQuant X batió al azar el 56 % de las veces, 20 de 36: apenas por encima del 53 % de todo lo que guardó al construir. Lo que BotFactoryFX puntuó con 45 o más batió al azar el 65 % de las veces, 91 de 140, con los stops tal como se juzgaron. Con stops que siguen la volatilidad, más anchos cuando el mercado se mueve mucho y más estrechos cuando está tranquilo, que es como BotFactoryFX manda hoy una estrategia a cuarentena, fue el 80 %.</p>
+      <p>En una frase: <b>StrategyQuant X aprueba más; lo que señala BotFactoryFX acierta más.</b> Pero fíjate en dónde está esa ventaja. De las 140 de BotFactoryFX, 134 sacaron entre 45 y 74, la franja del medio. Sus notas más altas, 75 o más, fueron sólo seis. Las seis batieron al azar con los stops tal como se juzgaron, y seis son muy pocas para apoyarse en ellas.</p>
+      <h2>Depende del mercado</h2>
+      <p>No fue un paseo. En el S&amp;P 500, las 13 aprobadas de StrategyQuant X batieron al azar 12 veces, el mejor resultado de todo el duelo, por delante de las 18 de 24 de BotFactoryFX con los stops fijos. En el Nasdaq, StrategyQuant X se quedó en 7 de 21. BotFactoryFX tuvo también su mal mercado: el Nasdaq con el corte de 2019, donde lo que eligió batió al azar sólo 2 veces de 14 con los stops fijos, y 14 de 14 cuando los stops siguieron la volatilidad.</p>
+      <details class="datos"><summary>Mercado a mercado</summary>
+      <div class="tabla"><table>
+        <thead><tr><th>Mercado</th><th>StrategyQuant X, aprobadas</th><th>BotFactoryFX, 45 o más</th><th>… stops que siguen la volatilidad</th></tr></thead>
+        <tbody>
+          <tr><td>Nasdaq 100, corte de 2022</td><td>7 de 21</td><td>4 de 8</td><td>4 de 8</td></tr>
+          <tr><td>S&amp;P 500</td><td>12 de 13</td><td>18 de 24</td><td>23 de 24</td></tr>
+          <tr><td>Nasdaq 100, corte de 2019</td><td>0 de 1</td><td>2 de 14</td><td>14 de 14</td></tr>
+          <tr><td>Oro</td><td>ninguna aprobada</td><td>21 de 23</td><td>22 de 23</td></tr>
+          <tr><td>EURUSD</td><td>1 de 1</td><td>9 de 13</td><td>9 de 13</td></tr>
+          <tr><td>Dow</td><td>ninguna aprobada</td><td>7 de 15</td><td>7 de 15</td></tr>
+          <tr><td>DAX</td><td>ninguna aprobada</td><td>18 de 23</td><td>19 de 23</td></tr>
+          <tr><td>GBPJPY, corte de 2020</td><td>ninguna aprobada</td><td>12 de 20</td><td>14 de 20</td></tr>
+          <tr><td><b>Los ocho</b></td><td><b>20 de 36</b></td><td><b>91 de 140</b></td><td><b>112 de 140</b></td></tr>
+        </tbody>
+      </table></div>
+      </details>
+      <h2>Tres tropiezos por el camino</h2>
+      <p>Un duelo justo necesita a los dos contendientes bien preparados. Por el camino fallaron tres cosas, y las arreglamos antes de contar.</p>
+      <ul>
+        <li><b>Un error nuestro: el diferencial de otro mercado.</b> La prueba de mayor precisión de StrategyQuant X lleva un diferencial fijo en su configuración. La plantilla estaba hecha para el Nasdaq y copiamos su número en todos los mercados, lo que en el EURUSD era un diferencial de 1.503 pips. Lo rechazaba todo, claro. Lo vimos, lo arreglamos y repetimos la ronda entera.</li>
+        <li><b>Velas semanales que no eran semanales.</b> Una prueba vuelve a pasar cada estrategia por velas semanales. En diez años hay unas 520 velas semanales, y aun así en esa prueba las estrategias hacían entre 6.151 y 163.872 operaciones. Corriera sobre lo que corriera, no eran velas semanales, así que quitamos esa prueba.</li>
+        <li><b>Un walk-forward que leía porcentajes como días.</b> La prueba de walk-forward fallaba con un error. La plantilla describía sus ventanas con un ajuste que StrategyQuant X no reconoce, y las leía como días en vez de como porcentajes. Bien puesto, funcionó, y dejó pasar el 92 % de las estrategias que le llegaron.</li>
+      </ul>
+      <p>Nada de esto se ve desde fuera. Son ajustes, y los resultados dependen de ellos. Ésa es una lección en sí misma: una prueba de robustez vale lo que vale su configuración.</p>
+      <h2>Lo que costó</h2>
+      <figure class="grafica"><svg class="g" viewBox="0 0 760 208" role="img" aria-labelledby="g-duelo-recursos-t g-duelo-recursos-d" preserveAspectRatio="xMidYMid meet"><title id="g-duelo-recursos-t">Lo que gastó cada programa en buscar y probar un mercado (Nasdaq 100, corte de 2022)</title><desc id="g-duelo-recursos-d">StrategyQuant X: 19,0 horas de procesador y 14,3 GB de memoria. BotFactoryFX: 16 minutos y 0,5 GB.</desc><text class="g-tf" x="0" y="18">Tiempo de procesador</text><text class="g-t" x="218" y="44.0" text-anchor="end">StrategyQuant X</text><rect class="g-barra" x="230" y="28" width="410.0" height="24" rx="3"><title>StrategyQuant X: 19,0 horas</title></rect><text class="g-tf" x="648.0" y="44.0">19,0 horas</text><text class="g-t" x="218" y="76.0" text-anchor="end">BotFactoryFX</text><rect class="g-barra-ojo" x="230" y="60" width="5.7" height="24" rx="3"><title>BotFactoryFX: 16 minutos</title></rect><text class="g-tf" x="243.7" y="76.0">16 minutos</text><text class="g-tf" x="0" y="120">Memoria máxima</text><text class="g-t" x="218" y="146.0" text-anchor="end">StrategyQuant X</text><rect class="g-barra" x="230" y="130" width="410.0" height="24" rx="3"><title>StrategyQuant X: 14,3 GB</title></rect><text class="g-tf" x="648.0" y="146.0">14,3 GB</text><text class="g-t" x="218" y="178.0" text-anchor="end">BotFactoryFX</text><rect class="g-barra-ojo" x="230" y="162" width="14.3" height="24" rx="3"><title>BotFactoryFX: 0,5 GB</title></rect><text class="g-tf" x="252.3" y="178.0">0,5 GB</text></svg><figcaption>El tiempo de procesador suma todos los núcleos, así que puede pasar del tiempo de reloj. En reloj, StrategyQuant X tardó 52 minutos en este mercado; BotFactoryFX, 2. El mismo Core i9 de sobremesa para los dos.</figcaption></figure>
+      <p>En los cinco mercados en que medimos a los dos, StrategyQuant X gastó entre 43 y 82 veces más tiempo de procesador que BotFactoryFX, y entre 25 y 31 veces más memoria. En un portátil, BotFactoryFX hizo el mismo trabajo en menos de seis minutos, también con medio giga.</p>
+      <h2>Lo que esto no demuestra</h2>
+      <ul>
+        <li><b>BotFactoryFX lo hicimos nosotros, y el duelo también.</b> El examen es el de nuestro juez. StrategyQuant X corrió con las plantillas de un trader, no con la mejor configuración que nadie pudiera montar. Te contamos los errores que encontramos, y aun así léelo como una medida nuestra, no neutral.</li>
+        <li><b>Es un solo tramo de tiempo,</b> de 2022 a 2026, y casi todo con el mercado subiendo. Lo que compra lo tiene más fácil.</li>
+        <li><b>Las estrategias de cada lado se parecen entre sí,</b> así que 140 o 36 son menos apuestas independientes de lo que parece.</li>
+        <li><b>Ninguna de estas estrategias ha demostrado nada con dinero de verdad.</b> Batir al azar en años escondidos es una buena señal, no un veredicto.</li>
+      </ul>
+      <h2>La prueba de verdad ya ha empezado</h2>
+      <p>El 19 de octubre de 2026 pusimos a los dos en cuarentena en el S&amp;P 500: las 13 aprobadas de StrategyQuant X y las 24 estrategias de BotFactoryFX con 45 o más. Cada una corre con el motor de su programa, sobre los precios que llegan desde ese día, y cada semana se miden las dos con la misma vara. Cada sábado por la mañana el marcador sale en la página del <a href="../../../es/duelo-en-directo/">duelo en directo</a>, vaya quien vaya delante.</p>
+      <p>Antes de empezar probamos el montaje en las siete semanas desde el 1 de septiembre, que tampoco había visto ninguno de los dos. Las de BotFactoryFX ganaron en las 23 que operaron; las de StrategyQuant X, en 2 de las 12 que operaron. Léelo con cuidado: una o dos operaciones cada una, y muchas de ellas la misma operación el mismo día. Es un vistazo, no un resultado.</p>
+      <p>Después empezó la cuarentena de verdad, y su primera semana fue al revés: hasta el 23 de octubre, 1 de las 6 estrategias de BotFactoryFX que habían operado batió al azar, frente a 2 de 7 de StrategyQuant X. La segunda le dio la vuelta otra vez: hasta el 30 de octubre, 22 de 22 frente a 6 de 11. Detrás de las 28 operaciones de BotFactoryFX sólo hay 5 distintas, porque sus estrategias se parecen mucho entre sí, frente a 14 distintas en las 21 de StrategyQuant X. Dos semanas no deciden nada. La página del <a href="../../../es/duelo-en-directo/">duelo en directo</a> lleva cada semana según sale.</p>
+      <div class="aviso"><h3>De dónde salen los números</h3><p>De nuestras propias medidas, del 17 al 19 de octubre de 2026, en un Core i9 de sobremesa: StrategyQuant X, versión 144, manejado desde su línea de órdenes, y el motor de BotFactoryFX en nuestro banco de pruebas. El histórico de precios, de Dukascopy: velas de un minuto para StrategyQuant X, con el día cerrando a la hora de Nueva York, y velas de una hora para BotFactoryFX, con el día en UTC. Años escondidos: desde cada corte (26 de septiembre de 2022; 31 de diciembre de 2019 para el segundo Nasdaq; 31 de diciembre de 2020 para el GBPJPY) hasta el 24 de julio de 2026. 500 gemelas al azar por estrategia. Los costes: el mismo diferencial y el mismo deslizamiento para los dos, sin swap.</p></div>
+      <p class="nota-fin"><a href="../">← Todas las notas</a> <a class="boton boton-ambar" href="../../../demo/?lang=es">Pruébalo gratis</a></p>
+    </article>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura">
+    <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
+      <p><strong>Operar puede costarte todo tu capital.</strong> BotFactoryFX es software de análisis: no da consejo de inversión y no opera por ti. Estas notas cuentan lo que medimos; no son consejo de inversión.</p>
+      <p>Sin cookies, sin rastreadores, nada cargado de fuera de este dominio. <a href="../../">Volver a la portada</a></p>
+      <p class="pie-legal"><a href="../../legal/">Condiciones de venta y privacidad</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
