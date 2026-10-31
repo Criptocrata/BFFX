@@ -658,6 +658,10 @@ article.nota td:first-child { white-space: nowrap; }
 .duelo-directo li { margin: 10px 0; color: var(--texto-2); }
 .duelo-directo .aviso, .duelo-directo .grafica, .duelo-directo .datos { margin-top: 18px; }
 .duelo-directo .datos .tabla { overflow-x: auto; }
+/* La ficha del duelo (31-10-2026): mercado, vela y cuántas de cada lado, a la vista bajo el título. */
+.duelo-ficha { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.duelo-ficha li { border: 1px solid var(--linea); border-radius: 6px; padding: 6px 12px; font-size: 0.95rem; color: var(--texto); background: var(--superficie); }
+.duelo-ficha li span { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--apagado); margin-right: 6px; }
 /* En el móvil el gráfico no encoge hasta dejar las letras ilegibles: se desliza dentro de su marco. */
 .duelo-directo .grafica { overflow-x: auto; }
 .duelo-directo .grafica svg { min-width: 620px; }
