@@ -191,14 +191,14 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--mono); font-weight: 600; text-wra
   backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px);
   border-bottom: 1px solid var(--linea);
 }
-.barra-dentro { display: flex; align-items: center; gap: 20px; min-height: 64px; }
+.barra-dentro { display: flex; align-items: center; gap: 16px; min-height: 64px; }
 .marca { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--mono); font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; }
 .marca img { width: 30px; height: 30px; }
 .marca b { color: var(--ambar); font-weight: 600; }
-.barra-enlaces { display: flex; gap: 4px; margin-left: 8px; }
+.barra-enlaces { display: flex; gap: 2px; margin-left: 4px; }
 .barra-enlaces a {
-  text-decoration: none; font-size: 0.9rem; color: var(--texto-2);
-  padding: 8px 10px; border-radius: 6px; white-space: nowrap;
+  text-decoration: none; font-size: 0.86rem; color: var(--texto-2);
+  padding: 8px 7px; border-radius: 6px; white-space: nowrap;
 }
 .barra-enlaces a:hover, .barra-enlaces a[aria-current="page"] { color: var(--texto); background: var(--superficie-2); }
 .barra-acciones { margin-left: auto; display: flex; align-items: center; gap: 10px; }
@@ -241,8 +241,18 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--mono); font-weight: 600; text-wra
    parten (nowrap): antes, «La factura» y «Cómo funciona» bajaban a dos líneas
    en cuanto apretaba el sitio, y la barra crecía a 62 px.
    11-10-2026, con «Notas» / «Lab notes» en el menú: a 1.181 px de ventana
-   quedan 20 px entre el menú y los botones en castellano y 52 en inglés. */
-@media (max-width: 1180px) {
+   quedan 20 px entre el menú y los botones en castellano y 52 en inglés.
+   31-10-2026, con «La fábrica» / «The Factory»: ya con «Duelo en directo» la
+   barra en castellano pedía 1.187 px, más que el ancho de la web (1.180), y a
+   1.181 px de ventana el carrito se salía 16 px por la derecha. Con la fábrica
+   pedía 1.274. Ahora la letra del menú baja de 0,9 a 0,86 rem, los enlaces
+   llevan 7 px a cada lado (antes 10) y 2 px entre ellos (antes 4), y la barra
+   16 px entre sus tres partes (antes 20): pide 1.162 px en castellano y ~1.045
+   en inglés (medido a 1.600 px de ventana). El menú de escritorio sale cuando
+   caben con holgura: 1.162 + 2 × 40 de margen + 15 de barra de desplazamiento
+   = 1.257; desde 1.271. OJO: con «Referidos» de vuelta (la venta reabierta)
+   el castellano pide 1.237 y no cabe en 1.180 a ningún ancho. */
+@media (max-width: 1270px) {
   .barra-enlaces { display: none; }
   .menu-movil { display: block; }
 }
@@ -669,6 +679,39 @@ article.nota td:first-child { white-space: nowrap; }
 .tarjeta.duelo-lado-bfx .duelo-cifra { color: var(--ambar); }
 .tarjeta.duelo-lado-sqx .duelo-cifra { color: var(--traza); }
 .tarjeta .duelo-que { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--apagado); margin-top: -4px; }
+
+/* «The Factory / La fábrica» (31-10-2026): una tarjeta por estrategia en cuarentena, con su tabla y su gráfico; lo vivo
+   en ámbar, como BotFactoryFX en el duelo, y el ritmo de su backtest de rayas, en el azul de las trazas. Todo con el
+   prefijo fabrica- (esta hoja es la de toda la web). Dos columnas desde 2·420 + 18 = 858 px de rejilla: con un número
+   impar, la última ocupa las dos y pone la tabla y el gráfico lado a lado, para que las columnas acaben a la vez. */
+.fabrica-rotulo { margin-top: 20px; max-width: 72ch; }
+.fabrica .g-leyenda { margin-top: 4px; }
+.fabrica-grupo { margin-top: 30px; font-size: 1.05rem; }
+.fabrica-grupo + p { color: var(--texto-2); margin-top: 6px; max-width: 72ch; }
+.fabrica-robots { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 18px; margin-top: 16px; container: fabrica / inline-size; }
+.fabrica-robot { background: var(--superficie); border: 1px solid var(--linea); border-radius: 12px; padding: 20px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.fabrica-robot h3 { font-size: 1.05rem; }
+.fabrica-simulado { justify-self: start; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ambar); background: var(--ambar-suave); border: 1px solid var(--ambar-borde); border-radius: 999px; padding: 1px 8px; }
+.fabrica-meta { color: var(--apagado); font-size: 0.88rem; }
+.fabrica-veredicto { font-size: 0.92rem; color: var(--texto-2); padding: 6px 10px; border-radius: 6px; background: var(--superficie-2); }
+.fabrica-veredicto-gana b { color: var(--gana); }
+.fabrica-veredicto-pierde b { color: var(--pierde); }
+.fabrica-apagada { font-size: 0.92rem; color: var(--texto); padding: 6px 10px; border-left: 3px solid var(--pierde); background: var(--superficie-2); border-radius: 0 6px 6px 0; }
+.fabrica-cuerpo { display: grid; gap: 12px; min-width: 0; }
+.fabrica-tabla { font-size: 0.86rem; }
+.fabrica-tabla th, .fabrica-tabla td { padding: 5px 6px; text-align: right; }
+.fabrica-tabla thead th { font-size: 0.68rem; letter-spacing: 0.06em; }
+.fabrica-tabla th[scope="row"] { text-align: left; font-family: var(--sans); font-size: 0.86rem; letter-spacing: 0; text-transform: none; color: var(--texto-2); }
+.fabrica-tabla tr:last-child th { border-bottom: 0; }
+.fabrica-grafica { margin: 0; }
+.fabrica-grafica svg { display: block; width: 100%; height: auto; }
+.fabrica-ritmo { font-size: 0.85rem; color: var(--apagado); }
+.g-linea-promesa { stroke: var(--traza); stroke-width: 1.6; stroke-dasharray: 5 4; }
+.g-muestra-promesa { height: 3px; background: repeating-linear-gradient(90deg, var(--traza) 0 5px, transparent 5px 9px); }
+@container fabrica (min-width: 858px) {
+  .fabrica-robots > .fabrica-robot:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .fabrica-robots > .fabrica-robot:last-child:nth-child(odd) .fabrica-cuerpo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 24px; }
+}
 
 /* «Coming soon / Próximamente» (24-10-2026): el móvil y la tableta, sin fecha. */
 .pronto { font-size: 0.93rem; color: var(--texto-2); }
