@@ -745,3 +745,57 @@ article.nota td:first-child { white-space: nowrap; }
 /* Los referidos, OCULTOS mientras la venta está cerrada (24-10-2026): ver scripts/referidos-ocultos.py. Reabrir el
    programa es BORRAR esta regla (y el aviso de arriba de las páginas de referidos). */
 [data-referidos] { display: none !important; }
+
+/* El expediente de cada estrategia de la fábrica (01-11-2026): su backtest, cómo la juzgó el juez y lo que lleva en vivo. */
+.fabrica-robot h3 a { color: inherit; text-decoration: none; }
+.fabrica-robot h3 a:hover, .fabrica-robot h3 a:focus-visible { color: var(--ambar); text-decoration: underline; }
+.fabrica-al-expediente { font-size: 0.9rem; }
+.fabrica-al-expediente a { color: var(--ambar); font-weight: 600; text-decoration: none; }
+.fabrica-al-expediente a:hover, .fabrica-al-expediente a:focus-visible { text-decoration: underline; }
+.fabrica-expediente h3 { margin-top: 28px; font-size: 1.02rem; }
+.fabrica-expediente h2 + p, .fabrica-expediente h3 + p { max-width: 72ch; color: var(--texto-2); }
+.fabrica-cifras { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 10px; margin: 16px 0 0; }
+.fabrica-cifras > div { background: var(--superficie); border: 1px solid var(--linea); border-radius: 10px; padding: 10px 14px; min-width: 0; }
+.fabrica-cifras dt { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--apagado); }
+.fabrica-cifras dd { margin: 4px 0 0; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.95rem; color: var(--texto); overflow-wrap: anywhere; }
+.fabrica-grafica-grande, .fabrica-grafica-caidas { margin-top: 12px; background: var(--superficie); border: 1px solid var(--linea); border-radius: 10px; padding: 8px 6px 2px; }
+.g-no-visto { fill: var(--ambar-suave); }
+.g-no-visto-t { fill: var(--ambar); font-weight: 600; }
+.g-linea-backtest { stroke: var(--traza); stroke-width: 2; }
+.g-punto-backtest { fill: var(--traza); }
+.g-caida { fill: var(--pierde); opacity: 0.16; }
+.g-linea-caida { stroke: var(--pierde); stroke-width: 1.4; }
+.g-punto-caida { fill: var(--pierde); }
+.fabrica-años-envoltura { max-width: 560px; }
+.fabrica-años { width: 100%; }
+.fabrica-años th[scope="row"] { font-family: var(--mono); color: var(--texto-2); }
+.fabrica-barra-celda { width: 45%; text-align: left !important; }
+.fabrica-barra { display: block; height: 10px; border-radius: 2px; min-width: 1px; }
+.fabrica-barra-gana { background: var(--gana); }
+.fabrica-barra-pierde { background: var(--pierde); }
+.solo-lectores { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.fabrica-pruebas { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; }
+.fabrica-prueba { background: var(--superficie); border: 1px solid var(--linea); border-left: 3px solid var(--linea-fuerte); border-radius: 0 10px 10px 0; padding: 12px 16px; display: grid; gap: 4px; }
+.fabrica-prueba-good { border-left-color: var(--gana); }
+.fabrica-prueba-warning { border-left-color: var(--ambar); }
+.fabrica-prueba-critical { border-left-color: var(--pierde); }
+.fabrica-prueba-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.fabrica-prueba-estado { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--linea-fuerte); color: var(--texto-2); }
+.fabrica-prueba-good .fabrica-prueba-estado { color: var(--gana); border-color: var(--gana); }
+.fabrica-prueba-warning .fabrica-prueba-estado { color: var(--ambar); border-color: var(--ambar-borde); }
+.fabrica-prueba-critical .fabrica-prueba-estado { color: var(--pierde); border-color: var(--pierde); }
+.fabrica-prueba-cifra { margin-left: auto; font-size: 0.92rem; }
+.fabrica-prueba-pregunta { color: var(--apagado); font-size: 0.86rem; }
+.fabrica-prueba p { margin: 0; max-width: 78ch; }
+.fabrica-prueba p.fabrica-prueba-cabeza { max-width: none; }
+@media (min-width: 900px) {
+  .fabrica-cuerpo-ancho { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 24px; }
+}
+/* En una pantalla estrecha el gráfico encoge entero, letra incluida: la letra del SVG va en sus unidades, así que se
+   agranda en proporción para que se siga leyendo. */
+.fabrica-grafica-grande .g-t, .fabrica-grafica-caidas .g-t { font-size: 12px; }
+@media (max-width: 640px) {
+  .fabrica-grafica-grande .g-t, .fabrica-grafica-caidas .g-t { font-size: 21px; }
+  .fabrica-grafica-grande .g-linea-backtest { stroke-width: 3.4; }
+  .fabrica-grafica-caidas .g-linea-caida { stroke-width: 2.4; }
+}

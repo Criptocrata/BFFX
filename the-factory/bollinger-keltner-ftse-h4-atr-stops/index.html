@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ZhoHEDiyVetny61emVu2UOiKRnXe0jJF1QOOS3GT80k='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bollinger + Keltner · FTSE H4 ATR stops: its record in The Factory · BotFactoryFX</title>
+<meta name="description" content="Its backtest, its statistics and charts, the judge’s verdict, and what it has done live since it went into quarantine. Simulated, no real money; no rules and no code.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../../assets/logo-split.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="../">
+<link rel="alternate" hreflang="es" href="../../es/la-fabrica/bollinger-keltner-ftse-h4-atr-stops/">
+<link rel="stylesheet" href="../../assets/fuentes.css">
+<link rel="stylesheet" href="../../assets/web.css">
+<script>
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="../../assets/web.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BotFactoryFX">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="Bollinger + Keltner · FTSE H4 ATR stops: its record in The Factory · BotFactoryFX">
+<meta property="og:description" content="Its backtest, its statistics and charts, the judge’s verdict, and what it has done live since it went into quarantine. Simulated, no real money; no rules and no code.">
+<meta property="og:url" content="https://botfactoryfx.com/the-factory/bollinger-keltner-ftse-h4-atr-stops/">
+<meta property="og:image" content="https://botfactoryfx.com/banners/en/bfx-1200x628.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<a class="saltar" href="#contenido">Skip to content</a>
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="../../"><img src="../../assets/logo-split.svg" alt="" width="30" height="30"><span>BotFactory<b>FX</b></span></a>
+    <nav class="barra-enlaces" aria-label="Main">
+      <a href="../../#bill">The bill</a>
+      <a href="../../how-it-works/">How it works</a>
+      <a href="../../#programs">Programs</a>
+      <a href="../../downloads/">Downloads</a>
+      <a href="../../docs/">Docs</a>
+      <a href="../../notes/">Lab notes</a>
+      <a href="../../live-duel/">Live duel</a>
+      <a href="../">The Factory</a>
+      <a href="../../referrals/" data-referidos>Referrals</a>
+      <a href="../../contact/">Contact</a>
+    </nav>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Theme">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" href="../../es/la-fabrica/bollinger-keltner-ftse-h4-atr-stops/" hreflang="es" lang="es">ES</a>
+      <a class="boton boton-ambar boton-chico boton-carrito" href="../../#programs" aria-label="Buy: start with the free one" title="Buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 12.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg></a>
+      <details class="menu-movil">
+        <summary>Menu</summary>
+        <nav aria-label="Main (mobile)">
+          <a href="../../#bill">The bill</a><a href="../../how-it-works/">How it works</a><a href="../../#programs">Programs</a>
+          <a href="../../downloads/">Downloads</a><a href="../../docs/">Docs</a><a href="../../notes/">Lab notes</a>
+      <a href="../../live-duel/">Live duel</a>
+      <a href="../">The Factory</a><a href="../../referrals/" data-referidos>Referrals</a><a href="../../contact/">Contact</a><a href="../../demo/?lang=en">Try it free</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+<section class="portada-interior">
+  <div class="envoltura">
+    <p class="ceja"><a href="../#q-mvuu59ll-ekuy2">The Factory</a> · its record</p>
+    <h1>Bollinger + Keltner · FTSE H4 ATR stops</h1>
+    <p class="entradilla">FTSE 100 · 4-hour candles · stops sized to volatility (ATR) · prices from Darwinex’s MetaTrader 5. Found by BotFactoryFX in the 24/7 factory on 30 October 2026; in quarantine since 30 October 2026.</p>
+    <p class="aviso fabrica-rotulo"><b>Simulated, no real money.</b> Its backtest and its quarantine run on a simulated account; no order is sent to any broker. Its rules, settings and code are not published: this record shows what it did, not how it decides.</p>
+  </div>
+</section>
+<section class="seccion" style="border-top:0;padding-top:8px">
+  <div class="envoltura duelo-directo fabrica fabrica-expediente">
+    <h2>Its backtest</h2>
+    <p>What the strategy did on the history it was tested on, from 21 August 2013 to 16 September 2026, as BotFactoryFX measured it when it went into quarantine, with the costs it pays there. A simulated account of 10,000 in the market’s currency, with a fixed size; every figure in % of that account. </p>
+    <dl class="fabrica-cifras"><div><dt>Trades</dt><dd>96 in 13.1 years, 0.6 a month</dd></div><div><dt>Won</dt><dd>75%</dd></div><div><dt>Profit factor</dt><dd>1.96</dd></div><div><dt>Result</dt><dd>+53.8%</dd></div><div><dt>Worst drawdown</dt><dd>−16.9%</dd></div><div><dt>Average per trade</dt><dd>+0.56%</dd></div><div><dt>Average win · average loss</dt><dd>+1.52% · −2.33%</dd></div><div><dt>Best trade · worst trade</dt><dd>+7.55% · −9.96%</dd></div><div><dt>Longest losing streak</dt><dd>3 trades in a row</dd></div><div><dt>Years in loss</dt><dd>2 of 14</dd></div></dl>
+    <h3>The result, trade after trade</h3>
+    <figure class="fabrica-grafica fabrica-grafica-grande"><svg class="g" viewBox="0 0 720 300" role="img" aria-labelledby="gb-q-mvuu59ll-ekuy2-t gb-q-mvuu59ll-ekuy2-d" preserveAspectRatio="xMidYMid meet"><title id="gb-q-mvuu59ll-ekuy2-t">Bollinger + Keltner · FTSE H4 ATR stops: its backtest, the result of each closed trade added up, in % of its simulated account</title><desc id="gb-q-mvuu59ll-ekuy2-d">From 21 August 2013 to 16 September 2026: +53.8% after 96 trades. The shaded stretch, from 11 January 2023, is history the search never saw.</desc><rect class="g-no-visto" x="533.1" y="32" width="172.9" height="230"/><text class="g-t g-no-visto-t" x="700" y="26" text-anchor="end">Unseen by the search</text><line class="g-eje" x1="92" x2="706" y1="182.8" y2="182.8"/><text class="g-t" x="86" y="186.8" text-anchor="end">+20%</text><line class="g-eje" x1="92" x2="706" y1="103.7" y2="103.7"/><text class="g-t" x="86" y="107.7" text-anchor="end">+40%</text><line class="g-eje" x1="109.0" x2="109.0" y1="262" y2="267"/><text class="g-t" x="109.0" y="294" text-anchor="middle">2014</text><line class="g-eje" x1="202.9" x2="202.9" y1="262" y2="267"/><text class="g-t" x="202.9" y="294" text-anchor="middle">2016</text><line class="g-eje" x1="297.0" x2="297.0" y1="262" y2="267"/><text class="g-t" x="297.0" y="294" text-anchor="middle">2018</text><line class="g-eje" x1="390.9" x2="390.9" y1="262" y2="267"/><text class="g-t" x="390.9" y="294" text-anchor="middle">2020</text><line class="g-eje" x1="484.9" x2="484.9" y1="262" y2="267"/><text class="g-t" x="484.9" y="294" text-anchor="middle">2022</text><line class="g-eje" x1="578.8" x2="578.8" y1="262" y2="267"/><text class="g-t" x="578.8" y="294" text-anchor="middle">2024</text><line class="g-eje" x1="672.8" x2="672.8" y1="262" y2="267"/><text class="g-t" x="672.8" y="294" text-anchor="middle">2026</text><polyline class="g-linea g-linea-backtest" points="92.0,262.0 92.1,258.8 93.0,254.9 106.5,259.5 107.3,256.2 113.8,250.3 119.7,246.1 137.6,242.1 145.2,246.6 146.1,254.9 154.0,247.9 177.3,256.8 178.1,252.2 180.3,248.0 185.8,253.8 188.3,246.6 200.7,254.9 206.2,247.5 219.9,243.6 220.6,238.1 221.5,233.6 243.2,228.7 244.9,224.2 254.3,221.3 262.2,218.1 266.4,213.5 273.1,218.4 302.7,209.3 303.6,205.9 307.3,211.0 309.1,203.2 317.1,199.9 327.0,196.2 328.9,201.2 329.0,206.9 330.5,203.8 334.8,196.5 335.7,191.0 340.2,184.8 343.2,176.9 343.3,186.3 352.1,182.9 353.1,179.3 361.3,174.1 373.8,170.2 380.2,165.6 381.8,161.7 388.3,158.5 395.3,154.1 399.1,138.7 399.6,166.2 400.5,205.6 401.7,175.7 416.0,169.6 418.6,163.4 419.4,158.8 422.3,165.2 423.1,160.3 426.6,154.6 429.6,162.3 430.3,155.1 442.2,148.0 456.5,143.1 480.3,147.6 481.6,139.4 491.8,147.3 492.9,164.1 500.6,157.9 507.7,150.0 517.2,144.8 521.6,155.5 530.3,163.0 540.6,167.8 542.0,159.8 542.9,152.9 547.6,157.3 548.6,154.2 552.0,150.6 561.7,147.0 568.1,142.6 571.1,137.9 598.9,133.8 599.6,130.4 599.8,126.4 605.4,122.3 624.2,126.8 625.2,121.6 638.6,97.4 639.6,84.1 649.0,79.9 682.6,69.6 682.8,78.6 684.2,70.9 688.9,65.1 689.8,58.1 702.6,54.5 706.0,49.0"/><circle class="g-punto g-punto-backtest" cx="706.0" cy="49.0" r="3.6"><title>16 September 2026: +53.8%</title></circle></svg></figure>
+    <h3>Its drawdowns</h3>
+    <p>How far below its previous high it was at each closed trade: what you would have had to sit through.</p>
+    <figure class="fabrica-grafica fabrica-grafica-caidas"><svg class="g" viewBox="0 0 720 156" role="img" aria-labelledby="gc-q-mvuu59ll-ekuy2-t gc-q-mvuu59ll-ekuy2-d" preserveAspectRatio="xMidYMid meet"><title id="gc-q-mvuu59ll-ekuy2-t">Bollinger + Keltner · FTSE H4 ATR stops: how far below its previous high it was, in % of its simulated account</title><desc id="gc-q-mvuu59ll-ekuy2-d">Measured at each closed trade. The worst, −16.9%, on 16 March 2020.</desc><line class="g-raya" x1="92" x2="706" y1="12.0" y2="12.0"/><text class="g-t" x="86" y="16.0" text-anchor="end">0%</text><line class="g-eje" x1="92" x2="706" y1="69.1" y2="69.1"/><text class="g-t" x="86" y="73.1" text-anchor="end">−10%</text><line class="g-eje" x1="109.0" x2="109.0" y1="120" y2="125"/><text class="g-t" x="109.0" y="150" text-anchor="middle">2014</text><line class="g-eje" x1="202.9" x2="202.9" y1="120" y2="125"/><text class="g-t" x="202.9" y="150" text-anchor="middle">2016</text><line class="g-eje" x1="297.0" x2="297.0" y1="120" y2="125"/><text class="g-t" x="297.0" y="150" text-anchor="middle">2018</text><line class="g-eje" x1="390.9" x2="390.9" y1="120" y2="125"/><text class="g-t" x="390.9" y="150" text-anchor="middle">2020</text><line class="g-eje" x1="484.9" x2="484.9" y1="120" y2="125"/><text class="g-t" x="484.9" y="150" text-anchor="middle">2022</text><line class="g-eje" x1="578.8" x2="578.8" y1="120" y2="125"/><text class="g-t" x="578.8" y="150" text-anchor="middle">2024</text><line class="g-eje" x1="672.8" x2="672.8" y1="120" y2="125"/><text class="g-t" x="672.8" y="150" text-anchor="middle">2026</text><polygon class="g-caida" points="92.0,12.0 92.0,12.0 92.1,12.0 93.0,12.0 106.5,18.6 107.3,13.8 113.8,12.0 119.7,12.0 137.6,12.0 145.2,18.4 146.1,30.4 154.0,20.4 177.3,33.2 178.1,26.6 180.3,20.5 185.8,28.9 188.3,18.4 200.7,30.4 206.2,19.8 219.9,14.2 220.6,12.0 221.5,12.0 243.2,12.0 244.9,12.0 254.3,12.0 262.2,12.0 266.4,12.0 273.1,19.1 302.7,12.0 303.6,12.0 307.3,19.3 309.1,12.0 317.1,12.0 327.0,12.0 328.9,19.1 329.0,27.5 330.5,22.9 334.8,12.5 335.7,12.0 340.2,12.0 343.2,12.0 343.3,25.6 352.1,20.6 353.1,15.5 361.3,12.0 373.8,12.0 380.2,12.0 381.8,12.0 388.3,12.0 395.3,12.0 399.1,12.0 399.6,51.6 400.5,108.4 401.7,65.3 416.0,56.6 418.6,47.7 419.4,40.9 422.3,50.2 423.1,43.1 426.6,35.0 429.6,46.0 430.3,35.6 442.2,25.4 456.5,18.3 480.3,24.8 481.6,13.0 491.8,24.4 492.9,48.6 500.6,39.7 507.7,28.3 517.2,20.7 521.6,36.2 530.3,47.0 540.6,53.9 542.0,42.5 542.9,32.5 547.6,38.9 548.6,34.3 552.0,29.2 561.7,23.9 568.1,17.6 571.1,12.0 598.9,12.0 599.6,12.0 599.8,12.0 605.4,12.0 624.2,18.5 625.2,12.0 638.6,12.0 639.6,12.0 649.0,12.0 682.6,12.0 682.8,25.0 684.2,13.8 688.9,12.0 689.8,12.0 702.6,12.0 706.0,12.0 706.0,12.0"/><polyline class="g-linea g-linea-caida" points="92.0,12.0 92.1,12.0 93.0,12.0 106.5,18.6 107.3,13.8 113.8,12.0 119.7,12.0 137.6,12.0 145.2,18.4 146.1,30.4 154.0,20.4 177.3,33.2 178.1,26.6 180.3,20.5 185.8,28.9 188.3,18.4 200.7,30.4 206.2,19.8 219.9,14.2 220.6,12.0 221.5,12.0 243.2,12.0 244.9,12.0 254.3,12.0 262.2,12.0 266.4,12.0 273.1,19.1 302.7,12.0 303.6,12.0 307.3,19.3 309.1,12.0 317.1,12.0 327.0,12.0 328.9,19.1 329.0,27.5 330.5,22.9 334.8,12.5 335.7,12.0 340.2,12.0 343.2,12.0 343.3,25.6 352.1,20.6 353.1,15.5 361.3,12.0 373.8,12.0 380.2,12.0 381.8,12.0 388.3,12.0 395.3,12.0 399.1,12.0 399.6,51.6 400.5,108.4 401.7,65.3 416.0,56.6 418.6,47.7 419.4,40.9 422.3,50.2 423.1,43.1 426.6,35.0 429.6,46.0 430.3,35.6 442.2,25.4 456.5,18.3 480.3,24.8 481.6,13.0 491.8,24.4 492.9,48.6 500.6,39.7 507.7,28.3 517.2,20.7 521.6,36.2 530.3,47.0 540.6,53.9 542.0,42.5 542.9,32.5 547.6,38.9 548.6,34.3 552.0,29.2 561.7,23.9 568.1,17.6 571.1,12.0 598.9,12.0 599.6,12.0 599.8,12.0 605.4,12.0 624.2,18.5 625.2,12.0 638.6,12.0 639.6,12.0 649.0,12.0 682.6,12.0 682.8,25.0 684.2,13.8 688.9,12.0 689.8,12.0 702.6,12.0 706.0,12.0"/><circle class="g-punto g-punto-caida" cx="400.5" cy="108.4" r="3.4"><title>Worst drawdown, 16 March 2020: −16.9%</title></circle></svg></figure>
+    <h3>Year by year</h3>
+    <p>The first and the last year are only part of a year.</p>
+    <div class="tabla-envoltura fabrica-años-envoltura"><table class="fabrica-tabla fabrica-años"><thead><tr><th>Year</th><th>Trades</th><th>Result</th><th><span class="solo-lectores">Bar</span></th></tr></thead><tbody><tr><th scope="row">2013</th><td class="cifra">4</td><td class="cifra">+1.5%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:13.9%"></span></td></tr><tr><th scope="row">2014</th><td class="cifra">6</td><td class="cifra">+2.1%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:19.8%"></span></td></tr><tr><th scope="row">2015</th><td class="cifra">6</td><td class="cifra">−1.7%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-pierde" style="width:16.6%"></span></td></tr><tr><th scope="row">2016</th><td class="cifra">6</td><td class="cifra">+7.8%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:73.7%"></span></td></tr><tr><th scope="row">2017</th><td class="cifra">4</td><td class="cifra">+1.5%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:13.8%"></span></td></tr><tr><th scope="row">2018</th><td class="cifra">14</td><td class="cifra">+8.1%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:77.2%"></span></td></tr><tr><th scope="row">2019</th><td class="cifra">7</td><td class="cifra">+7.0%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:66.7%"></span></td></tr><tr><th scope="row">2020</th><td class="cifra">13</td><td class="cifra">+0.9%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:8.1%"></span></td></tr><tr><th scope="row">2021</th><td class="cifra">4</td><td class="cifra">+4.0%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:37.7%"></span></td></tr><tr><th scope="row">2022</th><td class="cifra">7</td><td class="cifra">−6.0%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-pierde" style="width:56.6%"></span></td></tr><tr><th scope="row">2023</th><td class="cifra">9</td><td class="cifra">+6.4%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:60.4%"></span></td></tr><tr><th scope="row">2024</th><td class="cifra">6</td><td class="cifra">+4.1%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:39.2%"></span></td></tr><tr><th scope="row">2025</th><td class="cifra">3</td><td class="cifra">+10.5%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:100.0%"></span></td></tr><tr><th scope="row">2026</th><td class="cifra">7</td><td class="cifra">+7.8%</td><td class="fabrica-barra-celda" aria-hidden="true"><span class="fabrica-barra fabrica-barra-gana" style="width:74.1%"></span></td></tr></tbody></table></div>
+    <h2>How it was found and judged</h2>
+    <p>BotFactoryFX found it in the 24/7 factory on 30 October 2026, the best of 2,317 candidate rule sets that search tried on FTSE 100, 4-hour candles.</p>
+    <dl class="fabrica-cifras"><div><dt>Judge’s score</dt><dd><b class="cifra">85</b>/100 · Solid</dd></div><div><dt>On a similar market</dt><dd>the CAC 40: 84/100 · Solid (correlation 0.84)</dd></div><div><dt>Judged on</dt><dd>history the search never saw, from 11 January 2023</dd></div><div><dt>History it was found on</dt><dd>from 1 May 2013 to 30 September 2026, 19,626 candles</dd></div></dl>
+    <p>The judge measured it with fixed stops. This copy runs the same rules with its stops sized to volatility (ATR), to see which of the two holds up better live; its backtest above is the one with those stops.</p>
+    <p>The judge is BotFactoryFX’s Reality Check: 13 checks on the strategy, nine of them on history the search never saw. Our bar to put one in quarantine is Solid, 75 or more, on its own market and again on a similar one, judged from the same date.</p>
+    <p class="fabrica-ritmo">The search keeps the score of each finalist but not its check-by-check report, so that report is not here.</p>
+    <h2>Live, in quarantine</h2>
+    <p>Since 30 October 2026, on prices it had never seen, with closed trades only.</p>
+    <p class="fabrica-veredicto fabrica-veredicto-neutro">Quarantine verdict: <b>No trades yet</b></p>
+    <div class="fabrica-cuerpo fabrica-cuerpo-ancho"><table class="fabrica-tabla"><thead><tr><th></th><th>Its backtest promised</th><th>Live so far</th></tr></thead><tbody><tr><th scope="row">Trades</th><td class="cifra">96 in 13 years</td><td class="cifra">0 in 2 days</td></tr><tr><th scope="row">Won</th><td class="cifra">75%</td><td class="cifra">—</td></tr><tr><th scope="row">Profit factor</th><td class="cifra">1.96</td><td class="cifra">—</td></tr><tr><th scope="row">Result</th><td class="cifra">+53.8%</td><td class="cifra">—</td></tr><tr><th scope="row">Worst drawdown</th><td class="cifra">−16.9%</td><td class="cifra">—</td></tr></tbody></table><figure class="fabrica-grafica"><svg class="g" viewBox="0 0 400 176" role="img" aria-labelledby="g-q-mvuu59ll-ekuy2-t g-q-mvuu59ll-ekuy2-d" preserveAspectRatio="xMidYMid meet"><title id="g-q-mvuu59ll-ekuy2-t">Bollinger + Keltner · FTSE H4 ATR stops: live against its backtest’s pace, in % of its simulated account</title><desc id="g-q-mvuu59ll-ekuy2-d">Simulated, no real money. Live, with closed trades only: +0.0% after 0 trades. At its backtest’s pace it would be at +0.0%.</desc><line class="g-eje" x1="52" x2="388" y1="131.2" y2="131.2"/><text class="g-t" x="46" y="135.2" text-anchor="end">−1%</text><line class="g-raya" x1="52" x2="388" y1="79.7" y2="79.7"/><text class="g-t" x="46" y="83.7" text-anchor="end">0%</text><line class="g-eje" x1="52" x2="388" y1="28.1" y2="28.1"/><text class="g-t" x="46" y="32.1" text-anchor="end">+1%</text><text class="g-t" x="52.0" y="168" text-anchor="start">30 Oct</text><text class="g-t" x="388.0" y="168" text-anchor="end">1 Nov</text><polyline class="g-linea g-linea-promesa" points="52.0,79.7 388.0,78.3"><title>Its backtest’s pace: +0.0%</title></polyline><polyline class="g-linea g-linea-bfx" points="52.0,79.7 388.0,79.7"><title>Live, closed trades: +0.0%</title></polyline></svg></figure></div>
+    <p class="fabrica-ritmo">At its backtest’s pace, by now it would have closed about 0.0 trades and made +0.0%.</p>
+    <h3>Its closed trades</h3>
+    <p>No closed trades yet.</p>
+    <p><a class="boton boton-linea" href="../#q-mvuu59ll-ekuy2">← Back to every strategy in The Factory</a></p>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura">
+    <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
+      <p><strong>Trading can cost you all your capital.</strong> BotFactoryFX is analysis software: it gives no investment advice and does not trade for you. The factory is simulated on real market prices, with no real money: no order is sent to any broker. It reports what we measure, not investment advice, and a strategy that did well here can still lose money.</p>
+      <p>No cookies, no trackers, nothing loaded from outside this domain. <a href="../../">Back to the home page</a></p>
+      <p class="pie-legal"><a href="../../legal/">Terms of sale and privacy</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
