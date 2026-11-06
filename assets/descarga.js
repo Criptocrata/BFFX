@@ -43,6 +43,8 @@
         sistemas: { windows: "Windows", "macos-arm64": "un Mac con chip de Apple", "macos-x64": "un Mac con Intel", linux: "Linux" },
         sugerido: (s) => `Parece que estás en ${s}: es el botón resaltado.`,
         sugeridoMac: "Parece que estás en un Mac. Los de finales de 2020 en adelante llevan chip de Apple (M1–M4); los anteriores, Intel.",
+        /* Sólo Linux por ahora (06-11-2026): a quien llega desde otro sistema se le dice, en vez de resaltarle nada. */
+        otroSistema: (s) => `Parece que estás en ${s}: por ahora sólo está la versión de Linux.`,
         ventas: (r) => {
           const quien = r.ventas === 1 ? "Ya ha comprado una persona con tu código." : `Ya han comprado ${r.ventas} personas con tu código.`;
           const lo = loPendiente(r);
@@ -91,6 +93,7 @@
         sistemas: { windows: "Windows", "macos-arm64": "a Mac with Apple silicon", "macos-x64": "an Intel Mac", linux: "Linux" },
         sugerido: (s) => `Looks like you’re on ${s}: it’s the highlighted button.`,
         sugeridoMac: "Looks like you’re on a Mac. Macs from late 2020 on have Apple silicon (M1–M4); older ones, Intel.",
+        otroSistema: (s) => `Looks like you’re on ${s}: for now there is only the Linux version.`,
         ventas: (r) => {
           const quien = r.ventas === 1 ? "One person has bought with your code." : `${r.ventas} people have bought with your code.`;
           const lo = loPendiente(r);
@@ -220,14 +223,17 @@
      no lo pida otra vez. */
   const queCompra = params.get("comprar");
   if (!pedido && (queCompra === "fx" || queCompra === "quarantine")) {
-    montarCompra(queCompra, (params.get("ref") || "").trim().toUpperCase());
+    montarCompra(queCompra, (params.get("ref") || "").trim().toUpperCase(), (params.get("pase") || "").trim());
     return;
   }
-  function montarCompra(producto, ref) {
+  /* `pase` (06-11-2026): el pase del dueño, para su ronda de compra con la venta cerrada. Va a la tienda, que sólo
+     guarda su huella; al crear la factura la dirección cambia y el pase ya no viaja con ella. */
+  function montarCompra(producto, ref, pase) {
     const NOMBRES = { fx: "BotFactoryFX", quarantine: "BFQuarantine" };
     document.getElementById("comprar-producto").textContent = NOMBRES[producto];
     const q = new URLSearchParams({ producto });
     if (ref) q.set("ref", ref);
+    if (pase) q.set("pase", pase);
     /* La venta cerrada (24-10-2026): si la tienda lo dice, la lista de espera en vez de la compra. Hasta saberlo
        se queda «Un momento»; sin respuesta, la compra, como siempre. Ver servidor/src/lista-de-espera.ts. */
     fetch(`${API}/recomendacion?${q}`)
@@ -279,6 +285,7 @@
         const elegida = marcada ? marcada.value : "";
         const cuerpo = { producto, correo, lengua: ES ? "es" : "en", moneda: elegida };
         if (ref) cuerpo.ref = ref;
+        if (pase) cuerpo.pase = pase;
         /* Cómo nos conoció (11-10-2026): sólo si lo dijo. Es opcional, y la
            tienda calla lo que no reconoce: nunca impide comprar. */
         const origen = document.getElementById("comprar-origen");
@@ -381,8 +388,9 @@
       if (a) { a.classList.remove("boton-linea"); a.classList.add("boton-ambar"); }
     };
     const caja = document.getElementById("sugerido");
-    if (s === "mac") { marcar("macos-arm64"); marcar("macos-x64"); if (caja) caja.textContent = T.sugeridoMac; }
-    else { marcar(s); if (caja) caja.textContent = T.sugerido(T.sistemas[s]); }
+    /* Sólo los sistemas que tienen botón (06-11-2026: Linux; Windows y macOS, «próximamente»). */
+    if (document.querySelector(`[data-sistema="${s}"]`)) { marcar(s); if (caja) caja.textContent = T.sugerido(T.sistemas[s]); }
+    else if (caja) caja.textContent = T.otroSistema(s === "mac" ? T.sistemas["macos-arm64"].replace(/ con .*| with .*/, "") : (T.sistemas[s] || s));
   });
 
   let espera = 3000;
