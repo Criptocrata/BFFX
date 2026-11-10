@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ZhoHEDiyVetny61emVu2UOiKRnXe0jJF1QOOS3GT80k='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comprar un robot a ciegas · BotFactoryFX</title>
+<meta name="description" content="Lo que sale al abrir la caja de un robot de StrategyQuant X de verdad: lo que hace su código, si le cuadra el informe y la horquilla que su prueba no pagó.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../../../assets/logo-split.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="../../../notes/buying-a-robot-blind/">
+<link rel="alternate" hreflang="es" href="./">
+<link rel="stylesheet" href="../../../assets/fuentes.css">
+<link rel="stylesheet" href="../../../assets/web.css">
+<script>
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="../../../assets/web.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BotFactoryFX">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Comprar un robot a ciegas · BotFactoryFX">
+<meta property="og:description" content="Lo que sale al abrir la caja de un robot de StrategyQuant X de verdad: lo que hace su código, si le cuadra el informe y la horquilla que su prueba no pagó.">
+<meta property="og:url" content="https://botfactoryfx.com/es/notas/comprar-un-robot-a-ciegas/">
+<meta property="og:image" content="https://botfactoryfx.com/banners/es/bfx-1200x628.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="../../"><img src="../../../assets/logo-split.svg" alt="" width="30" height="30"><span>BotFactory<b>FX</b></span></a>
+    <nav class="barra-enlaces" aria-label="Principal">
+      <a href="../../#factura">La factura</a>
+      <a href="../../como-funciona/">Cómo funciona</a>
+      <a href="../../#programas">Programas</a>
+      <a href="../../descargas/">Descargas</a>
+      <a href="../../documentacion/">Documentación</a>
+      <a href="../../notas/">Notas</a>
+      <a href="../../duelo-en-directo/">Duelo en directo</a>
+      <a href="../../la-fabrica/">La fábrica</a>
+      <a href="../../referidos/" data-referidos>Referidos</a>
+      <a href="../../contacto/">Contacto</a>
+    </nav>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Tema">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" href="../../../notes/buying-a-robot-blind/" hreflang="en" lang="en">EN</a>
+      <a class="boton boton-ambar boton-chico boton-carrito" href="../../#programas" aria-label="Comprar: empieza por el gratuito" title="Comprar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 12.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg></a>
+      <details class="menu-movil">
+        <summary>Menú</summary>
+        <nav aria-label="Principal (móvil)">
+          <a href="../../#factura">La factura</a><a href="../../como-funciona/">Cómo funciona</a><a href="../../#programas">Programas</a>
+          <a href="../../descargas/">Descargas</a><a href="../../documentacion/">Documentación</a><a href="../../notas/">Notas</a>
+      <a href="../../duelo-en-directo/">Duelo en directo</a>
+      <a href="../../la-fabrica/">La fábrica</a><a href="../../referidos/" data-referidos>Referidos</a><a href="../../contacto/">Contacto</a><a href="../../../demo/?lang=es">Probar gratis</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+<section class="portada-interior">
+  <div class="envoltura">
+    <p class="ceja">Notas del laboratorio · 10 de noviembre de 2026</p>
+    <h1>Comprar un robot a ciegas</h1>
+    <p class="entradilla">Alguien quiere venderte un robot, y su backtest dice 8.742 $ de beneficio. Abrimos la caja con BFInspector, como lo haría quien compra: el código, el informe y los costes que nadie cuenta.</p>
+  </div>
+</section>
+<section class="seccion" style="border-top:0;padding-top:8px">
+  <div class="envoltura">
+    <article class="nota">
+      <figure class="captura"><a href="https://youtu.be/-mcM7y55RjE" rel="noopener"><img src="../../../capturas/notas/a-ciegas/video.webp" alt="Vídeo: comprar un robot a ciegas. Lo que había de verdad en la caja de un robot de StrategyQuant X." width="1280" height="720" loading="lazy"></a><figcaption>Esta nota en minuto y medio. Míralo en YouTube (en inglés).</figcaption></figure>
+      <h2>La caja</h2>
+      <p>Quien vende te manda tres ficheros: el robot (un <code>.mq5</code> para MetaTrader 5), un PDF con su backtest y un <code>.sqx</code>, el proyecto de StrategyQuant X del que salió. El PDF pinta bien: <b>8.742 $ de beneficio en 1.211 operaciones</b> en el S&amp;P 500, de 2012 a 2026, un factor de beneficio de 1,24 (gana 1,24 $ por cada dólar que pierde) y una caída máxima del 10,7 %.</p>
+      <p>Abrimos la caja con BFInspector, la herramienta gratuita que regalamos, como lo haría quien compra. Es un robot de StrategyQuant X de verdad, no uno hecho para la ocasión. Esto es lo que salió.</p>
+      <h2>Lo que hace de verdad</h2>
+      <p>BFInspector lee el código sin ejecutarlo y escribe, con palabras, cuándo compra, cuándo vende y cuánto arriesga.</p>
+      <ul>
+        <li><b>Sólo compra.</b> Su regla de venta pide que dos precios calculados de forma distinta sean exactamente iguales. Eso no pasa casi nunca. Las 1.211 operaciones de su propio informe son compras.</li>
+        <li><b>Una de sus dos condiciones de compra es de adorno.</b> Se cumple casi siempre, así que no filtra nada.</li>
+        <li>Lo que trabaja: una orden de compra por encima del máximo de ayer, un stop al 0,3 % del precio, un objetivo al 1,1 %, un stop dinámico y cerrarlo todo el viernes por la tarde. Arriesga el 1 % del saldo en cada operación.</li>
+        <li>No lleva ninguna de las siete trampas conocidas (doblar tras perder, operar sin stop, mirar el futuro, candados de cuenta…).</li>
+      </ul>
+      <figure class="captura"><img src="../../../capturas/notas/a-ciegas/que-hace.webp" alt="El acta de BFInspector sobre el robot: decide una vez por vela de una hora; una condición de compra se cumple casi siempre y es de adorno; en la práctica no vende nunca; después, sus reglas de compra y de venta y cómo lleva cada operación" width="1600" height="1790" loading="lazy"><figcaption>Escrito a partir del código, no de una descripción. Las dos líneas en ámbar son las que ningún PDF te va a contar.</figcaption></figure>
+      <p>Nada de esto está en el PDF. Quien sólo leyera el PDF no sabría que compra un robot que no vende nunca.</p>
+      <h2>El PDF no trae operaciones</h2>
+      <p>El PDF es un resumen: totales, una tabla por meses, gráficos. Ni una operación. Un resumen no se puede comprobar contra nada. BFInspector lo dice y te pide el <code>.sqx</code>, que las lleva todas.</p>
+      <figure class="captura"><img src="../../../capturas/notas/a-ciegas/el-pdf.webp" alt="El aviso de BFInspector: es el PDF de un informe de StrategyQuant X; trae el resumen y los meses, pero ni una operación; pide su .sqx o el informe del Probador de su plataforma" width="1600" height="198" loading="lazy"><figcaption>Lo que dice BFInspector en cuanto le das el PDF.</figcaption></figure>
+      <h2>¿Le cuadran las cuentas? Sí</h2>
+      <p>Con el <code>.sqx</code>, sus 1.211 operaciones suman exactamente los 8.742,72 $ que declara su informe. Nadie retocó el resumen. Es lo primero que falla en un informe tramposo, y éste es honrado.</p>
+      <h2>La horquilla que no pagó</h2>
+      <p>Aquí está la trampa. El <code>.sqx</code> también dice cuánto costaba operar en la prueba: un diferencial de <b>0,03 pips</b>. Su propia ficha del instrumento, dentro del mismo fichero, dice que el S&amp;P 500 cuesta normalmente <b>4,6 pips</b>. La prueba pagó una horquilla 153 veces más fina que la de verdad.</p>
+      <p>BFInspector repite las mismas 1.211 operaciones con el diferencial que su propia ficha llama típico. <b>Los 8.742 $ se quedan en 5.976 $: casi un tercio del beneficio no iba a llegar nunca a la cuenta de nadie.</b> Sigue ganando, pero no es el robot del PDF.</p>
+      <figure class="grafica"><svg class="g" viewBox="0 0 760 128" role="img" aria-labelledby="g-a-ciegas-coste-t g-a-ciegas-coste-d" preserveAspectRatio="xMidYMid meet"><title id="g-a-ciegas-coste-t">Lo que gana el robot cuando paga el diferencial que su propio fichero llama típico</title><desc id="g-a-ciegas-coste-d">Su informe: 8.742,72 $ de beneficio en 1.211 operaciones, probado con un diferencial de 0,03 pips. Las mismas operaciones con los 4,6 pips que su propia ficha del instrumento llama típicos: 5.975,58 $, un 32 % menos.</desc><text class="g-t" x="0" y="20">Beneficio de las mismas 1.211 operaciones</text><text class="g-t" x="208" y="59.0" text-anchor="end">Como dice su informe</text><rect class="g-barra" x="220" y="40" width="380.0" height="30" rx="3"><title>Como dice su informe: 8.742 $</title></rect><text class="g-tf" x="608.0" y="59.0">8.742 $</text><text class="g-t" x="208" y="103.0" text-anchor="end">Con su diferencial típico</text><rect class="g-barra-ojo" x="220" y="84" width="259.7" height="30" rx="3"><title>Con su diferencial típico: 5.976 $ · −32 %</title></rect><text class="g-tf" x="487.7" y="103.0">5.976 $ · −32 %</text></svg><figcaption>Las mismas operaciones, los mismos precios y los mismos tamaños. Sólo cambia el diferencial, y los 2.767,14 $ que añade salen directamente del beneficio.</figcaption></figure>
+      <figure class="captura"><img src="../../../capturas/notas/a-ciegas/los-costes.webp" alt="El panel de costes de BFInspector: su prueba se hizo con un diferencial de 0,03 pips; cuidado, su propia ficha del instrumento dice que el típico es 4,6 pips, 153 veces más; tres botones para verlo con los costes que trae, con su diferencial típico (el elegido) o con tus ajustes" width="1600" height="593" loading="lazy"><figcaption>El panel de costes. Las cantidades son las del capital y el lote de nuestro ejemplo, una cincuentava parte de las del robot; la caída es la misma, un 32 %.</figcaption></figure>
+      <h2>Las velas de tu bróker no son las suyas (y eso no es fraude)</h2>
+      <p>Una buena comprobación es poner sus operaciones encima de tu propio histórico: una operación a un precio que el mercado no tocó es inventada. Usamos dos años de S&amp;P 500 de un bróker corriente. <b>84 de 355</b> precios caían fuera de su vela.</p>
+      <p>Parece una condena, y no lo es. 83 de los 84 caían <i>por debajo</i> de la vela, entradas y salidas por igual, y por poco. Su prueba usó otra fuente de datos, que cotiza el mismo índice unos puntos más abajo, y de noche las dos pueden separarse bastante. Un precio inventado se sale hacia el lado que le conviene al vendedor; 60 de éstos perjudican al vendedor. Nadie se inventa un precio que le hace perder.</p>
+      <p>La primera vez que lo pasamos, BFInspector lo llamó fraude. La versión 2.5.0 reconoce la huella de otra fuente, avisa en vez de acusar y te pide velas de la misma fuente que la prueba.</p>
+      <figure class="captura"><img src="../../../capturas/notas/a-ciegas/las-comprobaciones.webp" alt="Las seis comprobaciones de BFInspector sobre el informe: nada falso, pero 2 cosas merecen una mirada; sus totales cuadran; el mismo resultado con tus costes baja a 5.975,58 $; la muestra basta; 84 de 355 precios caen fuera de su vela con la huella de otra fuente; 2 de 179 entradas caen donde el histórico no tiene vela; entradas demasiado buenas: dentro de lo normal" width="1600" height="1471" loading="lazy"><figcaption>Las seis comprobaciones, con dos años de velas de un bróker corriente debajo. «Cuidado», no «fraude».</figcaption></figure>
+      <h2>Con los precios del bróker</h2>
+      <p>Así que hicimos lo que pide esa comprobación, pero al revés: pasar el robot por los precios del bróker. El último año de su backtest, de junio de 2025 a junio de 2026, en el Probador de MetaTrader 5 de ese bróker: 87 operaciones. Los mismos meses, otros precios. Contra su backtest opera al mismo ritmo (1,7 operaciones por semana contra 1,6), acierta lo mismo (35,6 % contra 35,8 %) y gana algo menos por operación (0,96 $ por lote contra 1,44 $), de sobra dentro de lo que su propia historia da de sí: 418 de mil muestras al azar de su backtest lo hicieron peor. Con los precios del bróker sigue siendo el mismo robot.</p>
+      <figure class="captura"><img src="../../../capturas/notas/a-ciegas/un-ano-despues.webp" alt="La comparación de BFInspector entre la cuenta y el backtest: 87 operaciones en vivo contra sus 1211; hace lo que prometía; lo que gana por operación, el acierto, cuántas abre y la primera mitad contra la segunda, todo cuadra" width="1600" height="1329" loading="lazy"><figcaption>Ese año en el Probador del bróker, dado a BFInspector como si fuera tu cuenta. BFInspector se da cuenta también de que en ese bróker un lote mueve diez veces más que en el backtest, y los compara por lo que mueve cada lote.</figcaption></figure>
+      <h2>¿Y después de su backtest?</h2>
+      <p>Ésa es la única pregunta que ninguna caja contesta. Del 9 de junio al 16 de octubre de 2026, meses que su backtest no vio, el mismo Probador le dio <b>26 operaciones</b>. Acertó el 31 %, y perdió dinero: <b>0,78 $ por cada dólar perdido</b>, contra los 1,24 $ que prometía.</p>
+      <p>Veintiséis operaciones son muy pocas para distinguir una mala racha de un robot roto. BFQuarantine, nuestro programa para vigilar un robot después de comprarlo, dice justo eso: pierde dinero, pero aún no claramente peor de lo prometido. Cómo decide cuándo hay que apagar un robot es otra nota.</p>
+      <h2>Lo que nos dijo la caja</h2>
+      <ul>
+        <li><b>Qué hace:</b> un robot que sólo compra el S&amp;P 500, con una condición que no hace nada.</li>
+        <li><b>Si el informe es honrado:</b> sí, sus totales cuadran con sus operaciones, y con los precios del bróker se porta igual.</li>
+        <li><b>Cuánto vale para ti:</b> casi un tercio menos de lo que dice, porque su prueba nunca pagó una horquilla de verdad.</li>
+      </ul>
+      <p>Nada de esto nos dijo si ganaría dinero después de su backtest. Sus primeros meses dicen que de momento no, y todavía son pocos para estar seguros. Para eso está la cuarentena. Pero nadie paga un coche sin levantar el capó, y esto ha costado cinco minutos.</p>
+      <p><a href="../../../es/descargas/#inspector">BFInspector es gratis</a>, para Linux (Windows y macOS, próximamente), y nada sale de tu ordenador.</p>
+      <div class="aviso"><h3>De dónde salen los números</h3><p>De BFInspector 2.5.0, con los ficheros que recibiría quien compra: el <code>.mq5</code> del robot, su PDF de StrategyQuant X y su <code>.sqx</code>, una estrategia para el S&amp;P 500 en velas de una hora probada de enero de 2012 a junio de 2026. Las velas de debajo son dos años de S&amp;P 500 del MetaTrader 5 de un bróker corriente. Las dos pasadas por el Probador de ese bróker, la del último año de su backtest y la de los meses de después, son nuestras, de octubre de 2026. Las capturas son de esa misma inspección.</p></div>
+      <p class="nota-fin"><a href="../">← Todas las notas</a> <a class="boton boton-ambar" href="../../../demo/?lang=es">Pruébalo gratis</a></p>
+    </article>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura">
+    <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
+      <p><strong>Operar puede costarte todo tu capital.</strong> BotFactoryFX es software de análisis: no da consejo de inversión y no opera por ti. Estas notas cuentan lo que medimos; no son consejo de inversión.</p>
+      <p>Sin cookies, sin rastreadores, nada cargado de fuera de este dominio. <a href="../../">Volver a la portada</a></p>
+      <p class="pie-legal"><a href="../../legal/">Condiciones de venta y privacidad</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
