@@ -38,6 +38,7 @@
   /** ¿Están ya las dos direcciones? Las guardadas antes del 05-10-2026 sólo traen la de TRON. */
   const completo = (r) => Boolean(r.cobro && r.cobro.btc);
   const fecha = (ms) => new Date(ms).toLocaleDateString(LOCALE, { day: "numeric", month: "short", year: "numeric" });
+  const fechaHora = (ms) => new Date(ms).toLocaleString(LOCALE, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   const T = ES
     ? {
         sistemas: { windows: "Windows", "macos-arm64": "un Mac con chip de Apple", "macos-x64": "un Mac con Intel", linux: "Linux" },
@@ -82,6 +83,21 @@
         },
         teEscribiremos: (c) => `En cuanto se confirme el pago te escribimos a ${c} con el enlace de esta página.`,
         sinCobro: "El cobro no contesta ahora mismo. Inténtalo en un minuto, o escríbenos a support@botfactoryfx.com y te mandamos la factura a mano.",
+        /* El cobro directo (11-11-2026): servidor/src/cobro-directo.ts. */
+        sinCobroUsdt: "El cobro con esa moneda no contesta ahora mismo. El USDT por TRON sí funciona: elígelo arriba y pulsa otra vez.",
+        directoHasta: (ms) => `Esta cantidad queda reservada para tu pedido hasta el ${fechaHora(ms)}.`,
+        reclamo: {
+          comprobando: "Comprobando…",
+          exacto: "Es la cantidad exacta: tu pedido se dará por pagado en un minuto, aquí mismo.",
+          tx: "Eso no es un identificador de transacción: son 64 letras y cifras (a veces empieza por 0x).",
+          "tx-usada": "Esa transacción ya se usó para un pedido.",
+          "no-llega": "Todavía no la vemos confirmada, o no paga a nuestra dirección. Si acabas de enviarla, espera un par de minutos y prueba otra vez.",
+          anterior: "Esa transacción es anterior a tu pedido: no puede ser su pago.",
+          "de-otro-pedido": "Esa cantidad exacta es la de otro pedido. Comprueba que sea tu transacción.",
+          "sin-respuesta": "No hemos podido consultar la red ahora mismo. Prueba en un minuto.",
+          frenado: "Demasiados intentos seguidos: prueba dentro de un minuto.",
+          otro: "No se ha podido comprobar. Escríbenos a support@botfactoryfx.com con tu número de pedido y la transacción.",
+        },
         mejoraUsada: "Este pedido ya se usó para pasarse a BotFactoryFX.",
         numeroMal: "Eso no parece un número de pedido: empieza por BFX o BFQ y lleva dos grupos de ocho letras y cifras.",
         noEsNuestro: "Ese número no es de ningún pedido nuestro. Revisa que esté entero, o escríbenos.",
@@ -131,6 +147,21 @@
         },
         teEscribiremos: (c) => `As soon as the payment confirms we email ${c} the link to this page.`,
         sinCobro: "Checkout isn’t answering right now. Try again in a minute, or write to support@botfactoryfx.com and we’ll send you the invoice by hand.",
+        /* Direct payment (11-11-2026): servidor/src/cobro-directo.ts. */
+        sinCobroUsdt: "Checkout isn’t answering for that coin right now. USDT on TRON works: choose it above and press again.",
+        directoHasta: (ms) => `This amount is reserved for your order until ${fechaHora(ms)}.`,
+        reclamo: {
+          comprobando: "Checking…",
+          exacto: "That’s the exact amount: your order will show as paid within a minute, right here.",
+          tx: "That isn’t a transaction ID: it’s 64 letters and digits (sometimes starting with 0x).",
+          "tx-usada": "That transaction has already been used for an order.",
+          "no-llega": "We don’t see it confirmed yet, or it doesn’t pay our address. If you’ve just sent it, wait a couple of minutes and try again.",
+          anterior: "That transaction is older than your order: it can’t be its payment.",
+          "de-otro-pedido": "That exact amount belongs to another order. Check that it’s your transaction.",
+          "sin-respuesta": "We couldn’t reach the network just now. Try again in a minute.",
+          frenado: "Too many tries in a row: try again in a minute.",
+          otro: "It couldn’t be checked. Write to support@botfactoryfx.com with your order number and the transaction.",
+        },
         mejoraUsada: "This order has already been used to move up to BotFactoryFX.",
         mejoraNoVale: "This order doesn’t carry the discount. Write to us with your order number and we’ll look into it.",
         ref: "",
@@ -188,7 +219,7 @@
     otro.addEventListener("click", () => { try { sessionStorage.setItem("bfx-web-idioma", ES ? "en" : "es"); } catch { /* nada */ } });
   }
   const ver = (id) => {
-    for (const s of ["comprar", "lista", "lista-hecha", "sin-pedido", "por-pagar", "cargando", "confirmando", "esperando", "listo", "revisar", "cerrado"]) {
+    for (const s of ["comprar", "lista", "lista-hecha", "sin-pedido", "por-pagar", "directo", "cargando", "confirmando", "esperando", "listo", "revisar", "cerrado"]) {
       const el = document.getElementById(s);
       if (el) el.hidden = s !== id;
     }
@@ -296,15 +327,19 @@
         });
         const v = await r.json().catch(() => null);
         if (v && v.error === "correo") throw new Error("correo");
-        if (!r.ok || !v || !v.pagar || !v.pedido) throw new Error("sin factura");
+        /* Plisio no crea la factura con esa moneda y la tienda cobra directo el USDT por TRON (11-11-2026). */
+        if (v && v.alternativa === "USDT_TRX") throw new Error("alternativa");
+        // Una factura de Plisio (`pagar`) o un cobro directo (`directo`: la dirección y la cantidad, que da /estado).
+        if (!r.ok || !v || !v.pedido || !(v.pagar || v.directo)) throw new Error("sin factura");
         // Para decirle, en el paso de pagar, a dónde le escribiremos. Sólo en esta pestaña.
         try { sessionStorage.setItem(`bfx-correo-${v.pedido}`, correo); } catch { /* nada */ }
         const u = new URL(location.href); u.search = ""; u.hash = "";
         u.searchParams.set("p", v.pedido);
-        u.searchParams.set("pagar", v.pagar);
+        if (v.pagar) u.searchParams.set("pagar", v.pagar);
         location.replace(u.toString());
       } catch (err) {
-        error.textContent = err && err.message === "correo" ? T.errores.correo : T.sinCobro;
+        error.textContent = err && err.message === "correo" ? T.errores.correo
+          : err && err.message === "alternativa" ? T.sinCobroUsdt : T.sinCobro;
         error.hidden = false;
         seguir.disabled = false;
         seguir.textContent = dice;
@@ -375,6 +410,60 @@
       catch { /* el enlace se puede seleccionar a mano: .licencia lleva user-select: all */ }
     });
   }
+  /* ── El cobro directo (11-11-2026) ────────────────────────────────────────
+     USDT por TRON a nuestra dirección, sin pasarela (servidor/src/cobro-directo.ts). La dirección y la cantidad las
+     da la tienda (/estado), nunca la dirección de esta página: un enlace se puede fabricar. La cantidad se enseña
+     con punto y dos decimales, como la escribe un monedero. */
+  let directoActual = null;
+  const copiarAlPulsar = (id, texto) => {
+    const b = document.getElementById(id);
+    if (!b) return;
+    b.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(texto()); b.textContent = T.copiado; }
+      catch { /* se puede seleccionar a mano: .licencia lleva user-select: all */ }
+    });
+  };
+  copiarAlPulsar("directo-copiar-enlace", () => enlaceCompra);
+  copiarAlPulsar("directo-copiar-importe", () => (directoActual ? directoActual.importe : ""));
+  copiarAlPulsar("directo-copiar-direccion", () => (directoActual ? directoActual.direccion : ""));
+  function pintaDirecto(d) {
+    directoActual = d;
+    const poner = (id, texto) => { const el = document.getElementById(id); if (el) el.textContent = texto; };
+    poner("directo-enlace", enlaceCompra);
+    poner("directo-importe", `${Number(d.importe).toFixed(2)} USDT`);
+    poner("directo-direccion", d.direccion);
+    poner("directo-hasta", T.directoHasta(d.hasta));
+    const aviso = document.getElementById("directo-correo");
+    if (aviso && correoDeLaCompra) { aviso.textContent = T.teEscribiremos(correoDeLaCompra); aviso.hidden = false; }
+  }
+  /* «Ya he pagado y no aparece»: su transacción. La tienda nunca entrega sola con esto —una transacción es pública—;
+     lo exacto lo da por pagado la vigilancia, y lo demás lo mira una persona (la página pasa a «revisar»). */
+  const reclamar = document.getElementById("directo-reclamar");
+  if (reclamar) {
+    reclamar.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const respuesta = document.getElementById("directo-reclamar-respuesta");
+      const boton = reclamar.querySelector("button");
+      const tx = (document.getElementById("directo-tx").value || "").trim();
+      const decir = (texto) => { respuesta.textContent = texto; respuesta.hidden = false; };
+      decir(T.reclamo.comprobando);
+      boton.disabled = true;
+      try {
+        const r = await fetch(`${API}/directo/reclamar`, {
+          method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ pedido, tx }),
+        });
+        const v = await r.json().catch(() => null);
+        if (r.status === 429) decir(T.reclamo.frenado);
+        else if (v && v.exacto) decir(T.reclamo.exacto);
+        else if (v && v.estado && v.estado !== "esperando") { respuesta.hidden = true; mirar(); }
+        else decir((v && T.reclamo[v.error]) || T.reclamo.otro);
+      } catch {
+        decir(T.reclamo["sin-respuesta"]);
+      } finally {
+        boton.disabled = false;
+      }
+    });
+  }
   /* Resuelto el pedido —pagado, cerrado o para revisar—, la factura sobra en la dirección. */
   const sinFactura = () => { if (pagar) { try { history.replaceState(null, "", enlaceCompra); } catch { /* nada */ } } };
 
@@ -432,6 +521,15 @@
       if (texto) texto.textContent = T.confirmando(v.moneda, v.confirmaciones);
       sinFactura();
       ver("confirmando");
+      espera = Math.min(espera * 1.2, 20_000);
+      setTimeout(mirar, espera);
+      return;
+    }
+    /* Un cobro directo (11-11-2026): la dirección y la cantidad exacta, mientras no llegue. La tienda mira la cadena
+       cada minuto, así que aquí se pregunta a menudo, sin pasar de 20 s. */
+    if (v.directo) {
+      pintaDirecto(v.directo);
+      ver("directo");
       espera = Math.min(espera * 1.2, 20_000);
       setTimeout(mirar, espera);
       return;

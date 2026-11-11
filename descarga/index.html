@@ -139,6 +139,41 @@
     </div>
   </section>
 
+  <section id="directo" hidden>
+    <h1>Pay with USDT on TRON.</h1>
+    <div class="tarjeta">
+      <p>Your order number is <strong class="num"></strong>. <strong>Keep this page’s address</strong> — in your bookmarks, or copy it: it is the way back to your download and your licence, whenever you like.</p>
+      <div class="enlace-y-copiar">
+        <div class="licencia" id="directo-enlace"></div>
+        <button class="boton boton-linea" id="directo-copiar-enlace" type="button">Copy</button>
+      </div>
+      <p>Send <strong>exactly</strong> this amount of <strong>USDT on the TRON network (TRC-20)</strong>:</p>
+      <div class="enlace-y-copiar">
+        <div class="licencia" id="directo-importe"></div>
+        <button class="boton boton-linea" id="directo-copiar-importe" type="button">Copy</button>
+      </div>
+      <p>to this address:</p>
+      <div class="enlace-y-copiar">
+        <div class="licencia" id="directo-direccion"></div>
+        <button class="boton boton-linea" id="directo-copiar-direccion" type="button">Copy</button>
+      </div>
+      <p class="nota">The cents belong to your order: they are how we know the payment is yours, so it has to arrive exact. It is a little under the price, never over. Only USDT on TRON: anything else sent to this address — another network, another coin — is lost.</p>
+      <p class="nota">Paying from an exchange? Some take their fee out of what you send. Make sure the amount that <strong>arrives</strong> is exactly this one.</p>
+      <p class="nota" id="directo-hasta"></p>
+      <p class="nota" id="directo-correo" hidden></p>
+      <p class="latido"><span class="punto"></span> Waiting for your payment… It shows up here about a minute after you send it.</p>
+      <details class="directo-reclamar">
+        <summary>Already paid, and it doesn’t show after a few minutes?</summary>
+        <form id="directo-reclamar" class="buscar-pedido" novalidate>
+          <label for="directo-tx">Your transaction ID (TXID)</label>
+          <input id="directo-tx" name="tx" type="text" autocomplete="off" spellcheck="false" placeholder="64 letters and digits">
+          <button class="boton boton-linea" type="submit">Check it</button>
+          <p class="nota" id="directo-reclamar-respuesta" role="status" hidden></p>
+        </form>
+      </details>
+    </div>
+  </section>
+
   <section id="cargando">
     <h1>One moment.</h1>
     <p class="latido"><span class="punto"></span> Looking up your order…</p>
