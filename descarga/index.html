@@ -135,7 +135,7 @@
       <p><a class="boton boton-ambar" id="pagar" href="#" target="_blank" rel="noopener">Pay with Plisio</a></p>
       <p class="nota">Plisio opens in a new tab. Once the network confirms your payment, this page turns into your download by itself: you can close the Plisio tab.</p>
       <p class="nota" id="por-pagar-correo" hidden></p>
-      <p class="latido"><span class="punto"></span> Waiting for your payment…</p>
+      <p class="latido estado-pago" role="status"><span class="punto"></span> <span>Waiting for your payment…</span></p>
     </div>
   </section>
 
@@ -148,6 +148,7 @@
         <button class="boton boton-linea" id="directo-copiar-enlace" type="button">Copy</button>
       </div>
       <div id="directo-pagar">
+        <p class="latido estado-pago" role="status"><span class="punto"></span> <span><strong>Waiting for your payment…</strong> It shows up here about a minute after you send it.</span></p>
         <p>Send <strong>exactly</strong> this amount of <strong>USDT on the TRON network (TRC-20)</strong>:</p>
         <div class="enlace-y-copiar">
           <div class="licencia" id="directo-importe"></div>
@@ -166,7 +167,6 @@
         <p class="nota">Paying from an exchange? Some take their fee out of what you send. Make sure the amount that <strong>arrives</strong> is exactly this one.</p>
         <p class="nota" id="directo-hasta"></p>
         <p class="nota" id="directo-correo" hidden></p>
-        <p class="latido"><span class="punto"></span> Waiting for your payment… It shows up here about a minute after you send it.</p>
       </div>
       <div id="directo-caducado" hidden>
         <p><strong>This order’s reservation has expired:</strong> its exact amount is no longer kept for it.</p>
@@ -193,6 +193,7 @@
         <button class="boton boton-linea" id="btc-copiar-enlace" type="button">Copy</button>
       </div>
       <div id="btc-pagar">
+        <p class="latido estado-pago" role="status"><span class="punto"></span> <span><strong>Waiting for your payment…</strong> It shows up here a minute or two after you send it, and the download comes with the first confirmation.</span></p>
         <p>Send this amount of <strong>bitcoin (BTC, on the Bitcoin network)</strong>:</p>
         <div class="enlace-y-copiar">
           <div class="licencia" id="btc-importe"></div>
@@ -212,7 +213,6 @@
         <p class="nota">Paying from an exchange? Some take their fee out of what you send. Make sure that what <strong>arrives</strong> is at least this amount.</p>
         <p class="nota" id="btc-hasta"></p>
         <p class="nota" id="btc-correo" hidden></p>
-        <p class="latido"><span class="punto"></span> Waiting for your payment… It shows up here a minute or two after you send it, and the download comes with the first confirmation.</p>
       </div>
       <div id="btc-caducado" hidden>
         <p><strong>This price has expired:</strong> the hour went by without the network seeing a payment to this address.</p>
@@ -238,7 +238,7 @@
   <section id="confirmando" hidden>
     <h1>Payment received.</h1>
     <div class="tarjeta">
-      <p class="latido"><span class="punto"></span> <span id="confirmando-texto">The network is confirming it…</span></p>
+      <p class="latido estado-pago" role="status"><span class="punto"></span> <span id="confirmando-texto">The network is confirming it…</span></p>
       <p>You don’t need to stay here: this page turns into your download as soon as it confirms, and we’ll email you its link.</p>
       <p class="pedido">Order <span class="num"></span></p>
     </div>
@@ -247,7 +247,7 @@
   <section id="esperando" hidden>
     <h1>Your payment is on its way.</h1>
     <div class="tarjeta">
-      <p class="latido"><span class="punto"></span> Waiting for the network to confirm the transaction…</p>
+      <p class="latido estado-pago" role="status"><span class="punto"></span> <span>Waiting for the network to confirm the transaction…</span></p>
       <p>That part is not up to us: it is the network of the coin you chose. Usually minutes; with a congested network it can take a couple of hours. <strong>You don’t need to stay here</strong> — this page updates itself, and you can come back whenever you like.</p>
       <p><strong>Keep this address.</strong> It is the way back to your download.</p>
     </div>

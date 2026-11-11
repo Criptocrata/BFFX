@@ -144,3 +144,9 @@
 .qr-pago .qr { width: min(240px, 70vw); margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; }
 .qr-pago svg { display: block; width: 100%; height: auto; }
 .qr-pago figcaption { margin-top: .6rem; font-size: .9rem; color: var(--apagado); }
+
+/* El estado del pago, bien a la vista (11-11-2026; el dueño, pagando en Bitcoin: «la leyenda de "esperando el pago…"
+   me gustaría que fuera más visible»). Arriba del bloque de pago, en un recuadro ámbar con su punto que late. */
+.latido.estado-pago { align-items: flex-start; margin: 4px 0 18px; padding: 14px 16px; border: 1px solid var(--ambar-borde); border-radius: 10px; background: var(--ambar-suave); font-family: inherit; font-size: 1rem; line-height: 1.45; color: var(--texto); }
+.latido.estado-pago strong { color: var(--ambar); }
+.latido.estado-pago .punto { flex: none; width: 12px; height: 12px; margin-top: 6px; }

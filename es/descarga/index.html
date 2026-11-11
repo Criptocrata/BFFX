@@ -132,7 +132,7 @@
       <p><a class="boton boton-ambar" id="pagar" href="#" target="_blank" rel="noopener">Pagar con Plisio</a></p>
       <p class="nota">Plisio se abre en otra pestaña. Cuando la red confirme tu pago, esta página se convierte sola en tu descarga: puedes cerrar la de Plisio.</p>
       <p class="nota" id="por-pagar-correo" hidden></p>
-      <p class="latido"><span class="punto"></span> Esperando tu pago…</p>
+      <p class="latido estado-pago" role="status"><span class="punto"></span> <span>Esperando tu pago…</span></p>
     </div>
   </section>
 
@@ -145,6 +145,7 @@
         <button class="boton boton-linea" id="directo-copiar-enlace" type="button">Copiar</button>
       </div>
       <div id="directo-pagar">
+        <p class="latido estado-pago" role="status"><span class="punto"></span> <span><strong>Esperando tu pago…</strong> Aparece aquí más o menos un minuto después de enviarlo.</span></p>
         <p>Envía <strong>exactamente</strong> esta cantidad de <strong>USDT por la red TRON (TRC-20)</strong>:</p>
         <div class="enlace-y-copiar">
           <div class="licencia" id="directo-importe"></div>
@@ -163,7 +164,6 @@
         <p class="nota">¿Pagas desde un exchange? Algunos descuentan su comisión de lo que envías. Asegúrate de que lo que <strong>llega</strong> sea exactamente esta cantidad.</p>
         <p class="nota" id="directo-hasta"></p>
         <p class="nota" id="directo-correo" hidden></p>
-        <p class="latido"><span class="punto"></span> Esperando tu pago… Aparece aquí más o menos un minuto después de enviarlo.</p>
       </div>
       <div id="directo-caducado" hidden>
         <p><strong>La reserva de este pedido ha caducado:</strong> su cantidad exacta ya no se le guarda.</p>
@@ -190,6 +190,7 @@
         <button class="boton boton-linea" id="btc-copiar-enlace" type="button">Copiar</button>
       </div>
       <div id="btc-pagar">
+        <p class="latido estado-pago" role="status"><span class="punto"></span> <span><strong>Esperando tu pago…</strong> Aparece aquí un minuto o dos después de enviarlo, y la descarga, con la primera confirmación.</span></p>
         <p>Envía esta cantidad de <strong>bitcoin (BTC, por la red de Bitcoin)</strong>:</p>
         <div class="enlace-y-copiar">
           <div class="licencia" id="btc-importe"></div>
@@ -209,7 +210,6 @@
         <p class="nota">¿Pagas desde un exchange? Algunos descuentan su comisión de lo que envías. Asegúrate de que lo que <strong>llega</strong> sea por lo menos esta cantidad.</p>
         <p class="nota" id="btc-hasta"></p>
         <p class="nota" id="btc-correo" hidden></p>
-        <p class="latido"><span class="punto"></span> Esperando tu pago… Aparece aquí un minuto o dos después de enviarlo, y la descarga, con la primera confirmación.</p>
       </div>
       <div id="btc-caducado" hidden>
         <p><strong>Este precio ha caducado:</strong> pasó la hora sin que la red viera un pago a esta dirección.</p>
@@ -235,7 +235,7 @@
   <section id="confirmando" hidden>
     <h1>Pago recibido.</h1>
     <div class="tarjeta">
-      <p class="latido"><span class="punto"></span> <span id="confirmando-texto">La red lo está confirmando…</span></p>
+      <p class="latido estado-pago" role="status"><span class="punto"></span> <span id="confirmando-texto">La red lo está confirmando…</span></p>
       <p>No hace falta que te quedes aquí: esta página se convierte en tu descarga en cuanto se confirme, y te mandaremos su enlace por correo.</p>
       <p class="pedido">Pedido <span class="num"></span></p>
     </div>
@@ -244,7 +244,7 @@
   <section id="esperando" hidden>
     <h1>Tu pago está en camino.</h1>
     <div class="tarjeta">
-      <p class="latido"><span class="punto"></span> Esperando a que la red confirme la transacción…</p>
+      <p class="latido estado-pago" role="status"><span class="punto"></span> <span>Esperando a que la red confirme la transacción…</span></p>
       <p>Esto no depende de nosotros: lo que tarda es la red de la moneda que elegiste. Suelen ser minutos, y con la red congestionada puede irse a un par de horas. <strong>No hace falta que te quedes aquí</strong>: esta página se actualiza sola, y puedes volver a ella cuando quieras.</p>
       <p><strong>Guarda esta dirección.</strong> Es la forma de volver a tu descarga.</p>
     </div>
