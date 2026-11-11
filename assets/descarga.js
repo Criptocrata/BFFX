@@ -86,9 +86,17 @@
         /* El cobro directo (11-11-2026): servidor/src/cobro-directo.ts. */
         sinCobroUsdt: "El cobro con esa moneda no contesta ahora mismo. El USDT por TRON sí funciona: elígelo arriba y pulsa otra vez.",
         directoHasta: (ms) => `Esta cantidad queda reservada para tu pedido hasta el ${fechaHora(ms)}.`,
+        /* Y en Bitcoin (11-11-2026): servidor/src/cobro-btc.ts. */
+        btcHasta: (ms) => `Este precio vale hasta el ${fechaHora(ms)}.`,
+        sinCobroDirecto: (l) => l.includes("USDT_TRX") && l.includes("BTC")
+          ? "El cobro con esa moneda no contesta ahora mismo. El USDT por TRON y el Bitcoin sí funcionan: elige uno arriba y pulsa otra vez."
+          : l.includes("BTC") ? "El cobro con esa moneda no contesta ahora mismo. El Bitcoin sí funciona: elígelo arriba y pulsa otra vez."
+            : "El cobro con esa moneda no contesta ahora mismo. El USDT por TRON sí funciona: elígelo arriba y pulsa otra vez.",
         reclamo: {
           comprobando: "Comprobando…",
           exacto: "Es la cantidad exacta: tu pedido se dará por pagado en un minuto, aquí mismo.",
+          exactoBtc: "Lo vemos: tu pedido se dará por pagado aquí mismo en cuanto la red lo confirme.",
+          "de-menos-abierto": "Esa transacción manda menos de lo pedido. Si envías lo que falta a la misma dirección dentro de la hora, se da por pagado; si no, lo miramos a mano.",
           tx: "Eso no es un identificador de transacción: son 64 letras y cifras (a veces empieza por 0x).",
           "tx-usada": "Esa transacción ya se usó para un pedido.",
           "no-llega": "Todavía no la vemos confirmada, o no paga a nuestra dirección. Si acabas de enviarla, espera un par de minutos y prueba otra vez.",
@@ -150,9 +158,17 @@
         /* Direct payment (11-11-2026): servidor/src/cobro-directo.ts. */
         sinCobroUsdt: "Checkout isn’t answering for that coin right now. USDT on TRON works: choose it above and press again.",
         directoHasta: (ms) => `This amount is reserved for your order until ${fechaHora(ms)}.`,
+        /* And in Bitcoin (11-11-2026): servidor/src/cobro-btc.ts. */
+        btcHasta: (ms) => `This price holds until ${fechaHora(ms)}.`,
+        sinCobroDirecto: (l) => l.includes("USDT_TRX") && l.includes("BTC")
+          ? "Checkout isn’t answering for that coin right now. USDT on TRON and Bitcoin work: choose one above and press again."
+          : l.includes("BTC") ? "Checkout isn’t answering for that coin right now. Bitcoin works: choose it above and press again."
+            : "Checkout isn’t answering for that coin right now. USDT on TRON works: choose it above and press again.",
         reclamo: {
           comprobando: "Checking…",
           exacto: "That’s the exact amount: your order will show as paid within a minute, right here.",
+          exactoBtc: "We see it: your order will show as paid right here as soon as the network confirms it.",
+          "de-menos-abierto": "That transaction sends less than the amount asked. If you send the rest to the same address within the hour, it counts as paid; if not, we’ll look at it by hand.",
           tx: "That isn’t a transaction ID: it’s 64 letters and digits (sometimes starting with 0x).",
           "tx-usada": "That transaction has already been used for an order.",
           "no-llega": "We don’t see it confirmed yet, or it doesn’t pay our address. If you’ve just sent it, wait a couple of minutes and try again.",
@@ -219,7 +235,7 @@
     otro.addEventListener("click", () => { try { sessionStorage.setItem("bfx-web-idioma", ES ? "en" : "es"); } catch { /* nada */ } });
   }
   const ver = (id) => {
-    for (const s of ["comprar", "lista", "lista-hecha", "sin-pedido", "por-pagar", "directo", "cargando", "confirmando", "esperando", "listo", "revisar", "cerrado"]) {
+    for (const s of ["comprar", "lista", "lista-hecha", "sin-pedido", "por-pagar", "directo", "directo-btc", "cargando", "confirmando", "esperando", "listo", "revisar", "cerrado"]) {
       const el = document.getElementById(s);
       if (el) el.hidden = s !== id;
     }
@@ -309,6 +325,7 @@
         return;
       }
       const dice = seguir.textContent;
+      let alternativas = [];
       seguir.disabled = true;
       seguir.textContent = T.creando;
       try {
@@ -327,10 +344,14 @@
         });
         const v = await r.json().catch(() => null);
         if (v && v.error === "correo") throw new Error("correo");
-        /* Plisio no crea la factura con esa moneda y la tienda cobra directo el USDT por TRON (11-11-2026). */
-        if (v && v.alternativa === "USDT_TRX") throw new Error("alternativa");
-        // Una factura de Plisio (`pagar`) o un cobro directo (`directo`: la dirección y la cantidad, que da /estado).
-        if (!r.ok || !v || !v.pedido || !(v.pagar || v.directo)) throw new Error("sin factura");
+        /* Plisio no crea la factura con esa moneda y la tienda cobra directo en otra (11-11-2026): el USDT por TRON, el
+           Bitcoin o los dos. `alternativa` sola es la de la tienda de antes del Bitcoin directo. */
+        if (v && (v.alternativas || v.alternativa)) {
+          alternativas = Array.isArray(v.alternativas) ? v.alternativas : [v.alternativa];
+          throw new Error("alternativa");
+        }
+        // Una factura de Plisio (`pagar`) o un cobro directo (`directo`, `directoBtc`: lo que da /estado).
+        if (!r.ok || !v || !v.pedido || !(v.pagar || v.directo || v.directoBtc)) throw new Error("sin factura");
         // Para decirle, en el paso de pagar, a dónde le escribiremos. Sólo en esta pestaña.
         try { sessionStorage.setItem(`bfx-correo-${v.pedido}`, correo); } catch { /* nada */ }
         const u = new URL(location.href); u.search = ""; u.hash = "";
@@ -339,7 +360,7 @@
         location.replace(u.toString());
       } catch (err) {
         error.textContent = err && err.message === "correo" ? T.errores.correo
-          : err && err.message === "alternativa" ? T.sinCobroUsdt : T.sinCobro;
+          : err && err.message === "alternativa" ? T.sinCobroDirecto(alternativas) : T.sinCobro;
         error.hidden = false;
         seguir.disabled = false;
         seguir.textContent = dice;
@@ -426,25 +447,62 @@
   copiarAlPulsar("directo-copiar-enlace", () => enlaceCompra);
   copiarAlPulsar("directo-copiar-importe", () => (directoActual ? directoActual.importe : ""));
   copiarAlPulsar("directo-copiar-direccion", () => (directoActual ? directoActual.direccion : ""));
+  const poner = (id, texto) => { const el = document.getElementById(id); if (el) el.textContent = texto; };
+  /* Caducado (11-11-2026): ni la cantidad ni la dirección, para que nadie pague a un pedido que ya no se mira; sí el
+     camino a uno nuevo y el formulario de «ya he pagado». */
+  const caducar = (prefijo, caducado) => {
+    const pagarlo = document.getElementById(`${prefijo}-pagar`);
+    const fuera = document.getElementById(`${prefijo}-caducado`);
+    if (pagarlo) pagarlo.hidden = Boolean(caducado);
+    if (fuera) fuera.hidden = !caducado;
+  };
+  const otraVez = `?comprar=${pedido.startsWith("BFQ") ? "quarantine" : "fx"}`;
+  for (const a of document.querySelectorAll(".directo-otra-vez")) a.href = otraVez;
   function pintaDirecto(d) {
     directoActual = d;
-    const poner = (id, texto) => { const el = document.getElementById(id); if (el) el.textContent = texto; };
     poner("directo-enlace", enlaceCompra);
     poner("directo-importe", `${Number(d.importe).toFixed(2)} USDT`);
     poner("directo-direccion", d.direccion);
     poner("directo-hasta", T.directoHasta(d.hasta));
+    caducar("directo", d.caducado);
     const aviso = document.getElementById("directo-correo");
+    if (aviso && correoDeLaCompra) { aviso.textContent = T.teEscribiremos(correoDeLaCompra); aviso.hidden = false; }
+  }
+  /* ── El Bitcoin directo (11-11-2026) ──────────────────────────────────────
+     Una dirección sólo de este pedido (servidor/src/cobro-btc.ts) y el precio en BTC, que vale una hora. Lo da la
+     tienda (/estado), como el de TRON. El botón abre el monedero con la dirección y la cantidad puestas (BIP21), y sólo
+     con un enlace «bitcoin:» de la tienda: cualquier otra cosa no se convierte en botón. */
+  let btcActual = null;
+  copiarAlPulsar("btc-copiar-enlace", () => enlaceCompra);
+  copiarAlPulsar("btc-copiar-importe", () => (btcActual ? btcActual.importe : ""));
+  copiarAlPulsar("btc-copiar-direccion", () => (btcActual ? btcActual.direccion : ""));
+  function pintaDirectoBtc(d) {
+    btcActual = d;
+    poner("btc-enlace", enlaceCompra);
+    poner("btc-importe", `${d.importe} BTC`);
+    poner("btc-direccion", d.direccion);
+    poner("btc-hasta", T.btcHasta(d.hasta));
+    const abrir = document.getElementById("btc-abrir");
+    if (abrir) {
+      const vale = typeof d.uri === "string" && /^bitcoin:bc1[a-z0-9]{20,90}\?amount=\d+\.\d{8}$/.test(d.uri);
+      abrir.hidden = !vale;
+      if (vale) abrir.href = d.uri;
+    }
+    caducar("btc", d.caducado);
+    const aviso = document.getElementById("btc-correo");
     if (aviso && correoDeLaCompra) { aviso.textContent = T.teEscribiremos(correoDeLaCompra); aviso.hidden = false; }
   }
   /* «Ya he pagado y no aparece»: su transacción. La tienda nunca entrega sola con esto —una transacción es pública—;
      lo exacto lo da por pagado la vigilancia, y lo demás lo mira una persona (la página pasa a «revisar»). */
-  const reclamar = document.getElementById("directo-reclamar");
-  if (reclamar) {
+  /* Los dos formularios, el de TRON y el de Bitcoin (11-11-2026): la misma ruta de la tienda, que sabe de qué es el pedido. */
+  for (const prefijo of ["directo", "btc"]) {
+    const reclamar = document.getElementById(`${prefijo}-reclamar`);
+    if (!reclamar) continue;
     reclamar.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const respuesta = document.getElementById("directo-reclamar-respuesta");
+      const respuesta = document.getElementById(`${prefijo}-reclamar-respuesta`);
       const boton = reclamar.querySelector("button");
-      const tx = (document.getElementById("directo-tx").value || "").trim();
+      const tx = (document.getElementById(`${prefijo}-tx`).value || "").trim();
       const decir = (texto) => { respuesta.textContent = texto; respuesta.hidden = false; };
       decir(T.reclamo.comprobando);
       boton.disabled = true;
@@ -454,7 +512,7 @@
         });
         const v = await r.json().catch(() => null);
         if (r.status === 429) decir(T.reclamo.frenado);
-        else if (v && v.exacto) decir(T.reclamo.exacto);
+        else if (v && v.exacto) decir(prefijo === "btc" ? T.reclamo.exactoBtc : T.reclamo.exacto);
         else if (v && v.estado && v.estado !== "esperando") { respuesta.hidden = true; mirar(); }
         else decir((v && T.reclamo[v.error]) || T.reclamo.otro);
       } catch {
@@ -530,7 +588,16 @@
     if (v.directo) {
       pintaDirecto(v.directo);
       ver("directo");
-      espera = Math.min(espera * 1.2, 20_000);
+      espera = v.directo.caducado ? 60_000 : Math.min(espera * 1.2, 20_000);
+      setTimeout(mirar, espera);
+      return;
+    }
+    /* Y en Bitcoin (11-11-2026): la red lo ve en un minuto o dos; la confirmación, la página la enseña como cualquier
+       pago que se confirma («confirmando»). */
+    if (v.directoBtc) {
+      pintaDirectoBtc(v.directoBtc);
+      ver("directo-btc");
+      espera = v.directoBtc.caducado ? 60_000 : Math.min(espera * 1.2, 20_000);
       setTimeout(mirar, espera);
       return;
     }

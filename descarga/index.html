@@ -147,21 +147,27 @@
         <div class="licencia" id="directo-enlace"></div>
         <button class="boton boton-linea" id="directo-copiar-enlace" type="button">Copy</button>
       </div>
-      <p>Send <strong>exactly</strong> this amount of <strong>USDT on the TRON network (TRC-20)</strong>:</p>
-      <div class="enlace-y-copiar">
-        <div class="licencia" id="directo-importe"></div>
-        <button class="boton boton-linea" id="directo-copiar-importe" type="button">Copy</button>
+      <div id="directo-pagar">
+        <p>Send <strong>exactly</strong> this amount of <strong>USDT on the TRON network (TRC-20)</strong>:</p>
+        <div class="enlace-y-copiar">
+          <div class="licencia" id="directo-importe"></div>
+          <button class="boton boton-linea" id="directo-copiar-importe" type="button">Copy</button>
+        </div>
+        <p>to this address:</p>
+        <div class="enlace-y-copiar">
+          <div class="licencia" id="directo-direccion"></div>
+          <button class="boton boton-linea" id="directo-copiar-direccion" type="button">Copy</button>
+        </div>
+        <p class="nota">The cents belong to your order: they are how we know the payment is yours, so it has to arrive exact. It is a little under the price, never over. Only USDT on TRON: anything else sent to this address — another network, another coin — is lost.</p>
+        <p class="nota">Paying from an exchange? Some take their fee out of what you send. Make sure the amount that <strong>arrives</strong> is exactly this one.</p>
+        <p class="nota" id="directo-hasta"></p>
+        <p class="nota" id="directo-correo" hidden></p>
+        <p class="latido"><span class="punto"></span> Waiting for your payment… It shows up here about a minute after you send it.</p>
       </div>
-      <p>to this address:</p>
-      <div class="enlace-y-copiar">
-        <div class="licencia" id="directo-direccion"></div>
-        <button class="boton boton-linea" id="directo-copiar-direccion" type="button">Copy</button>
+      <div id="directo-caducado" hidden>
+        <p><strong>This order’s reservation has expired:</strong> its exact amount is no longer kept for it.</p>
+        <p class="nota">If you haven’t paid, don’t send anything: <a class="directo-otra-vez" href="./">start a new order</a>. If you already paid, paste your transaction below and we’ll check it by hand.</p>
       </div>
-      <p class="nota">The cents belong to your order: they are how we know the payment is yours, so it has to arrive exact. It is a little under the price, never over. Only USDT on TRON: anything else sent to this address — another network, another coin — is lost.</p>
-      <p class="nota">Paying from an exchange? Some take their fee out of what you send. Make sure the amount that <strong>arrives</strong> is exactly this one.</p>
-      <p class="nota" id="directo-hasta"></p>
-      <p class="nota" id="directo-correo" hidden></p>
-      <p class="latido"><span class="punto"></span> Waiting for your payment… It shows up here about a minute after you send it.</p>
       <details class="directo-reclamar">
         <summary>Already paid, and it doesn’t show after a few minutes?</summary>
         <form id="directo-reclamar" class="buscar-pedido" novalidate>
@@ -169,6 +175,48 @@
           <input id="directo-tx" name="tx" type="text" autocomplete="off" spellcheck="false" placeholder="64 letters and digits">
           <button class="boton boton-linea" type="submit">Check it</button>
           <p class="nota" id="directo-reclamar-respuesta" role="status" hidden></p>
+        </form>
+      </details>
+    </div>
+  </section>
+
+  <section id="directo-btc" hidden>
+    <h1>Pay with Bitcoin.</h1>
+    <div class="tarjeta">
+      <p>Your order number is <strong class="num"></strong>. <strong>Keep this page’s address</strong> — in your bookmarks, or copy it: it is the way back to your download and your licence, whenever you like.</p>
+      <div class="enlace-y-copiar">
+        <div class="licencia" id="btc-enlace"></div>
+        <button class="boton boton-linea" id="btc-copiar-enlace" type="button">Copy</button>
+      </div>
+      <div id="btc-pagar">
+        <p>Send this amount of <strong>bitcoin (BTC, on the Bitcoin network)</strong>:</p>
+        <div class="enlace-y-copiar">
+          <div class="licencia" id="btc-importe"></div>
+          <button class="boton boton-linea" id="btc-copiar-importe" type="button">Copy</button>
+        </div>
+        <p>to this address, which is <strong>only for this order</strong>:</p>
+        <div class="enlace-y-copiar">
+          <div class="licencia" id="btc-direccion"></div>
+          <button class="boton boton-linea" id="btc-copiar-direccion" type="button">Copy</button>
+        </div>
+        <p><a class="boton boton-ambar" id="btc-abrir" href="#">Open in my wallet</a></p>
+        <p class="nota">The price in BTC is fixed for one hour: the network has to <strong>see</strong> your payment within that hour, and it can confirm later. Your wallet’s network fee goes on top. Only bitcoin on the Bitcoin network: anything else sent to this address — another network, another coin — is lost.</p>
+        <p class="nota">Paying from an exchange? Some take their fee out of what you send. Make sure that what <strong>arrives</strong> is at least this amount.</p>
+        <p class="nota" id="btc-hasta"></p>
+        <p class="nota" id="btc-correo" hidden></p>
+        <p class="latido"><span class="punto"></span> Waiting for your payment… It shows up here a minute or two after you send it, and the download comes with the first confirmation.</p>
+      </div>
+      <div id="btc-caducado" hidden>
+        <p><strong>This price has expired:</strong> the hour went by without the network seeing a payment to this address.</p>
+        <p class="nota">If you haven’t paid, don’t send anything to this address: <a class="directo-otra-vez" href="./">start a new order</a> at today’s price. If you already paid, paste your transaction below and we’ll check it by hand.</p>
+      </div>
+      <details class="directo-reclamar">
+        <summary>Already paid, and it doesn’t show after a few minutes?</summary>
+        <form id="btc-reclamar" class="buscar-pedido" novalidate>
+          <label for="btc-tx">Your transaction ID (TXID)</label>
+          <input id="btc-tx" name="tx" type="text" autocomplete="off" spellcheck="false" placeholder="64 letters and digits">
+          <button class="boton boton-linea" type="submit">Check it</button>
+          <p class="nota" id="btc-reclamar-respuesta" role="status" hidden></p>
         </form>
       </details>
     </div>
