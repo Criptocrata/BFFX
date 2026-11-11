@@ -20,6 +20,8 @@
   /* Y la del consentimiento de la lista de espera: servidor/src/lista-de-espera.ts, ACEPTA_LISTA. La de 25-10-2026
      añade el 10 % de descuento a lo que se guarda el correo. */
   const ACEPTA_LISTA = "lista-descuento-2026-10";
+  /* De dónde se cargó este guion: el QR del pago (qr-pago.js) está a su lado. */
+  const AQUI = document.currentScript && document.currentScript.src ? document.currentScript.src : location.href;
   const main = document.querySelector("main[data-api]");
   if (!main) return;
   const API = main.dataset.api;
@@ -457,6 +459,24 @@
     if (fuera) fuera.hidden = !caducado;
   };
   const otraVez = `?comprar=${pedido.startsWith("BFQ") ? "quarantine" : "fx"}`;
+  /* El QR del pago (11-11-2026): para pagar con el móvil escaneando la pantalla. Se carga sólo aquí, cuando hace falta,
+     y se dibuja una vez por texto (la página pregunta a la tienda cada pocos segundos). Si no se puede, no sale: la
+     dirección y la cantidad siguen ahí para copiarlas. */
+  let qrPago = null;
+  async function pintaQR(id, texto) {
+    const caja = document.getElementById(id);
+    if (!caja || caja.dataset.texto === texto) return;
+    try {
+      qrPago = qrPago || import(new URL("qr-pago.js", AQUI).href);
+      const { svgQR } = await qrPago;
+      const dibujo = caja.querySelector(".qr");
+      dibujo.replaceChildren(svgQR(texto, document, caja.querySelector("figcaption").textContent));
+      caja.dataset.texto = texto;
+      caja.hidden = false;
+    } catch {
+      caja.hidden = true;
+    }
+  }
   for (const a of document.querySelectorAll(".directo-otra-vez")) a.href = otraVez;
   function pintaDirecto(d) {
     directoActual = d;
@@ -464,6 +484,8 @@
     poner("directo-importe", `${Number(d.importe).toFixed(2)} USDT`);
     poner("directo-direccion", d.direccion);
     poner("directo-hasta", T.directoHasta(d.hasta));
+    // En TRON no hay un enlace de pago que lean todos los monederos: el QR lleva sólo la dirección.
+    if (/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(d.direccion)) pintaQR("directo-qr", d.direccion);
     caducar("directo", d.caducado);
     const aviso = document.getElementById("directo-correo");
     if (aviso && correoDeLaCompra) { aviso.textContent = T.teEscribiremos(correoDeLaCompra); aviso.hidden = false; }
@@ -487,6 +509,8 @@
       const vale = typeof d.uri === "string" && /^bitcoin:bc1[a-z0-9]{20,90}\?amount=\d+\.\d{8}$/.test(d.uri);
       abrir.hidden = !vale;
       if (vale) abrir.href = d.uri;
+      // El QR, con el mismo enlace «bitcoin:»: la dirección y la cantidad, como lo leen los monederos (BIP21).
+      if (vale) pintaQR("btc-qr", d.uri);
     }
     caducar("btc", d.caducado);
     const aviso = document.getElementById("btc-correo");

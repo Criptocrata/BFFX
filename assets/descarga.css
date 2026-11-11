@@ -138,3 +138,9 @@
 .directo-reclamar summary { cursor: pointer; color: var(--apagado); }
 .directo-reclamar summary:hover { color: var(--texto); }
 .directo-reclamar form { margin-top: 12px; }
+
+/* El QR del pago directo (11-11-2026): negro sobre blanco también en el tema oscuro, que es como lo leen las cámaras. */
+.qr-pago { margin: 1.25rem 0; text-align: center; }
+.qr-pago .qr { width: min(240px, 70vw); margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; }
+.qr-pago svg { display: block; width: 100%; height: auto; }
+.qr-pago figcaption { margin-top: .6rem; font-size: .9rem; color: var(--apagado); }

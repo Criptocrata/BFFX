@@ -158,6 +158,10 @@
           <div class="licencia" id="directo-direccion"></div>
           <button class="boton boton-linea" id="directo-copiar-direccion" type="button">Copy</button>
         </div>
+        <figure class="qr-pago" id="directo-qr" hidden>
+          <div class="qr"></div>
+          <figcaption>Scan the address with your phone’s wallet and type the exact amount yourself.</figcaption>
+        </figure>
         <p class="nota">The cents belong to your order: they are how we know the payment is yours, so it has to arrive exact. It is a little under the price, never over. Only USDT on TRON: anything else sent to this address — another network, another coin — is lost.</p>
         <p class="nota">Paying from an exchange? Some take their fee out of what you send. Make sure the amount that <strong>arrives</strong> is exactly this one.</p>
         <p class="nota" id="directo-hasta"></p>
@@ -199,6 +203,10 @@
           <div class="licencia" id="btc-direccion"></div>
           <button class="boton boton-linea" id="btc-copiar-direccion" type="button">Copy</button>
         </div>
+        <figure class="qr-pago" id="btc-qr" hidden>
+          <div class="qr"></div>
+          <figcaption>Scan it with your phone’s wallet: it carries the address and the amount. Check the amount before you send.</figcaption>
+        </figure>
         <p><a class="boton boton-ambar" id="btc-abrir" href="#">Open in my wallet</a></p>
         <p class="nota">The price in BTC is fixed for one hour: the network has to <strong>see</strong> your payment within that hour, and it can confirm later. Your wallet’s network fee goes on top. Only bitcoin on the Bitcoin network: anything else sent to this address — another network, another coin — is lost.</p>
         <p class="nota">Paying from an exchange? Some take their fee out of what you send. Make sure that what <strong>arrives</strong> is at least this amount.</p>

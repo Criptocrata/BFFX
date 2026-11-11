@@ -16,14 +16,14 @@
         tema: { system: "Tema del sistema", light: "Tema claro", dark: "Tema oscuro" },
         recomendado: (precio, lista) => `Vienes recomendado: pagas ${precio} USD en vez de ${lista}. El descuento va en la factura, sin pedirlo.`,
         comprar: (precio) => `Comprar licencia · ${precio} USD`,
-        apuntarse: "Apúntate · 10 % de descuento",
+        proximamente: "Próximamente",
         pausa: "Pausa", sigue: "Reanudar",
       }
     : {
         tema: { system: "System theme", light: "Light theme", dark: "Dark theme" },
         recomendado: (precio, lista) => `You were referred: you pay $${precio} instead of $${lista}. The discount is on the invoice, nothing to ask for.`,
         comprar: (precio) => `Buy a licence · $${precio}`,
-        apuntarse: "Join the list · 10% off",
+        proximamente: "Coming soon",
         pausa: "Pause", sigue: "Play",
       };
 
@@ -143,12 +143,21 @@
       })
       .catch(() => {});
   };
-  /* La venta cerrada (24-10-2026): la tienda lo dice en /recomendacion, y los botones de comprar pasan a la lista de
-     espera; llevan a la misma página de compra, que enseña la lista. Reabrir no pide republicar la web. */
+  /* La venta cerrada (24-10-2026): la tienda lo dice en /recomendacion. Hasta el 11-11-2026 los botones pasaban a
+     «Apúntate», con el descuento de la lista de espera, y llevaban a ella; desde ese día dicen sólo «Próximamente» y no llevan
+     a ninguna parte. El dueño: «de momento, estamos a la espera. No quiero tirarme a la piscina sin saber si hay
+     agua». Reabrir no pide republicar la web: con la venta abierta vuelven solos a «Comprar licencia». */
+  const cerrar = (b) => {
+    b.textContent = T.proximamente;
+    b.dataset.cerrada = "";
+    b.removeAttribute("href");
+    b.setAttribute("aria-disabled", "true");
+    b.classList.add("boton-cerrado");
+  };
   if (botones.length && botones[0].dataset.cobro) {
     fetch(botones[0].dataset.cobro + "/recomendacion?producto=fx")
       .then((r) => r.json())
-      .then((v) => { if (v && v.venta === "cerrada") for (const b of botones) b.textContent = T.apuntarse; })
+      .then((v) => { if (v && v.venta === "cerrada") for (const b of botones) cerrar(b); })
       .catch(() => {});
   }
   if (ref && /^BFR-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref)) {
@@ -165,6 +174,7 @@
      JavaScript, el botón sigue siendo un enlace de correo que funciona. */
   for (const boton of botones) {
     boton.addEventListener("click", (e) => {
+      if (boton.dataset.cerrada !== undefined) { e.preventDefault(); return; }
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
       e.preventDefault();
       /* La página de compra de ESTA lengua: la marca de la cabecera lleva a
