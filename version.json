@@ -1,7 +1,7 @@
 {
-  "version": "1.34.1",
+  "version": "1.34.2",
   "versions": {
-    "fx": "1.34.1",
+    "fx": "1.34.2",
     "quarantine": "1.33.0"
   },
   "notes": "https://botfactoryfx.com/downloads/",
