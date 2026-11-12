@@ -744,9 +744,9 @@ article.nota td:first-child { white-space: nowrap; }
 
 .pronto-etiqueta { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ambar); background: var(--ambar-suave); border: 1px solid var(--ambar-borde); vertical-align: 1px; }
 
-/* Los referidos, OCULTOS mientras la venta está cerrada (24-10-2026): ver scripts/referidos-ocultos.py. Reabrir el
-   programa es BORRAR esta regla (y el aviso de arriba de las páginas de referidos). */
-[data-referidos] { display: none !important; }
+/* Los referidos estuvieron OCULTOS mientras la venta estuvo cerrada (24-10 → 12-11-2026): una regla que daba
+   «display: none» a todo lo que lleva la marca data-referidos. Las marcas se quedan (scripts/referidos-ocultos.py):
+   volver a esconderlos es volver a poner esa regla. */
 
 /* El expediente de cada estrategia de la fábrica (01-11-2026): su backtest, cómo la juzgó el juez y lo que lleva en vivo. */
 .fabrica-robot h3 a { color: inherit; text-decoration: none; }
