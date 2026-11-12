@@ -171,6 +171,11 @@ h1, h2, h3, h4 { margin: 0; font-family: var(--mono); font-weight: 600; text-wra
   border: 1px solid transparent; transition: background-color 0.15s, border-color 0.15s, transform 0.15s, color 0.15s;
 }
 .boton:active { transform: translateY(1px); }
+/* En un móvil, un botón de texto largo se parte en dos líneas antes que salirse de la pantalla (12-11-2026): «The duel
+   against StrategyQuant X has its own page →» empujaba La fábrica 90 px a la derecha a 430 px de ancho. */
+@media (max-width: 560px) {
+  .boton { max-width: 100%; white-space: normal; text-align: center; padding-top: 10px; padding-bottom: 10px; }
+}
 .boton-ambar { background: var(--ambar-fondo); color: var(--ambar-tinta); }
 .boton-ambar:hover { background: color-mix(in srgb, var(--ambar-fondo) 86%, var(--texto)); }
 .boton-linea { border-color: var(--linea-fuerte); color: var(--texto); background: transparent; }
