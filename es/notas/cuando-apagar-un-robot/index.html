@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ZhoHEDiyVetny61emVu2UOiKRnXe0jJF1QOOS3GT80k='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://botfactoryfx-cobro.criptonauta-trickle488.workers.dev; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Cuándo hay que apagar un robot? · BotFactoryFX</title>
+<meta name="description" content="32 robots de verdad, en los meses que su backtest no vio: juzgarlos por el acierto falla en los dos sentidos; juzgarlos por el dinero, no.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../../../assets/logo-split.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="../../../notes/when-to-switch-a-robot-off/">
+<link rel="alternate" hreflang="es" href="./">
+<link rel="stylesheet" href="../../../assets/fuentes.css">
+<link rel="stylesheet" href="../../../assets/web.css">
+<script>
+  (function () { try { var t = localStorage.getItem("bfx-web-tema"); if (t === "dark" || t === "system") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
+<script src="../../../assets/web.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BotFactoryFX">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="¿Cuándo hay que apagar un robot? · BotFactoryFX">
+<meta property="og:description" content="32 robots de verdad, en los meses que su backtest no vio: juzgarlos por el acierto falla en los dos sentidos; juzgarlos por el dinero, no.">
+<meta property="og:url" content="https://botfactoryfx.com/es/notas/cuando-apagar-un-robot/">
+<meta property="og:image" content="https://botfactoryfx.com/banners/es/bfx-1200x628.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<header class="barra">
+  <div class="envoltura barra-dentro">
+    <a class="marca" href="../../"><img src="../../../assets/logo-split.svg" alt="" width="30" height="30"><span>BotFactory<b>FX</b></span></a>
+    <nav class="barra-enlaces" aria-label="Principal">
+      <a href="../../#factura">La factura</a>
+      <a href="../../como-funciona/">Cómo funciona</a>
+      <a href="../../#programas">Programas</a>
+      <a href="../../descargas/">Descargas</a>
+      <a href="../../documentacion/">Documentación</a>
+      <a href="../../notas/">Notas</a>
+      <a href="../../duelo-en-directo/">Duelo en directo</a>
+      <a href="../../la-fabrica/">La fábrica</a>
+      <a href="../../referidos/" data-referidos>Referidos</a>
+      <a href="../../contacto/">Contacto</a>
+    </nav>
+    <div class="barra-acciones">
+      <div class="tema" role="group" aria-label="Tema">
+        <button type="button" data-tema="system" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-tema="light" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-tema="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+      <a class="idioma" href="../../../notes/when-to-switch-a-robot-off/" hreflang="en" lang="en">EN</a>
+      <a class="boton boton-ambar boton-chico boton-carrito" href="../../#programas" aria-label="Comprar: empieza por el gratuito" title="Comprar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 12.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg></a>
+      <details class="menu-movil">
+        <summary>Menú</summary>
+        <nav aria-label="Principal (móvil)">
+          <a href="../../#factura">La factura</a><a href="../../como-funciona/">Cómo funciona</a><a href="../../#programas">Programas</a>
+          <a href="../../descargas/">Descargas</a><a href="../../documentacion/">Documentación</a><a href="../../notas/">Notas</a>
+      <a href="../../duelo-en-directo/">Duelo en directo</a>
+      <a href="../../la-fabrica/">La fábrica</a><a href="../../referidos/" data-referidos>Referidos</a><a href="../../contacto/">Contacto</a><a href="../../../demo/?lang=es">Probar gratis</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+<section class="portada-interior">
+  <div class="envoltura">
+    <p class="ceja">Notas del laboratorio · 13 de noviembre de 2026</p>
+    <h1>¿Cuándo hay que apagar un robot?</h1>
+    <p class="entradilla">Tu robot lleva unas semanas malas. ¿Se ha roto, o es una mala racha? Cogimos 32 robots de verdad, los dejamos operar los meses que su backtest no vio y comprobamos qué manera de contestar acierta.</p>
+  </div>
+</section>
+<section class="seccion" style="border-top:0;padding-top:8px">
+  <div class="envoltura">
+    <article class="nota">
+      <figure class="captura"><a href="https://youtu.be/aIIqgzkWvXo" rel="noopener"><img src="../../../capturas/notas/cuando-apagar/video.webp" alt="Vídeo: ¿cuándo hay que apagar un robot? El acierto contra el dinero, en 32 robots de verdad." width="1280" height="720" loading="lazy"></a><figcaption>Esta nota en minuto y medio. Míralo en YouTube (en inglés).</figcaption></figure>
+      <h2>La pregunta</h2>
+      <p>Tienes un robot en marcha. Tiene un backtest que pintaba bien. Lleva unas semanas malas. ¿Se ha roto, o es una mala racha? Si lo apagas pronto, matas a un buen robot en su racha de mala suerte. Si lo apagas tarde, pagas la lección.</p>
+      <p>Casi todas las herramientas contestan mirando el acierto: si el robot sigue acertando tanto como decía su backtest, «está bien». Nosotros también lo hacíamos. Luego comprobamos esa respuesta con robots cuyo final ya conocíamos.</p>
+      <h2>El experimento</h2>
+      <p>32 robots hechos con StrategyQuant X, cada uno con su backtest: lo que prometía. Pasamos cada uno por el Probador de MetaTrader 5 en los meses siguientes al final de su backtest, meses que no había visto nunca. Y miramos qué pasó de verdad:</p>
+      <ul>
+        <li><b>21 perdieron dinero:</b> ganaban menos de 0,95 $ por cada dólar que perdían.</li>
+        <li>5 quedaron más o menos planos.</li>
+        <li>6 ganaron.</li>
+      </ul>
+      <p>Así que la respuesta buena se conoce para cada robot. Ahora: ¿qué dice cada manera de juzgar?</p>
+      <h2>Juzgar por el acierto</h2>
+      <div class="tabla"><table>
+        <thead><tr><th>Lo que pasó de verdad</th><th>Robots</th><th>«Se ha ido»</th><th>«Sigue como su backtest»</th><th>«Es pronto»</th></tr></thead>
+        <tbody>
+          <tr><td>Perdieron</td><td>21</td><td>10</td><td><b>5</b></td><td>6</td></tr>
+          <tr><td>Planos</td><td>5</td><td>1</td><td>2</td><td>2</td></tr>
+          <tr><td>Ganaron</td><td>6</td><td><b>3</b></td><td>1</td><td>2</td></tr>
+        </tbody>
+      </table></div>
+      <p>A cinco robots que perdían dinero se les dijo «sigue como su backtest». Uno había perdido <b>20.967 $ en 94 operaciones</b>: seguía acertando lo bastante para aprobar. Y a tres que ganaban se les dijo «se ha ido», porque acertaban menos de lo prometido, aunque ganaban dinero. Uno iba <b>3.763 $</b> arriba.</p>
+      <figure class="captura"><img src="../../../capturas/notas/cuando-apagar/va-peor.webp" alt="La ficha de un robot en BFQuarantine: va peor de lo que prometía su backtest; factor de beneficio de 0,46 en vivo contra 1,25 prometido; acierto del 28 % contra 34 %, como su backtest; 94 operaciones en vivo marcadas en el gráfico" width="1600" height="950" loading="lazy"><figcaption>El robot que perdió 20.967 $. Acierta más o menos lo que prometía, y pierde dinero. Cuenta de ejemplo hecha con las pasadas del Probador.</figcaption></figure>
+      <figure class="captura"><img src="../../../capturas/notas/cuando-apagar/aguanta.webp" alt="La ficha de otro robot en BFQuarantine: gana dinero como prometía su backtest; factor de beneficio de 1,16 en vivo contra 1,22 prometido; acierto del 57 % contra 71 %, distinto de su backtest; 61 operaciones en vivo marcadas en el gráfico" width="1600" height="950" loading="lazy"><figcaption>El robot que iba 3.763 $ arriba. Acierta mucho menos de lo prometido, y gana dinero. La misma cuenta de ejemplo.</figcaption></figure>
+      <p>Un robot puede acertar lo que prometió y perder dinero. Puede acertar menos y ganarlo. El acierto es un detalle; lo que importa es el dinero.</p>
+      <h2>Juzgar por el dinero</h2>
+      <p>Así que cambiamos la pregunta: <b>¿gana menos por cada dólar que arriesga de lo que prometía, más allá de lo que explica la mala suerte?</b> En números: su factor de beneficio (dólares ganados por cada dólar perdido) contra el de su backtest, con un margen para la suerte, y sólo cuando tiene 20 operaciones para juzgar.</p>
+      <figure class="grafica"><svg class="g" viewBox="0 0 760 312" role="img" aria-labelledby="g-cuando-apagar-reglas-t g-cuando-apagar-reglas-d" preserveAspectRatio="xMidYMid meet"><title id="g-cuando-apagar-reglas-t">Cuatro maneras de juzgar a los mismos 32 robots en los meses que su backtest no vio</title><desc id="g-cuando-apagar-reglas-d">De los 21 robots que perdieron dinero, el acierto pilla 10, el dinero con margen del 90 % 12, con margen del 95 % 10, y «pierde dinero» a secas 15. De los 11 que no perdían, apagan por error 4, ninguno, ninguno y 2.</desc><text class="g-tf" x="0" y="18">Robots que pierden, pillados, de 21 (más es mejor)</text><text class="g-t" x="218" y="43.0" text-anchor="end">El acierto</text><rect class="g-barra" x="230" y="28" width="195.2" height="22" rx="3"><title>El acierto: 10 de 21</title></rect><text class="g-tf" x="433.2" y="43.0">10</text><text class="g-t" x="218" y="72.0" text-anchor="end">Dinero, margen del 90 %</text><rect class="g-barra-ojo" x="230" y="57" width="234.3" height="22" rx="3"><title>Dinero, margen del 90 %: 12 de 21</title></rect><text class="g-tf" x="472.3" y="72.0">12</text><text class="g-t" x="218" y="101.0" text-anchor="end">Dinero, margen del 95 %</text><rect class="g-barra" x="230" y="86" width="195.2" height="22" rx="3"><title>Dinero, margen del 95 %: 10 de 21</title></rect><text class="g-tf" x="433.2" y="101.0">10</text><text class="g-t" x="218" y="130.0" text-anchor="end">Pierde dinero, a secas</text><rect class="g-barra" x="230" y="115" width="292.9" height="22" rx="3"><title>Pierde dinero, a secas: 15 de 21</title></rect><text class="g-tf" x="530.9" y="130.0">15</text><text class="g-tf" x="0" y="172">Robots que no perdían, apagados por error, de 11 (menos es mejor)</text><text class="g-t" x="218" y="197.0" text-anchor="end">El acierto</text><rect class="g-barra" x="230" y="182" width="149.1" height="22" rx="3"><title>El acierto: 4 de 11</title></rect><text class="g-tf" x="387.1" y="197.0">4</text><text class="g-t" x="218" y="226.0" text-anchor="end">Dinero, margen del 90 %</text><text class="g-tf" x="238.0" y="226.0">0</text><text class="g-t" x="218" y="255.0" text-anchor="end">Dinero, margen del 95 %</text><text class="g-tf" x="238.0" y="255.0">0</text><text class="g-t" x="218" y="284.0" text-anchor="end">Pierde dinero, a secas</text><rect class="g-barra" x="230" y="269" width="74.5" height="22" rx="3"><title>Pierde dinero, a secas: 2 de 11</title></rect><text class="g-tf" x="312.5" y="284.0">2</text></svg><figcaption>Las reglas del dinero sólo juzgan desde 20 operaciones; antes, la respuesta es «es pronto». La de color ámbar es la que usa BFQuarantine.</figcaption></figure>
+      <p>Con un margen del 90 %, doce de los 21 pillados, y ni un robot bueno apagado por error. Y nunca dice «aguanta» de un robot que pierde dinero.</p>
+      <p>¿Y los otros nueve? Casi todos tenían demasiado pocas operaciones para que nadie distinga la mala suerte de un robot roto, y para ésos la respuesta honrada es «es pronto». Una regla que pillara a los 21 también mataría robots buenos en sus semanas malas: juzgar por «pierde dinero» a secas pilla 15 en vez de 12, y apaga por error dos robots planos.</p>
+      <h2>Lo que hace BFQuarantine con esto</h2>
+      <p>BFQuarantine lee las operaciones de verdad de tu robot en tu cuenta (MetaTrader 5, JForex o un monedero web3), sólo leyendo, nunca operando. Le dices qué robot por su número mágico, y cuenta desde su primera operación en la cuenta. Luego pone esas operaciones al lado de lo que prometía el backtest y da una de tres respuestas: es pronto, aguanta, o va peor de lo que prometía. Cada cifra en pantalla va con el margen que deja la suerte.</p>
+      <figure class="captura"><img src="../../../capturas/notas/cuando-apagar/el-alta.webp" alt="Poner un robot en cuarentena en BFQuarantine: el fichero del backtest del robot, la cuenta de MetaTrader 5, el instrumento en vivo, qué robot por su número mágico (94 operaciones) y contar desde su primera operación en la cuenta" width="1600" height="237" loading="lazy"><figcaption>Qué robot, por su número mágico, y desde cuándo contar. Cuenta de ejemplo.</figcaption></figure>
+      <h2>Lo que 32 robots pueden decir y lo que no</h2>
+      <p>32 robots no son una muestra grande, y casi todos tuvieron entre 20 y 50 operaciones en sus meses nuevos. Comparamos cuatro reglas con ellos y nos quedamos con la que no daba falsas alarmas, así que las cifras exactas son una primera medida, no una ley.</p>
+      <p>Si tienes un robot en marcha, la pregunta no es si ha tenido una semana mala. Es si el dinero dice que ha dejado de ser el robot que compraste.</p>
+      <p><a href="../../../es/descargas/#bfquarantine">BFQuarantine</a>: 199 USD, una vez, para Linux (Windows y macOS, próximamente).</p>
+      <div class="aviso"><h3>De dónde salen los números</h3><p>De nuestras propias medidas, del 19 de octubre de 2026. 32 robots de StrategyQuant X, la promesa de cada uno leída de su fichero <code>.sqx</code>, tal como lo recibiría quien compra, y los meses después de cada backtest, hasta el 16 de octubre de 2026, pasados por el Probador de MetaTrader 5 con un bróker corriente. Un robot perdió dinero si ganaba menos de 0,95 $ por cada dólar que perdía, y ganó por encima de 1,05 $. El margen de la regla del dinero sale de remuestrear 4.000 veces las operaciones nuevas de cada robot. Las capturas son de BFQuarantine con una cuenta demo inventada que lleva las operaciones reales del Probador de dos de esos robots.</p></div>
+      <p class="nota-fin"><a href="../">← Todas las notas</a> <a class="boton boton-ambar" href="../../../demo/?lang=es">Pruébalo gratis</a></p>
+    </article>
+  </div>
+</section>
+</main>
+
+<footer class="pie">
+  <div class="envoltura">
+    <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
+      <p><strong>Operar puede costarte todo tu capital.</strong> BotFactoryFX es software de análisis: no da consejo de inversión y no opera por ti. Estas notas cuentan lo que medimos; no son consejo de inversión.</p>
+      <p>Sin cookies, sin rastreadores, nada cargado de fuera de este dominio. <a href="../../">Volver a la portada</a></p>
+      <p class="pie-legal"><a href="../../legal/">Condiciones de venta y privacidad</a></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
