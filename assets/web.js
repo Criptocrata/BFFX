@@ -187,4 +187,28 @@
       location.href = compra.toString();
     });
   }
+
+  /* ── Contar la visita (15-11-2026) ───────────────────────────────────────
+     Sin cookies y sin saber quién eres: a nuestro contador (servidor/visitas,
+     otro Worker nuestro, como la tienda) sólo van la ruta de esta página, el
+     nombre de la web de la que vienes y, si el enlace lo trae, el ?de=… de un
+     anuncio (o «recomendado» si trae un ?ref= válido, sin el código). Allí
+     sólo se suman totales del día. Quien abra cualquier página con
+     #no-me-cuentes o #dont-count-me no se cuenta más en ese navegador; lo
+     explica la página Legal. Contar nunca puede romper la página. */
+  try {
+    const VISITAS = "https://botfactoryfx-visitas.criptonauta-trickle488.workers.dev/v";
+    let fuera = !navigator.sendBeacon || navigator.webdriver || location.hostname !== "botfactoryfx.com";
+    try {
+      if (/^#(no-me-cuentes|dont-count-me)$/.test(location.hash)) localStorage.setItem("bfx-no-contar", "1");
+      if (localStorage.getItem("bfx-no-contar")) fuera = true;
+    } catch { /* sin almacenamiento local se cuenta igual: no hay nada que recordar */ }
+    if (!fuera) {
+      const r = document.referrer ? new URL(document.referrer).hostname : "";
+      const de = (new URLSearchParams(location.search).get("de") || "").toLowerCase();
+      const anuncio = /^[a-z0-9-]{1,24}$/.test(de) ? de
+        : /^BFR-[2-9A-HJ-NP-Z]{8}-[2-9A-HJ-NP-Z]{8}$/.test(ref) ? "recomendado" : "";
+      navigator.sendBeacon(VISITAS, JSON.stringify({ p: location.pathname, r, de: anuncio }));
+    }
+  } catch { /* nada */ }
 })();
